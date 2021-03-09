@@ -67,42 +67,40 @@ set background=dark
 " Theme config end
 
 let mapleader=","
-" GoTo with coc
+
+" Prefix G
+" Git <fugitive> gs -> status | gf -> accept left | gj -> accept right
+nmap <leader>gs :G<cr>
+nmap <leader>gf :diffget //2<cr>
+nmap <leader>gj :diffget //3<cr>
+
+" Movement coc into code
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Prefix r
 nmap <leader>rn <Plug>(coc-rename)
-nmap <c-l> :CocCommand python.enableLinting<CR>
 
-nmap gg <Plug>(GitGutterNextHunk)
-nmap ggb <Plug>(GitGutterPrevHunk)
-nmap ggs <Plug>(GitGutterStageHunk)
-nmap ggu <Plug>(GitGutterUndoHunk)
-
+" Prefix F
 nnoremap <leader>ff <cmd>Telescope find_files<CR>
 nnoremap <leader>fg <cmd>Telescope live_grep<CR>
 nnoremap <leader>fb <cmd>Telescope buffers<CR>
 nnoremap <leader>fh <cmd>Telescope help_tags<CR>
 
-map <C-n> :NERDTreeToggle<CR>
+" Prefix T
 nnoremap <leader>tt :NERDTreeFind<Esc>
 
+" Prefix V
 nmap <leader>vr :VimspectorReset<cr>
 nmap <leader>ve :VimspectorEval <c-r><c-w><cr>
 nmap <leader>vw :VimspectorWatch <c-r><c-w><cr>
+
+" Commands function keys
 nmap <F2> :CocCommand java.debug.vimspector.start<CR>
 
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
+" Control key
+nmap <c-l> :CocCommand python.enableLinting<CR>
+map <c-n> :NERDTreeToggle<CR>
+nmap <c-l> :CocCommand python.enableLinting<CR>
