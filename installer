@@ -6,6 +6,6 @@ echo "👉 Installer from github!"
 echo "-------------------------------------------------"
 echo
 
-git clone --depth 1 git@github.com:apascualco/dotfiles.git "$HOME/.dotfiles"
+git clone --depth 1 https://github.com/apascualco/dotfiles.git "$HOME/.dotfiles"
 
 sh $HOME/.dotfiles/install.sh
