@@ -1,0 +1,10 @@
+[user]
+	name = apascualco
+    email = apascualco@gmail.com
+
+[fetch]
+    prune = true
+
+[core]
+	excludesfile = /Users/albertopascualcorpas/.gitignore_global
+    editor = nvim
