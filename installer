@@ -19,5 +19,6 @@ echo
 
 echo "🚀 Launch install.sh"
 echo "-------------------------------------------------"
-sh $HOME/.dotfiles/install.sh
+cd $HOME/.dotfiles
+./install.sh
 echo
