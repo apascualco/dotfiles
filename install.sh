@@ -61,14 +61,20 @@ function last_executions() {
 	nvim +PlugInstall +qall
 	osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'${PWD}'/mac/wallpaper.jpg"'
 
+	#Mac configurations
+	defaults write com.apple.dock autohide -bool true
+	defaults delete com.apple.dock persistent-apps
+	defaults write com.apple.dock show-recents -bool false
+	defaults write com.apple.dock tilesize -int 40
+	defaults write com.apple.dock launchanim -bool false
+	defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode TwoButton
+	killall Dock
+
 	git config --global core.excludesfile ~/.gitignore_global
 
 	mkdir -p ${HOME}/workdir/code/go
 	softwareupdate -i -a
-	ln -sf ${PWD}/mac/Library/Preferences/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/com.googlecode.iterm2.plist
-	ln -sf ${PWD}/mac/Library/Preferences/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/com.apple.dock.plist
 }
-
 
 echo "⚡ Installing apps with brew!"
 echo "-------------------------------------------------"
@@ -95,7 +101,7 @@ echo "-------------------------------------------------"
 create_symlinks
 echo
 
-echo "Finishing the instalations and configurations"
+echo "Finishing the instalations, configurations and update xcode"
 echo "-------------------------------------------------"
 last_executions
 echo
