@@ -54,6 +54,7 @@ function create_symlinks() {
 	ln -sf ${PWD}/apps/zsh/p10k.zsh ${HOME}/.p10k.zsh
 
 	ln -sF ${PWD}/ides/nvim/init.vim ${HOME}/.config/nvim/init.vim
+	ln -sF ${PWD}/ides/nvim/lua ${HOME}/.config/nvim/lua
 	ln -sF ${PWD}/apps/git/gitignore_global ${HOME}/.gitignore_global
 	ln -sF ${PWD}/apps/git/gitconfig ${HOME}/.gitconfig
 }
