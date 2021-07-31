@@ -1,5 +1,5 @@
 #!/bin/bash
-
+https://github.com/apascualco/dotfiles/blob/master/installer
 set -euo pipefail
 
 echo "👉 Installer from github!"
@@ -8,7 +8,9 @@ echo
 
 echo "🚀 Installing brew!"
 echo "-------------------------------------------------"
-/bin/bash -c sudo "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+sudo su
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+exit
 echo "-------------------------------------------------"
 echo
 
