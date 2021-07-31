@@ -18,6 +18,7 @@ function install_apps_with_brew() {
 	brew install --cask mysqlworkbench
 	brew install --cask spotify
 	brew install --cask lastpass
+	brew install --cask intellij-idea
 }
 
 function install_and_configura_zsh() {
