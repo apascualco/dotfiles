@@ -8,7 +8,7 @@ echo
 
 echo "🚀 Installing brew!"
 echo "-------------------------------------------------"
-sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+/bin/bash -c sudo "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 echo "-------------------------------------------------"
 echo
 
