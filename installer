@@ -8,9 +8,8 @@ echo
 
 echo "🚀 Installing brew!"
 echo "-------------------------------------------------"
-sudo su
+sudo xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-exit
 echo "-------------------------------------------------"
 echo
 
