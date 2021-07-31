@@ -6,6 +6,18 @@ echo "👉 Installer from github!"
 echo "-------------------------------------------------"
 echo
 
-git clone --depth 1 https://github.com/apascualco/dotfiles.git "$HOME/.dotfiles"
+echo "🚀 Installing brew!"
+echo "-------------------------------------------------"
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" </dev/null
+echo "-------------------------------------------------"
+echo
 
+echo "🚀 Cloning dotfiles"
+echo "-------------------------------------------------"
+git clone --depth 1 https://github.com/apascualco/dotfiles.git "$HOME/.dotfiles"
+echo
+
+echo "🚀 Launch install.sh"
+echo "-------------------------------------------------"
 sh $HOME/.dotfiles/install.sh
+echo
