@@ -64,6 +64,9 @@ function last_executions() {
 	git config --global core.excludesfile ~/.gitignore_global
 
 	mkdir -p ${HOME}/workdir/code/go
+	softwareupdate -i -a
+	ln -sf ${PWD}/mac/Library/Preferences/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/com.googlecode.iterm2.plist
+	ln -sf ${PWD}/mac/Library/Preferences/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/com.apple.dock.plist
 }
 
 
