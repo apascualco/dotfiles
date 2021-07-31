@@ -1,9 +1,5 @@
 #!/bin/bash
 
-function install_brew() {
-	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" </dev/null
-}
-
 function install_apps_with_brew() {
 	brew update 
 	brew upgrade
@@ -71,23 +67,32 @@ function last_executions() {
 }
 
 
-echo "🚀 Installing brew!"
-install_brew
-
 echo "⚡ Installing apps with brew!"
+echo "-------------------------------------------------"
 install_apps_with_brew
+echo
 
 echo "⚡ Install meslo lg fonts"
+echo "-------------------------------------------------"
 install_meslo_lg_font
+echo
 
 echo "💻 Install ZSH"
+echo "-------------------------------------------------"
 install_and_configura_zsh
+echo
 
 echo "💻 Install neovim"
+echo "-------------------------------------------------"
 install_nvim_and_configure
+echo
 
 echo "Creating symlinks"
+echo "-------------------------------------------------"
 create_symlinks
+echo
 
 echo "Finishing the instalations and configurations"
+echo "-------------------------------------------------"
 last_executions
+echo
