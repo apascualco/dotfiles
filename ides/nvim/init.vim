@@ -32,39 +32,41 @@ set guicursor+=i:blinkon1
 " set foldexpr=nvim_treesitter#foldexpr()
 
 call plug#begin('~/.config/nvim/plugged')
+	" Theme
     Plug 'gruvbox-community/gruvbox'
     Plug 'vim-airline/vim-airline'
 
+	" Telescope
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
 
+	" Nerdtree
     Plug 'preservim/nerdtree'
-    "Plug 'ryanoasis/vim-devicons', {'commit': '58e57b6'}
     Plug 'ryanoasis/vim-devicons'
     Plug 'Xuyuanp/nerdtree-git-plugin'
 
+	" Git
     Plug 'airblade/vim-gitgutter'
-    Plug 'sheerun/vim-polyglot'
-    Plug 'tpope/vim-surround'
-
-    Plug 'mtdl9/vim-log-highlighting'
-
     Plug 'tpope/vim-fugitive'
 
-    Plug 'jiangmiao/auto-pairs'
-    Plug 'preservim/tagbar'
-    Plug 'takac/vim-hardtime'
-    
-    Plug 'voldikss/vim-floaterm'
-    Plug 'terryma/vim-multiple-cursors'
-    Plug 'preservim/nerdcommenter'
-
+    " IDE
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    Plug 'sebdah/vim-delve'
+	
+	" Utilities
+	Plug 'preservim/nerdcommenter'
+	Plug 'mtdl9/vim-log-highlighting'
+	Plug 'tpope/vim-surround'
+	Plug 'jiangmiao/auto-pairs'
+
+	Plug 'takac/vim-hardtime'
+    Plug 'voldikss/vim-floaterm'
+    Plug 'preservim/tagbar'
 call plug#end()
 
-:autocmd BufWritePost *.go !$HOME/.dotfiles/bin/golang_test.sh
+"autocmd BufWritePost *.go !$HOME/.dotfiles/bin/golang_test.sh
 
 " Coc
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -247,3 +249,6 @@ inoremap <C-j> <esc>:m .+1<CR>==
 inoremap <C-k> <esc>:m .-2<CR>==
 nnoremap <leader>j :m .+1<CR>==
 nnoremap <leader>k :m .-2<CR>==
+
+" Commands
+nmap <leader>gt <cmd>!$HOME/.dotfiles/bin/golang_test.sh<CR>
