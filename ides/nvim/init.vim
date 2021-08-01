@@ -25,6 +25,9 @@ set nobackup
 " spaces, tabs, dif symbols
 set list listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:.
 
+set guicursor=i:block
+set guicursor+=i:blinkon1
+"
 " set foldmethod=expr
 " set foldexpr=nvim_treesitter#foldexpr()
 
@@ -150,6 +153,14 @@ endif
 let g:gruvbox_invert_selection='0'
 colorscheme gruvbox
 set background=dark
+hi Search cterm=NONE ctermfg=NONE ctermbg=NONE
+hi SignColumn guibg=none
+hi CursorLineNR guibg=None
+highlight Normal guibg=none
+highlight LineNr guifg=#5eacd3
+highlight netrwDir guifg=#5eacd3
+highlight qfFileName guifg=#aed75f
+hi TelescopeBorder guifg=#5eacd
 " Theme config end
 
 let mapleader=","
@@ -222,3 +233,9 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 " Resize
 nnoremap <leader>+ :vertical resize +5<CR>
 nnoremap <leader>- :vertical resize -5<CR>
+
+" Remap
+nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
