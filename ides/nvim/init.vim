@@ -57,12 +57,14 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'terryma/vim-multiple-cursors'
     Plug 'preservim/nerdcommenter'
 
-	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
 :autocmd BufWritePost *.go !$HOME/.dotfiles/bin/golang_test.sh
+
+" Coc
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Treesitter
 lua <<EOF
@@ -138,24 +140,6 @@ let g:floaterm_width=0.9
 let g:gitgutter_map_keys = 0
 let g:gitgutter_enable = 1
 
-" Go syntax highlighting
-"let g:go_highlight_fields = 1
-"let g:go_highlight_functions = 1
-"let g:go_highlight_function_calls = 1
-"let g:go_highlight_extra_types = 1
-"let g:go_highlight_operators = 1
-"let g:go_fmt_autosave = 1
-"let g:go_fmt_command = "goimports"
-"let g:go_auto_type_info = 1
-"function! s:build_go_files()
-"  let l:file = expand('%')
-"  if l:file =~# '^\f\+_test\.go$'
-"    call go#test#Test(0, 1)
-"  elseif l:file =~# '^\f\+\.go$'
-"    call go#cmd#Build(0)
-"  endif
-"endfunction
-
 " Theme configuration gruvbox
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:gruvbox_contrast_dark = 'hard'
@@ -169,6 +153,11 @@ set background=dark
 " Theme config end
 
 let mapleader=","
+
+" Prefix a
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>ac  <Plug>(coc-codeaction)
 
 " Prefix B
 nnoremap <Leader>b :buffers<CR>:buffer<Space>
@@ -194,11 +183,18 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Prefix K
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
 
 " Prefix R
 nmap <leader>rn <Plug>(coc-rename)
@@ -212,6 +208,7 @@ nnoremap <leader>ff <cmd>Telescope find_files<CR>
 nnoremap <leader>fg <cmd>Telescope live_grep<CR>
 nnoremap <leader>fb <cmd>Telescope buffers<CR>
 nnoremap <leader>fh <cmd>Telescope help_tags<CR>
+
 nnoremap <leader>fn :FloatermNew<CR>
 let g:floaterm_keymap_new = '<Leader>fn'
 nnoremap <leader>ft :FloatermToggle<CR>
@@ -219,7 +216,9 @@ let g:floaterm_keymap_toggle = '<Leader>ft'
 nnoremap <leader>fp :FloatermPrev<CR>
 let g:floaterm_keymap_prev   = '<Leader>fp'
 
+" Prefix q
+nmap <leader>qf  <Plug>(coc-fix-current)
+
 " Resize
 nnoremap <leader>+ :vertical resize +5<CR>
 nnoremap <leader>- :vertical resize -5<CR>
-
