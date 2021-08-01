@@ -73,7 +73,11 @@ function last_executions() {
 
 	git config --global core.excludesfile ~/.gitignore_global
 
+	# Preparing go enviroment
 	mkdir -p ${HOME}/workdir/code/go
+	go install github.com/go-delve/delve/cmd/dlv@latest
+
+	# Update
 	softwareupdate -i -a
 }
 
