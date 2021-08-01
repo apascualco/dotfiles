@@ -1,6 +1,6 @@
 set nu relativenumber
 set guifont="Meslo LG S for Powerline"
-set spell
+"set spell
 set colorcolumn=120
 set tabstop=4 softtabstop=4
 set autoindent
@@ -62,8 +62,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
-:autocmd BufWritePost *.go !/Users/albertopascualcorpas/.dotifles/bin/golang_test.sh
-":autocmd BufWritePost * !/Users/albertopascualcorpas/.dotifles/bin/golang_test.sh %:p:h/*.go
+:autocmd BufWritePost *.go !$HOME/.dotfiles/bin/golang_test.sh
 
 " Treesitter
 lua <<EOF
