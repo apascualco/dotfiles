@@ -27,7 +27,7 @@ set list listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:.
 
 set guicursor=i:block
 set guicursor+=i:blinkon1
-"
+
 " set foldmethod=expr
 " set foldexpr=nvim_treesitter#foldexpr()
 
@@ -54,7 +54,10 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'sebdah/vim-delve'
-	
+    Plug 'fatih/vim-go'
+    Plug 'rust-lang/rust.vim'
+    Plug 'puremourning/vimspector'
+
 	" Utilities
 	Plug 'preservim/nerdcommenter'
 	Plug 'mtdl9/vim-log-highlighting'
@@ -70,6 +73,10 @@ call plug#end()
 
 " Coc
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Viminspector
+let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_install_gadgets = [ 'vscode-go', 'CodeLLDB' ]
 
 " Treesitter
 lua <<EOF
@@ -97,6 +104,8 @@ let NERDTreeShowHidden=1
     \ 'coc-json',
     \ 'coc-highlight',
     \ 'coc-go',
+    \ 'coc-tsserver',
+    \ 'coc-rls',
 \ ]
 
 " TagBar golang
@@ -164,6 +173,10 @@ highlight netrwDir guifg=#5eacd3
 highlight qfFileName guifg=#aed75f
 hi TelescopeBorder guifg=#5eacd
 " Theme config end
+
+" Python
+let g:python3_host_prog="$HOME/.dotfiles/ides/nvim/venvs/neovim3/bin/python"
+let g:python_host_prog="$HOME/.dotfiles/ides/nvim/venvs/neovim2/bin/python"
 
 let mapleader=","
 
@@ -252,3 +265,5 @@ nnoremap <leader>k :m .-2<CR>==
 
 " Commands
 nmap <leader>gt <cmd>!$HOME/.dotfiles/bin/golang_test.sh<CR>
+
+nnoremap <C-t> :NERDTreeToggle<CR>

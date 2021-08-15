@@ -6,5 +6,5 @@
     prune = true
 
 [core]
-    excludesfile = /Users/apascualco/.gitignore_global
+	excludesfile = /Users/apascualco/.gitignore_global
     editor = nvim

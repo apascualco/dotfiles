@@ -21,6 +21,11 @@ function install_apps_with_brew() {
 	brew install --cask intellij-idea
 }
 
+function install_python() {
+    sudo python3 -m pip install --upgrade pip
+    pip install virtualenv
+}
+
 function install_and_configura_zsh() {
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
@@ -42,7 +47,9 @@ function install_meslo_lg_font(){
 
 
 function install_nvim_and_configure(){
-	mkdir -p ${HOME}/.config/nvim
+	mkdir -p ${HOME}/.config/nvim/venvs
+    virtualenv -p ${HOME}/.config/nvim/venvs/neovim2 --python=python2
+    virtualenv -p ${HOME}/.config/nvim/venvs/neovim3 --python=python3
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 }
 
@@ -60,6 +67,9 @@ function create_symlinks() {
 
 function last_executions() {
 	nvim +PlugInstall +qall
+    npm install -g neovim
+    sudo gem install neovim
+
 	osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'${PWD}'/mac/wallpaper.jpg"'
 
 	#Mac configurations
@@ -84,6 +94,7 @@ function last_executions() {
 echo "⚡ Installing apps with brew!"
 echo "-------------------------------------------------"
 install_apps_with_brew
+install_python
 echo
 
 echo "⚡ Install meslo lg fonts"

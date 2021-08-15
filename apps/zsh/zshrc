@@ -59,3 +59,8 @@ alias ctags="`brew --prefix`/bin/ctags"
 
 # vim/nvim
 alias n='nvim .'
+
+# worksdir
+alias wdgo='cd ~/workdir/code/go'
+alias wdrust='cd ~/workdir/code/rust'
+alias wdinfra='cd ~/workdir/code/infra'

@@ -3,3 +3,7 @@
 
 # No versioning
 alberto/
+
+# Vim
+.vimspector.json
+__debug_bin
