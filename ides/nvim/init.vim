@@ -8,7 +8,7 @@ set smartindent
 set shiftwidth=4
 set expandtab
 set scrolloff=8
-set updatetime=300
+set updatetime=200
 
 " Ignore case
 set ic
@@ -73,6 +73,9 @@ call plug#end()
 
 " Coc
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+"TagBar
+autocmd FileType go,rust TagbarOpen
 
 " Viminspector
 let g:vimspector_enable_mappings = 'HUMAN'
@@ -145,7 +148,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:hardtime_default_on = 1
 let g:hardtime_showmsg = 1
 let g:hardtime_ignore_quickfix = 1
-let g:hardtime_ignore_buffer_patterns = [ "NERD.*" ]
+let g:hardtime_ignore_buffer_patterns = [ "NERD.*", "TagBar", "Viminspector" ]
 
 " Floaterm
 let g:floaterm_height=0.9
@@ -153,6 +156,12 @@ let g:floaterm_width=0.9
 
 let g:gitgutter_map_keys = 0
 let g:gitgutter_enable = 1
+
+" Textyank neovim
+augroup highlight_yank
+    autocmd!
+    au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=700}
+augroup END
 
 " Theme configuration gruvbox
 highlight ColorColumn ctermbg=0 guibg=lightgrey
