@@ -274,5 +274,9 @@ nnoremap <leader>k :m .-2<CR>==
 
 " Commands
 nmap <leader>gt <cmd>!$HOME/.dotfiles/bin/golang_test.sh<CR>
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
+autocmd FileType go nmap <leader>tf  <Plug>(go-test-func)
+autocmd FileType go nmap <leader>gm  <Plug>(go-metalinter)
+autocmd FileType go nmap <leader>im <Plug>(go-imports)
 
 nnoremap <C-t> :NERDTreeToggle<CR>
