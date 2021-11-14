@@ -14,11 +14,23 @@ function install_apps_with_brew() {
 	brew install node
 	brew install ctags
 	brew install kubectl
+    brew install jenv
 	brew install --cask docker
 	brew install --cask mysqlworkbench
 	brew install --cask spotify
 	brew install --cask lastpass
 	brew install --cask intellij-idea
+}
+
+function install_java() {
+    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-11-x64-macos-jdk.pkg
+    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-8-x64-macos-jdk.pkg
+    sudo installer -pkg amazon-corretto-11-x64-macos-jdk.pkg -target /
+    jenv add $(/usr/libexec/java_home)
+    sudo installer -pkg amazon-corretto-8-x64-macos-jdk.pkg -target /
+    jenv add /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home
+    rm amazon-corretto-11-x64-macos-jdk.pkg
+    rm amazon-corretto-8-x64-macos-jdk.pkg
 }
 
 function install_python() {
@@ -95,6 +107,7 @@ echo "⚡ Installing apps with brew!"
 echo "-------------------------------------------------"
 install_apps_with_brew
 install_python
+install_java
 echo
 
 echo "⚡ Install meslo lg fonts"

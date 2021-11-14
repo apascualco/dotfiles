@@ -67,6 +67,10 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'takac/vim-hardtime'
     Plug 'voldikss/vim-floaterm'
     Plug 'preservim/tagbar'
+     
+    " Code review
+    Plug 'junkblocker/patchreview-vim'
+    Plug 'codegram/vim-codereview'
 call plug#end()
 
 "autocmd BufWritePost *.go !$HOME/.dotfiles/bin/golang_test.sh
@@ -75,7 +79,7 @@ call plug#end()
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 "TagBar
-autocmd FileType go,rust TagbarOpen
+"autocmd FileType go,rust TagbarOpen
 
 " Viminspector
 let g:vimspector_enable_mappings = 'HUMAN'
