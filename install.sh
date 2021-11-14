@@ -15,6 +15,7 @@ function install_apps_with_brew() {
 	brew install ctags
 	brew install kubectl
     brew install jenv
+    brew install textmate
 	brew install --cask docker
 	brew install --cask mysqlworkbench
 	brew install --cask spotify
