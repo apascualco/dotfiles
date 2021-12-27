@@ -1,0 +1,35 @@
+set nu relativenumber
+
+" Disable no
+set visualbell
+set noerrorbells
+
+let mapleader=","
+
+nnoremap <leader>vv :e ~/.ideavimrc<CR>
+nnoremap <leader>vr :source ~/.ideavimrc<CR>
+nnoremap <leader>tt :action SelectInProjectView<CR>
+nnoremap <leader>fs :action HideAllWindows<CR>
+nnoremap <leader>om :action ActivateMavenToolWindow<CR>
+
+" Utilities
+nnoremap <leader>ci :action CommentByLineComment<CR>
+
+" Move code
+nmap <silent>gd :action GotoDeclaration<CR>
+nmap <silent>gi :action GotoImplementation<CR>
+nmap <silent>gr :action FindUsages<CR>
+nmap <silent>fc :action ReformatCode<CR>
+
+" Refactor
+vmap <leader>em :action ExtractMethod<CR>
+nmap <leader>rn :action RenameElement<CR>
+
+" Run
+nmap <leader>rr :action Run<CR>
+nmap <leader>rs :action Stop<CR>
+nmap <leader>rc :action RunClass<CR>
+nmap <leader>rd :action DebugClass<CR>
+
+" Debug
+nmap <leader>ab :action ToggleLineBreakpoint<CR>
