@@ -27,8 +27,10 @@ function install_java() {
     curl -LO https://corretto.aws/downloads/latest/amazon-corretto-11-x64-macos-jdk.pkg
     curl -LO https://corretto.aws/downloads/latest/amazon-corretto-8-x64-macos-jdk.pkg
     sudo installer -pkg amazon-corretto-11-x64-macos-jdk.pkg -target /
-    jenv add $(/usr/libexec/java_home)
     sudo installer -pkg amazon-corretto-8-x64-macos-jdk.pkg -target /
+    echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(jenv init -)"' >> ~/.zshrc
+    jenv add $(/usr/libexec/java_home)
     jenv add /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home
     rm amazon-corretto-11-x64-macos-jdk.pkg
     rm amazon-corretto-8-x64-macos-jdk.pkg
@@ -36,13 +38,13 @@ function install_java() {
 
 function install_python() {
     sudo python3 -m pip install --upgrade pip
+    pip3 install virtualenv
     pip install virtualenv
 }
 
 function install_and_configura_zsh() {
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-	#sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" || true
 	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k || true
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || true
 	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k || true
@@ -76,6 +78,7 @@ function create_symlinks() {
 	ln -sF ${PWD}/ides/nvim/init.vim ${HOME}/.config/nvim/init.vim
 	ln -sF ${PWD}/apps/git/gitignore_global ${HOME}/.gitignore_global
 	ln -sF ${PWD}/apps/git/gitconfig ${HOME}/.gitconfig
+	ln -sF ${PWD}/ides/intellij/ideavimrc ${HOME}/.ideavimrc
 }
 
 function last_executions() {
