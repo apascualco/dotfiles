@@ -220,8 +220,8 @@ hi TelescopeBorder guifg=#5eacd
 " Theme config end
 
 " Python
-let g:python3_host_prog="$HOME/.dotfiles/ides/nvim/venvs/neovim3/bin/python"
-let g:python_host_prog="$HOME/.dotfiles/ides/nvim/venvs/neovim2/bin/python"
+" .config/nvim/venvs/neovim3
+let g:python3_host_prog="$HOME/.config/nvim/venvs/neovim3/bin/python"
 
 let mapleader=","
 
