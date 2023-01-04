@@ -24,15 +24,19 @@ function install_apps_with_brew() {
 }
 
 function install_java() {
+    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-17-x64-macos-jdk.pkg
     curl -LO https://corretto.aws/downloads/latest/amazon-corretto-11-x64-macos-jdk.pkg
     curl -LO https://corretto.aws/downloads/latest/amazon-corretto-8-x64-macos-jdk.pkg
+    sudo installer -pkg amazon-corretto-17-x64-macos-jdk.pkg -target /
     sudo installer -pkg amazon-corretto-11-x64-macos-jdk.pkg -target /
     sudo installer -pkg amazon-corretto-8-x64-macos-jdk.pkg -target /
     echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.zshrc
     echo 'eval "$(jenv init -)"' >> ~/.zshrc
     jenv add $(/usr/libexec/java_home)
+    jenv add /Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
     jenv add /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home
     rm amazon-corretto-11-x64-macos-jdk.pkg
+    rm amazon-corretto-17-x64-macos-jdk.pkg
     rm amazon-corretto-8-x64-macos-jdk.pkg
 }
 
