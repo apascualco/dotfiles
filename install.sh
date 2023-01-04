@@ -65,9 +65,12 @@ function install_meslo_lg_font(){
 
 function install_nvim_and_configure(){
 	mkdir -p ${HOME}/.config/nvim/venvs
-    virtualenv -p ${HOME}/.config/nvim/venvs/neovim2 --python=python2
-    virtualenv -p ${HOME}/.config/nvim/venvs/neovim3 --python=python3
+    mkdir ${HOME}/.config/nvim/venvs/neovim3
+    ${HOME}/Library/Python/*/bin/virtualenv ${HOME}/.config/nvim/venvs/neovim3 --python=python3
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    ${home}/.config/nvim/venvs/neovim3/bin/python -m ensurepip --upgrade
+    ${home}/.config/nvim/venvs/neovim3/bin/pip3 install pynvim
+
 }
 
 function create_symlinks() {
@@ -109,6 +112,17 @@ function last_executions() {
 	softwareupdate -i -a
 }
 
+function install_maven() {
+    maven=maven-3
+    version=3.8.7
+    mkdir -p ~/workdir/tools/mvn-config
+    cp ${PWD}/ides/tools/mvn.xml ~/workdir/tools/mvn-config
+    wget -O ~/workdir/tools/maven.zip https://dlcdn.apache.org/maven/${maven}/${version}/source/apache-maven-${version}-src.zip
+    unzip ~/workdir/tools/maven.zip -d ~/workdir/tools/
+    mv ~/workdir/tools/apache-maven-${version} ~/workdir/tools/maven
+    rm ~/workdir/tools/maven.zip
+}
+
 echo "⚡ Installing apps with brew!"
 echo "-------------------------------------------------"
 install_apps_with_brew
@@ -139,4 +153,9 @@ echo
 echo "Finishing the instalations, configurations and update xcode"
 echo "-------------------------------------------------"
 last_executions
+echo
+
+echo "💻 Install Extra Tools"
+echo "-------------------------------------------------"
+install_maven
 echo
