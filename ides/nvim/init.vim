@@ -73,13 +73,8 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'codegram/vim-codereview'
 call plug#end()
 
-"autocmd BufWritePost *.go !$HOME/.dotfiles/bin/golang_test.sh
-
 " Coc
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
-"TagBar
-"autocmd FileType go,rust TagbarOpen
 
 " Viminspector
 let g:vimspector_enable_mappings = 'HUMAN'
@@ -145,6 +140,8 @@ let NERDTreeShowHidden=1
     \ 'coc-go',
     \ 'coc-tsserver',
     \ 'coc-rls',
+    \ 'coc-java',
+    \ 'coc-kotlin',
 \ ]
 
 " TagBar golang
