@@ -65,3 +65,8 @@ alias n='nvim .'
 alias wdgo='cd ~/workdir/code/go'
 alias wdrust='cd ~/workdir/code/rust'
 alias wdinfra='cd ~/workdir/code/infra'
+
+# Gradle
+alias gbc='./gradlew build --continuous --info'
+alias gbc.='../gradlew build --continuous --info'
+alias gbc..='../../gradlew build --continuous --info'
