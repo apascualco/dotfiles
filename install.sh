@@ -12,7 +12,7 @@ function install_apps_with_brew() {
 	brew install fzf
 	brew install --cask google-chrome
 	brew install node
-	brew install ctags
+    brew install universal-ctags
 	brew install kubectl
     brew install jenv
     brew install textmate
@@ -21,6 +21,9 @@ function install_apps_with_brew() {
 	brew install --cask spotify
 	brew install --cask lastpass
 	brew install --cask intellij-idea
+    brew install jq
+    brew install yq
+    brew install ripgrep
 }
 
 function install_java() {
