@@ -35,6 +35,8 @@ call plug#begin('~/.config/nvim/plugged')
 	" Theme
     Plug 'gruvbox-community/gruvbox'
     Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'gcmt/taboo.vim'
 
 	" Telescope
     Plug 'nvim-lua/popup.nvim'
@@ -75,6 +77,8 @@ call plug#end()
 
 " Coc
 autocmd CursorHold * silent call CocActionAsync('highlight')
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Viminspector
 let g:vimspector_enable_mappings = 'HUMAN'
@@ -142,6 +146,7 @@ let NERDTreeShowHidden=1
     \ 'coc-rls',
     \ 'coc-java',
     \ 'coc-kotlin',
+    \ 'coc-groovy'
 \ ]
 
 " TagBar golang
@@ -173,9 +178,19 @@ let g:tagbar_type_go = {
 	\ 'ctagsargs' : '-sort -silent'
 \ }
 
+let g:airline_theme='gruvbox'                                                                                                             
+let g:airline#extensions#tabline#show_close_button = 0
+
 " Aireline
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+let mapleader=","
+
+let g:airline#extensions#tabline#buffer_idx_mode = 1
 
 " HardTime
 let g:hardtime_default_on = 1
@@ -269,6 +284,7 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " Prefix T
 nnoremap <leader>tt :NERDTreeFind<Esc>
+nnoremap <C-t> :NERDTreeToggle<CR>
 nmap <silent><leader>tb :TagbarToggle<CR>
 
 " Prefix F
@@ -306,10 +322,8 @@ nnoremap <leader>j :m .+1<CR>==
 nnoremap <leader>k :m .-2<CR>==
 
 " Commands
-nmap <leader>gt <cmd>!$HOME/.dotfiles/bin/golang_test.sh<CR>
+" nmap <leader>gt <cmd>!$HOME/.dotfiles/bin/golang_test.sh<CR>
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
 autocmd FileType go nmap <leader>tf  <Plug>(go-test-func)
 autocmd FileType go nmap <leader>gm  <Plug>(go-metalinter)
 autocmd FileType go nmap <leader>im <Plug>(go-imports)
-
-nnoremap <C-t> :NERDTreeToggle<CR>
