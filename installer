@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -euo pipefail
+
+echo "👉 Installer from github!"
+echo "-------------------------------------------------"
+echo
+
+echo "🚀 Installing brew (password required)!"
+echo "-------------------------------------------------"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+echo "-------------------------------------------------"
+echo
+
+echo "🚀 Cloning dotfiles"
+echo "-------------------------------------------------"
+git clone --depth 1 https://github.com/apascualco/dotfiles.git "$HOME/.dotfiles"
+echo
+
+echo "🚀 Launch install.sh"
+echo "-------------------------------------------------"
+cd $HOME/.dotfiles
+./install.sh
+echo

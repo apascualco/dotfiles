@@ -1,0 +1,35 @@
+# Mac
+.DS_Store
+
+# No versioning
+alberto/
+
+# IDEA
+.idea/
+.idea
+*.iml
+
+# Vim
+.vimspector.json
+__debug_bin
+
+vendor/
+tmp/
+swagger.yaml
+
+# Java JDT
+.project
+.settings/
+.classpath
+.factorypath
+.project
+target/
+
+# Node
+node_modules/
+node_module
+.build/
+.build
+
+# Eclipse / neovim
+bin/
