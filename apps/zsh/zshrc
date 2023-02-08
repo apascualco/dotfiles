@@ -3,8 +3,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # Optional private configuration
-source .local_zshrc
-source .local_zshrc_alternative
+source ~/.local_zshrc
+source ~/.local_zshrc_alternative
 
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
@@ -70,3 +70,5 @@ alias wdinfra='cd ~/workdir/code/infra'
 alias gbc='./gradlew build --continuous --info'
 alias gbc.='../gradlew build --continuous --info'
 alias gbc..='../../gradlew build --continuous --info'
+
+source /Users/apascualco/.docker/init-zsh.sh || true # Added by Docker Desktop
