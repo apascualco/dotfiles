@@ -12,41 +12,32 @@ function install_apps_with_brew() {
 	brew install fzf
 	brew install --cask google-chrome
 	brew install node
-    brew install universal-ctags
+	brew install universal-ctags
 	brew install kubectl
-    brew install jenv
-    brew install textmate
+	brew install textmate
 	brew install --cask docker
 	brew install --cask mysqlworkbench
 	brew install --cask spotify
 	brew install --cask lastpass
 	brew install --cask intellij-idea
-    brew install jq
-    brew install yq
-    brew install ripgrep
+	brew install jq
+	brew install yq
+	brew install ripgrep
 }
 
 function install_java() {
-    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-17-x64-macos-jdk.pkg
-    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-11-x64-macos-jdk.pkg
-    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-8-x64-macos-jdk.pkg
-    sudo installer -pkg amazon-corretto-17-x64-macos-jdk.pkg -target /
-    sudo installer -pkg amazon-corretto-11-x64-macos-jdk.pkg -target /
-    sudo installer -pkg amazon-corretto-8-x64-macos-jdk.pkg -target /
-    echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.zshrc
-    echo 'eval "$(jenv init -)"' >> ~/.zshrc
-    jenv add $(/usr/libexec/java_home)
-    jenv add /Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
-    jenv add /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home
-    rm amazon-corretto-11-x64-macos-jdk.pkg
-    rm amazon-corretto-17-x64-macos-jdk.pkg
-    rm amazon-corretto-8-x64-macos-jdk.pkg
+	curl -s "https://get.sdkman.io" | bash
+	echo 'source "/Users/apascualco/.sdkman/bin/sdkman-init.sh"' >> ~/.zshrc
+}
+
+function install_gvm_go() {
+	bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
 }
 
 function install_python() {
-    sudo python3 -m pip install --upgrade pip
-    pip3 install virtualenv
-    pip install virtualenv
+	sudo python3 -m pip install --upgrade pip
+	pip3 install virtualenv
+	pip install virtualenv
 }
 
 function install_and_configura_zsh() {
@@ -56,8 +47,8 @@ function install_and_configura_zsh() {
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || true
 	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k || true
 	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    touch ~/.local_zshrc
-    touch ~/.local_zshrc_alternative
+	touch ~/.local_zshrc
+	touch ~/.local_zshrc_alternative
 }
 
 function install_meslo_lg_font(){
@@ -72,11 +63,11 @@ function install_meslo_lg_font(){
 
 function install_nvim_and_configure(){
 	mkdir -p ${HOME}/.config/nvim/venvs
-    mkdir ${HOME}/.config/nvim/venvs/neovim3
-    ${HOME}/Library/Python/*/bin/virtualenv ${HOME}/.config/nvim/venvs/neovim3 --python=python3
+	mkdir ${HOME}/.config/nvim/venvs/neovim3
+	${HOME}/Library/Python/*/bin/virtualenv ${HOME}/.config/nvim/venvs/neovim3 --python=python3
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    ${home}/.config/nvim/venvs/neovim3/bin/python -m ensurepip --upgrade
-    ${home}/.config/nvim/venvs/neovim3/bin/pip3 install pynvim
+	${home}/.config/nvim/venvs/neovim3/bin/python -m ensurepip --upgrade
+	${home}/.config/nvim/venvs/neovim3/bin/pip3 install pynvim
 
 }
 
@@ -87,7 +78,8 @@ function create_symlinks() {
 	ln -sf ${PWD}/apps/zsh/zshrc ${HOME}/.zshrc
 	ln -sf ${PWD}/apps/zsh/p10k.zsh ${HOME}/.p10k.zsh
 
-	ln -sF ${PWD}/ides/nvim/init.vim ${HOME}/.config/nvim/init.vim
+	ln -sF ${PWD}/ides/nvim/init.lua ${HOME}/.config/nvim/init.lua
+	ln -sF ${PWD}/ides/nvim/lua ${HOME}/.config/nvim/lua
 	ln -sF ${PWD}/apps/git/gitignore_global ${HOME}/.gitignore_global
 	ln -sF ${PWD}/apps/git/gitconfig ${HOME}/.gitconfig
 	ln -sF ${PWD}/ides/intellij/ideavimrc ${HOME}/.ideavimrc
@@ -95,8 +87,8 @@ function create_symlinks() {
 
 function last_executions() {
 	nvim +PlugInstall +qall
-    npm install -g neovim
-    sudo gem install neovim
+	npm install -g neovim
+	sudo gem install neovim
 
 	osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'${PWD}'/mac/wallpaper.jpg"'
 
@@ -120,21 +112,26 @@ function last_executions() {
 }
 
 function install_maven() {
-    maven=maven-3
-    version=3.8.7
-    mkdir -p ~/workdir/tools/mvn-config
-    cp ${PWD}/ides/tools/mvn.xml ~/workdir/tools/mvn-config
-    wget -O ~/workdir/tools/maven.zip https://dlcdn.apache.org/maven/${maven}/${version}/source/apache-maven-${version}-src.zip
-    unzip ~/workdir/tools/maven.zip -d ~/workdir/tools/
-    mv ~/workdir/tools/apache-maven-${version} ~/workdir/tools/maven
-    rm ~/workdir/tools/maven.zip
+	maven=maven-3
+	version=3.8.7
+	mkdir -p ~/workdir/tools/mvn-config
+	cp ${PWD}/ides/tools/mvn.xml ~/workdir/tools/mvn-config
+	wget -O ~/workdir/tools/maven.zip https://dlcdn.apache.org/maven/${maven}/${version}/source/apache-maven-${version}-src.zip
+	unzip ~/workdir/tools/maven.zip -d ~/workdir/tools/
+	mv ~/workdir/tools/apache-maven-${version} ~/workdir/tools/maven
+	rm ~/workdir/tools/maven.zip
 }
 
 echo "⚡ Installing apps with brew!"
 echo "-------------------------------------------------"
 install_apps_with_brew
+echo
+
+echo "⚡ Installing apps manually!"
+echo "-------------------------------------------------"
 install_python
 install_java
+install_gvm_go
 echo
 
 echo "⚡ Install meslo lg fonts"
