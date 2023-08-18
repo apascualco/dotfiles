@@ -7,3 +7,6 @@ g.mapleader = ','
 set("n", "tt", ":NvimTreeFindFile<CR>")
 set("n", "<C-t>", ":NvimTreeToggle<CR>")
 
+
+set("n", "ghs", "<Plug>(GitGutterStageHunk)")
+set("n", "ghu", "<Plug>(GitGutterUndoHunk)")
