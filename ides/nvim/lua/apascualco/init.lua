@@ -2,13 +2,6 @@ local wo = vim.wo
 local opt = vim.opt
 local g = vim.g
 
-g.coc_global_config = "$HOME/.config/coc/coc-settings.json"
-g.gitgutter_map_keys = 0
-g.gitgutter_enable = 1
-g.gitgutter_highlight_linenrs = 1
-g.gitgutter_set_sign_backgrounds = 1
-g.gitgutter_highlight_lines = 1
-g.gitgutter_highlight_linenrs = 0
 
 wo.relativenumber = true
 wo.number = true
@@ -25,7 +18,6 @@ opt.listchars = {
 	extends = '▶',
 	tab = '>>'
 }
--- set list listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:.
 
 opt.guicursor = 'i:block,i:blinkon1'
 
@@ -35,13 +27,27 @@ opt.wrap = false
 opt.backup = false
 
 require("apascualco.packer")
+
 require("apascualco.nvim-tree")
-require("apascualco.coc")
+-- require("apascualco.coc")
 require("apascualco.catppuccin")
 require("apascualco.airline")
 require("apascualco.treesitter")
--- require("apascualco.plug")
+require("apascualco.telescope")
+
+require("apascualco.custom-config-lsp")
 require("apascualco.set")
+
+g.mapleader = ","
+
+g.gitgutter_map_keys = 0
+g.gitgutter_enable = 1
+g.gitgutter_highlight_linenrs = 1
+g.gitgutter_set_sign_backgrounds = 1
+g.gitgutter_highlight_lines = 1
+g.gitgutter_highlight_linenrs = 0
+
+g.loaded_perl_provider = 0
 
 local api = vim.api
 local augroup = api.nvim_create_augroup
