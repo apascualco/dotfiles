@@ -12,7 +12,8 @@ g.coc_global_extensions = {
      "coc-java",
      "coc-kotlin",
      "coc-groovy",
-     "coc-lua"
+     "coc-lua",
+     "coc-snippets"
  }
 
 
@@ -80,12 +81,12 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
 
 -- Symbol renaming
-keyset("n", "rn", "<Plug>(coc-rename)", {silent = true})
+keyset("n", "<Leader>rn", "<Plug>(coc-rename)", {silent = true})
 
 
 -- Formatting selected code
-keyset("x", "f", "<Plug>(coc-format-selected)", {silent = true})
-keyset("n", "f", "<Plug>(coc-format-selected)", {silent = true})
+keyset("x", "<Leader>f", "<Plug>(coc-format-selected)", {silent = true})
+keyset("n", "<Leader>f", "<Plug>(coc-format-selected)", {silent = true})
 
 
 -- Setup formatexpr specified filetype(s)
@@ -107,25 +108,25 @@ vim.api.nvim_create_autocmd("User", {
 -- Apply codeAction to the selected region
 -- Example: `<leader>aap` for current paragraph
 local opts = {silent = true, nowait = true}
-keyset("x", "ader>a", "<Plug>(coc-codeaction-selected)", opts)
-keyset("n", "ader>a", "<Plug>(coc-codeaction-selected)", opts)
+keyset("x", "<Leader>a", "<Plug>(coc-codeaction-selected)", opts)
+keyset("n", "<Leader>a", "<Plug>(coc-codeaction-selected)", opts)
 
 -- Remap keys for apply code actions at the cursor position.
-keyset("n", "ac", "<Plug>(coc-codeaction-cursor)", opts)
+keyset("n", "<Leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
 -- Remap keys for apply code actions affect whole buffer.
-keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
+keyset("n", "<Leader>as", "<Plug>(coc-codeaction-source)", opts)
 -- Remap keys for applying codeActions to the current buffer
-keyset("n", "ac", "<Plug>(coc-codeaction)", opts)
+keyset("n", "<Leader>ac", "<Plug>(coc-codeaction)", opts)
 -- Apply the most preferred quickfix action on the current line.
-keyset("n", "qf", "<Plug>(coc-fix-current)", opts)
+keyset("n", "<Leader>qf", "<Plug>(coc-fix-current)", opts)
 
 -- Remap keys for apply refactor code actions.
-keyset("n", "re", "<Plug>(coc-codeaction-refactor)", { silent = true })
-keyset("x", "r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
-keyset("n", "r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+keyset("n", "<Leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
+keyset("x", "<Leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
+keyset("n", "<Leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
 
 -- Run the Code Lens actions on the current line
-keyset("n", "cl", "<Plug>(coc-codelens-action)", opts)
+keyset("n", "<Leader>cl", "<Plug>(coc-codelens-action)", opts)
 
 
 -- Map function and class text objects
