@@ -26,6 +26,12 @@ opt.fixendofline = false
 opt.wrap = false
 opt.backup = false
 
+-- TABS/SPACES
+opt.expandtab = true
+opt.autoindent = true
+opt.tabstop = 2 
+opt.shiftwidth = 2
+
 require("apascualco.packer")
 
 require("apascualco.nvim-tree")

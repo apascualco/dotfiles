@@ -42,7 +42,10 @@ require'nvim-treesitter.configs'.setup {
     "sql",
     "vim",
     "yaml",
-    "terraform"
+    "terraform",
+    "javascript",
+    "typescript",
+    "tsx"
   }
 }
 
