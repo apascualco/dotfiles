@@ -35,9 +35,8 @@ opt.shiftwidth = 2
 require("apascualco.packer")
 
 require("apascualco.nvim-tree")
--- require("apascualco.coc")
 require("apascualco.catppuccin")
-require("apascualco.airline")
+--require("apascualco.airline")
 require("apascualco.treesitter")
 require("apascualco.telescope")
 
