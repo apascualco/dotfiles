@@ -6,8 +6,8 @@ return require('packer').startup(function(use)
 	use { 'nvim-tree/nvim-tree.lua' }
 	-- use { 'neoclide/coc.nvim', branch = 'release' }
 	use { 'catppuccin/nvim', as = "catppuccin" }
-	use { 'vim-airline/vim-airline' }
-	use { 'vim-airline/vim-airline-themes' }
+--	use { 'vim-airline/vim-airline' }
+--	use { 'vim-airline/vim-airline-themes' }
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate'
@@ -21,10 +21,24 @@ return require('packer').startup(function(use)
 	use { 'neovim/nvim-lspconfig'}
 	use { 'jose-elias-alvarez/null-ls.nvim' }
 	use { 'hrsh7th/nvim-cmp' }
-	use { 'hrsh7th/cmp-nvim-lsp' }
-  	use { 'saadparwaiz1/cmp_luasnip' }
-  	use { 'L3MON4D3/LuaSnip' }
+  use { 'hrsh7th/cmp-nvim-lsp' }
+	use { 'hrsh7th/cmp-buffer' }
+	use { 'hrsh7th/cmp-path' }
+  use { 'saadparwaiz1/cmp_luasnip' }
+  use { 'L3MON4D3/LuaSnip' }
+  use { 'rafamadriz/friendly-snippets' }
+  --use { 'udalov/kotlin-vim' }
+  use { 'onsails/lspkind.nvim' }
 
 	use { 'airblade/vim-gitgutter' }
 	use { 'mtdl9/vim-log-highlighting' }
+
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = {
+      'arkav/lualine-lsp-progress',
+    },
+  }
+
+  use { 'arkav/lualine-lsp-progress' }
 end)
