@@ -4,18 +4,21 @@ return require('packer').startup(function(use)
 	use { "wbthomason/packer.nvim" }
 	use { 'nvim-tree/nvim-web-devicons' }
 	use { 'nvim-tree/nvim-tree.lua' }
-	-- use { 'neoclide/coc.nvim', branch = 'release' }
 	use { 'catppuccin/nvim', as = "catppuccin" }
---	use { 'vim-airline/vim-airline' }
---	use { 'vim-airline/vim-airline-themes' }
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate'
 	}
-	use {
-		'nvim-telescope/telescope.nvim', tag = '0.1.2',
-		requires = { { 'nvim-lua/plenary.nvim' } }
-	}
+  use {
+    "lazytanuki/nvim-mapper",
+    config = function() require("nvim-mapper").setup{} end,
+    before = "telescope.nvim"
+  }
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = {{'nvim-lua/plenary.nvim'}},
+    config = function() require("telescope").load_extension("mapper") end
+  }
 	use { 'preservim/tagbar' }
 
 	use { 'neovim/nvim-lspconfig'}
@@ -27,7 +30,7 @@ return require('packer').startup(function(use)
   use { 'saadparwaiz1/cmp_luasnip' }
   use { 'L3MON4D3/LuaSnip' }
   use { 'rafamadriz/friendly-snippets' }
-  --use { 'udalov/kotlin-vim' }
+
   use { 'onsails/lspkind.nvim' }
 
 	use { 'airblade/vim-gitgutter' }
@@ -41,4 +44,7 @@ return require('packer').startup(function(use)
   }
 
   use { 'arkav/lualine-lsp-progress' }
+  use { 'mfussenegger/nvim-dap' }
+  use { 'theHamsta/nvim-dap-virtual-text' }
+  use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
 end)

@@ -36,12 +36,12 @@ require("apascualco.packer")
 
 require("apascualco.nvim-tree")
 require("apascualco.catppuccin")
---require("apascualco.airline")
 require("apascualco.treesitter")
 require("apascualco.telescope")
 
 require("apascualco.custom-config-lsp")
 require("apascualco.set")
+require("apascualco.dap")
 
 g.mapleader = ","
 
