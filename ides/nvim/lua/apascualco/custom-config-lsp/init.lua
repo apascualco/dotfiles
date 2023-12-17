@@ -1,5 +1,5 @@
 require("apascualco.custom-config-lsp.autocompletion")
---require("apascualco.custom-config-lsp.lspconfig-lua")
+require("apascualco.custom-config-lsp.lspconfig-lua")
 require("apascualco.custom-config-lsp.lspconfig-go")
 require("apascualco.custom-config-lsp.null-ls-config")
 require("apascualco.custom-config-lsp.golangci-lint-config")

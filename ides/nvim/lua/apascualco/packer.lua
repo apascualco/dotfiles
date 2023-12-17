@@ -17,7 +17,10 @@ return require('packer').startup(function(use)
   use {
     'nvim-telescope/telescope.nvim',
     requires = {{'nvim-lua/plenary.nvim'}},
-    config = function() require("telescope").load_extension("mapper") end
+    config = function() 
+      require("telescope").load_extension("mapper") 
+      require("telescope").load_extension("luasnip") 
+    end
   }
 	use { 'preservim/tagbar' }
 
@@ -47,4 +50,9 @@ return require('packer').startup(function(use)
   use { 'mfussenegger/nvim-dap' }
   use { 'theHamsta/nvim-dap-virtual-text' }
   use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+  use { 'jpmcb/nvim-llama' }
+  use { "benfowler/telescope-luasnip.nvim" }
+  use {'akinsho/bufferline.nvim', tag = "*", requires = 'nvim-tree/nvim-web-devicons'}
+  use { 'dstein64/vim-startuptime' }
+
 end)
