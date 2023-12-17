@@ -7,7 +7,6 @@ lspconfig.gopls.setup({
 	filetypes = { "go", "gomod", "gowork", "gotmpl" },
 	root_dir = util.root_pattern("go.work", "go.mod", ".git"),
 	capabilities = capabilities,
-	on_attach = on_attach,
 	settings = {
 		gopls = {
 			expandWorkspaceToModule = true,

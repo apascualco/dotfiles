@@ -2,7 +2,6 @@ local wo = vim.wo
 local opt = vim.opt
 local g = vim.g
 
-
 wo.relativenumber = true
 wo.number = true
 
@@ -38,25 +37,6 @@ opt.foldmethod = "syntax"
 
 opt.termguicolors = true
 
-require("apascualco.packer")
-
-require("apascualco.nvim-tree")
-require("apascualco.catppuccin")
-require("apascualco.treesitter")
-require("apascualco.telescope")
-
-require("apascualco.custom-config-lsp")
-require("apascualco.set")
-require("apascualco.dap")
-
-require("nvim-llama").setup {
-  defaults = {
-    debug = false,
-    model = llama2,
-  }
-}
-require("bufferline").setup{}
-require("vim-startuptime").setup {}
 g.mapleader = ","
 
 g.gitgutter_map_keys = 0
@@ -83,3 +63,39 @@ autocmd('TextYankPost', {
 		})
 	end,
 })
+
+-- Pluggin manager
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("apascualco.lazy")
+
+require("apascualco.catppuccin")
+require("apascualco.nvim-tree")
+require("apascualco.treesitter")
+
+require("apascualco.telescope")
+require("apascualco.lualine")
+
+require("apascualco.set")
+
+require("apascualco.lsp")
+require("apascualco.dap")
+
+require("nvim-llama").setup {
+  defaults = {
+    debug = false,
+    model = "llama2",
+  }
+}
+require("bufferline").setup{}

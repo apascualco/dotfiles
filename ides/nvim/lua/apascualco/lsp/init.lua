@@ -1,11 +1,10 @@
-require("apascualco.custom-config-lsp.autocompletion")
-require("apascualco.custom-config-lsp.lspconfig-lua")
-require("apascualco.custom-config-lsp.lspconfig-go")
-require("apascualco.custom-config-lsp.null-ls-config")
-require("apascualco.custom-config-lsp.golangci-lint-config")
-require("apascualco.custom-config-lsp.lspconfig-terraform")
-require("apascualco.custom-config-lsp.lspconfig-tsserver")
-require("apascualco.custom-config-lsp.lspconfig-kotlin")
+require("apascualco.lsp.autocompletion")
+require("apascualco.lsp.lua")
+require("apascualco.lsp.go")
+require("apascualco.lsp.golangci-lint-config")
+require("apascualco.lsp.terraform")
+require("apascualco.lsp.tsserver")
+require("apascualco.lsp.kotlin")
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -47,4 +46,22 @@ vim.api.nvim_create_autocmd('LspAttach', {
       vim.lsp.buf.format { async = true }
     end, opts)
   end,
+})
+
+vim.o.updatetime = 250
+vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+  group = vim.api.nvim_create_augroup("float_diagnostic", { clear = true }),
+  callback = function ()
+    vim.diagnostic.open_float(nil, {focus=false})
+  end
+})
+
+require("mason").setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
+    }
 })
