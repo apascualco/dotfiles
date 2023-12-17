@@ -15,11 +15,3 @@ require("nvim-tree").setup({
     show_on_dirs = false,
   },
 })
-
-require("lualine").setup({
-  sections = {
-    lualine_a = { "mode" },
-    lualine_b = { "filename" },
-    lualine_c = { "lsp_progress" },
-  }
-})
