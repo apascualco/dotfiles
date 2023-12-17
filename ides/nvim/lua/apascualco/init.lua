@@ -31,6 +31,12 @@ opt.expandtab = true
 opt.autoindent = true
 opt.tabstop = 2 
 opt.shiftwidth = 2
+opt.splitbelow = true
+opt.splitright = true
+
+opt.foldmethod = "syntax"
+
+opt.termguicolors = true
 
 require("apascualco.packer")
 
@@ -43,6 +49,14 @@ require("apascualco.custom-config-lsp")
 require("apascualco.set")
 require("apascualco.dap")
 
+require("nvim-llama").setup {
+  defaults = {
+    debug = false,
+    model = llama2,
+  }
+}
+require("bufferline").setup{}
+require("vim-startuptime").setup {}
 g.mapleader = ","
 
 g.gitgutter_map_keys = 0

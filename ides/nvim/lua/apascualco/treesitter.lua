@@ -49,3 +49,7 @@ require'nvim-treesitter.configs'.setup {
   }
 }
 
+local opt = vim.opt
+
+opt.foldmethod = "expr"
+opt.foldexpr = "(getline(v:lnum)=~'^import')"
