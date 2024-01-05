@@ -12,9 +12,9 @@ require("telescope").setup({
 })
 
 local builtin = require('telescope.builtin')
-local keyset = vim.keymap.set
-keyset('n', 'tf', builtin.find_files, {})
-keyset('n', 'tg', builtin.live_grep, {})
-keyset('n', 'tb', builtin.buffers, {})
-keyset('n', 'th', builtin.help_tags, {})
-keyset('n', 'tk', builtin.keymaps, {})
+local set = vim.keymap.set
+set('n', 'tf', builtin.find_files, { desc = "Search find files"})
+set('n', 'tg', builtin.live_grep, { desc = "Search with grep"})
+set('n', 'tb', builtin.buffers, { desc = "Search in buffers"})
+set('n', 'th', builtin.help_tags, { desc = "Search help tags"})
+set('n', 'tk', builtin.keymaps, { desc = "Search keymaps"})

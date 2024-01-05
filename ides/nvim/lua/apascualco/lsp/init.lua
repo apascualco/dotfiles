@@ -24,27 +24,28 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wl', function()
+    local set = vim.keymap.set
+    set('n', 'gD', vim.lsp.buf.declaration, { desc = "Go declaration", buffer = ev.buf })
+    set('n', 'gd', vim.lsp.buf.definition, { desc = "Go definition",  buffer = ev.buf })
+    set('n', 'K', vim.lsp.buf.hover, { desc = "Display information about the symbol under the cursor", buffer = ev.buf })
+    set('n', 'gi', vim.lsp.buf.implementation, { desc = "Go implementation", buffer = ev.buf })
+    -- leader instead of space
+    set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = "Add workspace folder",  buffer = ev.buf })
+    set('n', '<leaser>wr', vim.lsp.buf.remove_workspace_folder, { desc = "Remove workspace folder" ,buffer = ev.buf })
+    set('n', '<leader>wl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, opts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-    vim.keymap.set('n', '<space>f', function()
+    end, { desc = "List workspace folders", buffer = ev.buf })
+    set('n', '<leader>D', vim.lsp.buf.type_definition, { desc = "Type definition", buffer = ev.buf })
+    set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "Rename", buffer = ev.buf })
+    set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, { desc = "Code action", buffer = ev.buf })
+    set('n', 'gr', vim.lsp.buf.references, { desc = "Show references", buffer = ev.buf })
+    set('n', 'gs', vim.lsp.buf.signature_help, { desc = "Signature help", buffer = ev.buf })
+    set('n', 'gl', vim.diagnostic.open_float, { desc = "Diagnostic open float", buffer = ev.buf })
+    set('n', '[d', vim.diagnostic.goto_prev, { desc = "Diagnostic go to prev" ,buffer = ev.buf })
+    set('n', ']d', vim.diagnostic.goto_next, { desc = "Diagnostic go to next", buffer = ev.buf })
+    set('n', '<leader>f', function()
       vim.lsp.buf.format { async = true }
-    end, opts)
+    end, { desc = "Format", buffer = ev.buf })
   end,
 })
 
