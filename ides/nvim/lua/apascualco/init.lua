@@ -92,6 +92,9 @@ require("apascualco.set")
 require("apascualco.lsp")
 require("apascualco.dap")
 
+require("apascualco.octo")
+require("apascualco.comment")
+
 require("nvim-llama").setup {
   defaults = {
     debug = false,
