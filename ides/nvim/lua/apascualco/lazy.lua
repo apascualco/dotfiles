@@ -123,8 +123,13 @@ require("lazy").setup({
       'nvim-tree/nvim-web-devicons',
     },
     config = function ()
-      require"octo".setup()
+      require('octo').setup()
     end
+  },
+  {
+    'numToStr/Comment.nvim',
+    opts = {},
+    lazy = false,
   }
 })
 
