@@ -1,9 +1,11 @@
 require("nvim-treesitter.configs").setup({
+  modules = {},
+  sync_install = false,
+  auto_install = true,
+  ignore_install = {},
   highlight = {
     enable = true,
-    custom_captures = {
-      -- ["foo.bar"] = "Identifier",
-    },
+    custom_captures = {},
     additional_vim_regex_highlighting = false,
   },
   ensure_installed = {
@@ -40,7 +42,8 @@ require("nvim-treesitter.configs").setup({
     "terraform",
     "javascript",
     "typescript",
-    "tsx"
+    "tsx",
+    "rust"
   }
 })
 

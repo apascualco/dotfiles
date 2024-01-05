@@ -87,5 +87,12 @@ require("lazy").setup({
   -- Tabs extra information
   {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
 
-  { 'dstein64/vim-startuptime' }
+  { 'dstein64/vim-startuptime' },
+
+  {
+    "willothy/flatten.nvim",
+    config = true,
+    lazy = false,
+    priority = 1001,
+  },
 })
