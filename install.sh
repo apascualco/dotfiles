@@ -16,10 +16,7 @@ function install_apps_with_brew() {
 	brew install kubectl
 	brew install textmate
 	brew install --cask docker
-	brew install --cask mysqlworkbench
 	brew install --cask spotify
-	brew install --cask lastpass
-	brew install --cask intellij-idea
 	brew install jq
 	brew install yq
 	brew install ripgrep
@@ -51,7 +48,7 @@ function install_and_configura_zsh() {
 	touch ~/.local_zshrc_alternative
 }
 
-function install_meslo_lg_font(){
+function nstall_meslo_lg_font(){
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P tmp/
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P tmp/
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P tmp/
@@ -86,7 +83,6 @@ function create_symlinks() {
 }
 
 function last_executions() {
-	nvim +PlugInstall +qall
 	npm install -g neovim
 	sudo gem install neovim
 
@@ -102,24 +98,6 @@ function last_executions() {
 	killall Dock
 
 	git config --global core.excludesfile ~/.gitignore_global
-
-	# Preparing go enviroment
-	mkdir -p ${HOME}/workdir/code/go
-	go install github.com/go-delve/delve/cmd/dlv@latest
-
-	# Update
-	softwareupdate -i -a
-}
-
-function install_maven() {
-	maven=maven-3
-	version=3.8.7
-	mkdir -p ~/workdir/tools/mvn-config
-	cp ${PWD}/ides/tools/mvn.xml ~/workdir/tools/mvn-config
-	wget -O ~/workdir/tools/maven.zip https://dlcdn.apache.org/maven/${maven}/${version}/source/apache-maven-${version}-src.zip
-	unzip ~/workdir/tools/maven.zip -d ~/workdir/tools/
-	mv ~/workdir/tools/apache-maven-${version} ~/workdir/tools/maven
-	rm ~/workdir/tools/maven.zip
 }
 
 echo "⚡ Installing apps with brew!"
@@ -157,9 +135,4 @@ echo
 echo "Finishing the instalations, configurations and update xcode"
 echo "-------------------------------------------------"
 last_executions
-echo
-
-echo "💻 Install Extra Tools"
-echo "-------------------------------------------------"
-install_maven
 echo

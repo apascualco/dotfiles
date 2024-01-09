@@ -130,7 +130,8 @@ require("lazy").setup({
     'numToStr/Comment.nvim',
     opts = {},
     lazy = false,
-  }
+  },
+  { 'simrat39/rust-tools.nvim' }
 })
 
 --require('k8s').setup({})

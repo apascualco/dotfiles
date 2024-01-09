@@ -95,6 +95,7 @@ require("apascualco.dap")
 require("apascualco.octo")
 require("apascualco.comment")
 
+require("apascualco.rust-tools")
 require("nvim-llama").setup {
   defaults = {
     debug = false,

@@ -1,3 +1,4 @@
+source "$HOME/.cargo/env"
 source "/Users/apascualco/.sdkman/bin/sdkman-init.sh"
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
