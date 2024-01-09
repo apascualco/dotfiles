@@ -5,6 +5,7 @@ require("apascualco.lsp.golangci-lint-config")
 require("apascualco.lsp.terraform")
 require("apascualco.lsp.tsserver")
 require("apascualco.lsp.kotlin")
+require("apascualco.lsp.rust")
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
