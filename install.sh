@@ -98,6 +98,7 @@ function last_executions() {
 	killall Dock
 
 	git config --global core.excludesfile ~/.gitignore_global
+ 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 }
 
 echo "⚡ Installing apps with brew!"
