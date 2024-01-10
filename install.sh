@@ -20,6 +20,7 @@ function install_apps_with_brew() {
 	brew install jq
 	brew install yq
 	brew install ripgrep
+  brew install stats
 }
 
 function install_java() {
