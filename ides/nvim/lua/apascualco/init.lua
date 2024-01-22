@@ -47,6 +47,7 @@ g.gitgutter_highlight_lines = 1
 g.gitgutter_highlight_linenrs = 0
 
 g.loaded_perl_provider = 0
+g.python3_host_prog = "/opt/homebrew/bin/python3"
 
 local api = vim.api
 local augroup = api.nvim_create_augroup
