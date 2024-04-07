@@ -7,6 +7,10 @@ require("telescope").setup({
         prompt_position = "top",
         width = 0.9
       },
+    },
+    file_ignore_patterns = { 
+      "^vendor/",
+      "/vendor/"
     }
   }
 })

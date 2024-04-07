@@ -131,7 +131,10 @@ require("lazy").setup({
     opts = {},
     lazy = false,
   },
-  { 'simrat39/rust-tools.nvim' }
+  { 'simrat39/rust-tools.nvim' },
+  
+  -- Required
+  { "nvim-neotest/nvim-nio" }
 })
 
 --require('k8s').setup({})
