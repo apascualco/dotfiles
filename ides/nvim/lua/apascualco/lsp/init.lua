@@ -6,6 +6,7 @@ require("apascualco.lsp.terraform")
 require("apascualco.lsp.tsserver")
 require("apascualco.lsp.kotlin")
 require("apascualco.lsp.rust")
+require("apascualco.lsp.css")
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
