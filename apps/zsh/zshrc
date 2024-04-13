@@ -92,6 +92,16 @@ alias idea='open -na "IntelliJ IDEA.app" --args '
 alias cab='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
 alias fckcache='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+
+#tmux
+alias t='tmux'
+alias tn='tmux new -s'
+alias ta='tmux attach -t'
+alias td='tmux detach'
+alias ts='tmux switch -t'
+alias tas='tmux attach-session'
+alias th='tmux split-window -h'
+alias tv='tmux split-window -v'
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

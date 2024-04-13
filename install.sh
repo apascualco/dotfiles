@@ -22,6 +22,7 @@ function install_apps_with_brew() {
 	brew install ripgrep
   brew install stats
   brew install tmux
+  brew install htop
 }
 
 function install_java() {
