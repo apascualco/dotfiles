@@ -97,10 +97,10 @@ require("apascualco.octo")
 require("apascualco.comment")
 
 require("apascualco.rust-tools")
-require("nvim-llama").setup {
-  defaults = {
-    debug = false,
-    model = "llama2",
-  }
-}
+-- require("nvim-llama").setup {
+--  defaults = {
+--    debug = false,
+--    model = "llama2",
+--  }
+--}
 require("bufferline").setup{}
