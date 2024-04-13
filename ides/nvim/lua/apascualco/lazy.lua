@@ -82,7 +82,7 @@ require("lazy").setup({
   { 'rcarriga/nvim-dap-ui', dependencies = { 'mfussenegger/nvim-dap' } },
 
   -- IA
-  { 'jpmcb/nvim-llama' },
+  -- { 'jpmcb/nvim-llama' },
 
   -- Tabs extra information
   {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
