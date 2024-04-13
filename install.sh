@@ -21,6 +21,7 @@ function install_apps_with_brew() {
 	brew install yq
 	brew install ripgrep
   brew install stats
+  brew install tmux
 }
 
 function install_java() {

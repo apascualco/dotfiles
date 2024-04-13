@@ -1,9 +1,28 @@
 local lspconfig = require('lspconfig')
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
+local util = require("lspconfig/util")
 
 lspconfig.rust_analyzer.setup({ 
+  cmd = { "rust-analyzer" },
+	root_dir = util.root_pattern("Cargo.toml", "rust-project.json"),
+	filetypes = { "rust" },
   settings = {
-    ['rust-analyzer'] = {},
+     ["rust-analyzer"] = {
+        imports = {
+           granularity = {
+              group = "module",
+           },
+           prefix = "self",
+        },
+        cargo = {
+           buildScripts = {
+              enable = true,
+           },
+        },
+        procMacro = {
+           enable = true
+        },
+     }
   },
   capabilities = capabilities
 })
