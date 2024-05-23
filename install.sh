@@ -23,6 +23,8 @@ function install_apps_with_brew() {
   brew install stats
   brew install tmux
   brew install htop
+  brew install gh
+
 }
 
 function install_java() {
