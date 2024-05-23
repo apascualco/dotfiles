@@ -49,7 +49,7 @@ function install_and_configura_zsh() {
 	touch ~/.local_zshrc_alternative
 }
 
-function nstall_meslo_lg_font(){
+function install_meslo_lg_font(){
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P tmp/
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P tmp/
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P tmp/
