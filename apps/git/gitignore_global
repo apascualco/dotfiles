@@ -34,3 +34,6 @@ node_module
 
 # Eclipse / neovim
 bin/
+
+#Kotlin
+build/
