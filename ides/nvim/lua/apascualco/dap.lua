@@ -1,5 +1,11 @@
 local dap = require("dap")
 
+dap.adapters.rt_lldb = {
+  type = 'executable',
+  command = vim.fn.expand('/opt/homebrew/opt/llvm/bin/lldb-dap'),
+  name = 'rt_lldb'
+}
+
 dap.adapters.kotlin = {
     type = "executable",
     command = "/Users/apascualco/workdir/tools/kotlin-debug-adapter/adapter/build/install/adapter/bin/kotlin-debug-adapter",
