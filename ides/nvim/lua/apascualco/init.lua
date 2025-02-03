@@ -5,6 +5,10 @@ local g = vim.g
 wo.relativenumber = true
 wo.number = true
 
+vim.api.nvim_set_hl(0, 'LineNrAbove', { fg='#EED49F', bold=true })
+vim.api.nvim_set_hl(0, 'LineNr', { fg='#EED49F', bold=true })
+vim.api.nvim_set_hl(0, 'LineNrBelow', { fg='#EED49F', bold=true })
+
 opt.colorcolumn = "120"
 
 -- spaces, tabs, dif symbols
@@ -97,10 +101,4 @@ require("apascualco.octo")
 require("apascualco.comment")
 
 require("apascualco.rust-tools")
--- require("nvim-llama").setup {
---  defaults = {
---    debug = false,
---    model = "llama2",
---  }
---}
 require("bufferline").setup{}
