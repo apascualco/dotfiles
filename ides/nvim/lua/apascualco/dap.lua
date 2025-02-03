@@ -91,3 +91,8 @@ set('n', '<Leader>ds', function()
   local widgets = require('dap.ui.widgets')
   widgets.centered_float(widgets.scopes)
 end, { desc ="Centered float scopes debugger"})
+
+vim.fn.sign_define('DapBreakpoint', { text = '✋', texthl = 'Error', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointCondition', { text = '🚫', texthl = 'WarningMsg', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointRejected', { text = '⛔', texthl = 'Comment', linehl = '', numhl = '' })
+vim.fn.sign_define('DapLogPoint', { text = '🟢', texthl = 'Identifier', linehl = '', numhl = '' })

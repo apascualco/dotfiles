@@ -23,6 +23,7 @@ require("nvim-tree").setup({
 local set = vim.keymap.set
 
 -- g? to show help
+set("n", "n", ":NvimTreeToggle<CR>", { desc = "" })
 set("n", "tt", ":NvimTreeFindFile<CR>", { desc = "Go to current file (nvim-tree)" })
 set("n", "tc", ":NvimTreeClose<CR>", { desc = "Toggle nvim-tree if are in the file (close)" })
 set("n", "tcc", ":NvimTreeCollapse<CR>", { desc = "Collapse nvim-tree" })
