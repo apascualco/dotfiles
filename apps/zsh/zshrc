@@ -1,100 +1,206 @@
-source "$HOME/.cargo/env"
-source "$HOME/.sdkman/bin/sdkman-init.sh"
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+export LANG=en_US.UTF-8
+export ZSH="$HOME/.oh-my-zsh"
+
+# Android SDK
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export ANDROID_HOME=$HOME/Library/Android/sdk
+
+# Go configuration (must be defined before PATH usage)
+export GOPATH="$HOME/.gvm/pkgsets/go1.20/global"
+
+# SDKMAN
+export SDKMAN_DIR="$HOME/.sdkman"
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+
+# ============================================================================
+# PATH CONFIGURATION
+# ============================================================================
+# Homebrew (this already adds /opt/homebrew/bin)
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# GNU binaries
+GNUBINS="$(find `brew --prefix`/opt -type d -follow -name gnubin -print)"
+for bindir in ${GNUBINS[@]}; do
+  export PATH=$bindir:$PATH
+done
+
+# Android SDK
+export PATH=$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+
+# Go
+export PATH="$GOPATH/bin:$PATH"
+
+# Python
+export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+
+# Maven
+export PATH="$HOME/workdir/tools/apache-maven-3.9.6/bin:$PATH"
+
+# LLVM
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
+# Bash
+export PATH="/opt/homebrew/bin/bash:$PATH"
+
+# System paths
+export PATH="/usr/local/bin:$PATH"
+
+# ============================================================================
+# POWERLEVEL10K INSTANT PROMPT
+# ============================================================================
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-GNUBINS="$(find `brew --prefix`/opt -type d -follow -name gnubin -print)"
-
-for bindir in ${GNUBINS[@]}
-do
-  export PATH=$bindir:$PATH
-done
-
-export PATH="$HOME/.gvm/pkgsets/go1.20/global/src/k8s.io/kubernetes/third_party/etcd:${PATH}"
-export PATH="/usr/local/bin:${PATH}"
-
-export PATH="$HOME/workdir/tools/apache-maven-3.9.6/bin":${PATH}
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-
-# Optional private configuration
-source ~/.local_zshrc
-source ~/.local_zshrc_alternative
-
-
-export PATH="$GOPATH/bin:$PATH"
-export PATH=$PATH:$(go env GOPATH)/bin
-export ZSH="$HOME/.oh-my-zsh"
-export ARCHFLAGS="-arch x86_64"
-
-export PATH="$HOME/.gvm/pkgsets/go1.20/global/bin:${PATH}"
-
+# ============================================================================
+# OH MY ZSH CONFIGURATION
+# ============================================================================
 ZSH_THEME="powerlevel10k/powerlevel10k"
+HIST_STAMPS="yyyy-mm-dd"
 
 plugins=(
-  git 
-  docker 
+  git
+  git-flow
+  docker
   docker-compose
-  python 
-  brew 
-  git-flow 
-  zsh-syntax-highlighting
-  zsh-autosuggestions 
-  fzf 
+  kubectl
   golang
+  python
+  rust
+  z
+  sudo
+  extract
+  copypath
+  copyfile
+  web-search
+  brew
+  colored-man-pages
+  command-not-found
+  dirhistory
+  jsontools
+  encode64
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  zsh-completions
+  fzf
 )
 
 source $ZSH/oh-my-zsh.sh
-export LANG=en_US.UTF-8
-PS1='%n@%m %. %% '
 
-# Alias 
+# ============================================================================
+# POWERLEVEL10K CONFIGURATION
+# ============================================================================
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ============================================================================
+# TOOL INITIALIZATION
+# ============================================================================
+# Cargo
+source "$HOME/.cargo/env"
+
+# GVM
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+
+# SDKMAN
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# NVM
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Kubectl completion
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
+# ============================================================================
+# OPTIONAL PRIVATE CONFIGURATION
+# ============================================================================
+source ~/.local_zshrc
+source ~/.local_zshrc_alternative
+
+# ============================================================================
+# FZF CONFIGURATION
+# ============================================================================
+export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}' --preview-window=right:60%:wrap"
+export FZF_ALT_C_OPTS="--preview 'ls -la --color=always {}' --preview-window=right:60%:wrap"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window=down:40%:wrap"
+
+# ============================================================================
+# EZA CONFIGURATION
+# ============================================================================
+export EZA_CONFIG_DIR="$HOME/Library/Application Support/eza"
+
+# ============================================================================
+# ALIASES - Docker
+# ============================================================================
 alias di='docker images'
 alias dca='docker ps -a'
 alias dri='docker rmi --force $(docker images -a -q)'
 alias drc='docker rm $(docker ps -a -q)'
 
+# ============================================================================
+# ALIASES - Shell Configuration
+# ============================================================================
 alias lsource='source ~/.zshrc'
 alias esource='vim ~/.zshrc'
 
-#Kubernetes
+# ============================================================================
+# ALIASES - Kubernetes
+# ============================================================================
 alias kapp='kubectl apply -f '
 alias kdapp='kubectl delete -f '
 
-#Python
+# ============================================================================
+# ALIASES - Python
+# ============================================================================
 alias pte='./.venv/bin/pytest '
 alias pdist='.venv/bin/python setup.py sdist'
 alias venvc='virtualenv .venv --python='
-alias venv2='virtualenv .venv --python=python2'
 alias venv3='virtualenv .venv --python=python3'
 alias venva='source .venv/bin/activate'
 alias venvd='deactivate'
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-HIST_STAMPS="yyyy-mm-dd"
-
+# ============================================================================
+# ALIASES - Development Tools
+# ============================================================================
 alias ctags="`brew --prefix`/bin/ctags"
-
-# vim/nvim
 alias n='nvim .'
+alias idea='open -na "IntelliJ IDEA.app" --args '
 
-# worksdir
+# ============================================================================
+# ALIASES - Navigation
+# ============================================================================
 alias wdgo='cd ~/workdir/code/go'
 alias wdrust='cd ~/workdir/code/rust'
 alias wdinfra='cd ~/workdir/code/infra'
 
-# Gradle
+# ============================================================================
+# ALIASES - Gradle
+# ============================================================================
 alias gbc='./gradlew build --continuous --info'
 alias gbc.='../gradlew build --continuous --info'
 alias gbc..='../../gradlew build --continuous --info'
-alias idea='open -na "IntelliJ IDEA.app" --args '
+
+# ============================================================================
+# ALIASES - Git
+# ============================================================================
 alias cab='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
+# ============================================================================
+# ALIASES - System
+# ============================================================================
 alias fckcache='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
-#tmux
+# ============================================================================
+# ALIASES - Tmux
+# ============================================================================
 alias t='tmux'
 alias tn='tmux new -s'
 alias ta='tmux attach -t'
@@ -105,21 +211,14 @@ alias th='tmux split-window -h'
 alias tv='tmux split-window -v'
 alias tk='tmux kill-session -t'
 alias tka='tmux kill-server'
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+# ============================================================================
+# ALIASES - File Listing (eza)
+# ============================================================================
+alias ls='eza --color=always --group-directories-first --icons -F'
+alias ll='eza -lh --group-directories-first --icons -F'
+alias la='eza -lha --group-directories-first --icons -F'
+alias lt='eza -T -L 2 --icons --color=always'
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/apascualco/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/apascualco/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/apascualco/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/apascualco/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
-export GOPATH="$HOME/.gvm/pkgsets/go1.20/global"
-export PATH="/opt/homebrew/bin/bash:${PATH}"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+# To customize prompt, run `p10k configure` or edit ~/.dotfiles/apps/zsh/p10k.zsh.
+[[ ! -f ~/.dotfiles/apps/zsh/p10k.zsh ]] || source ~/.dotfiles/apps/zsh/p10k.zsh
