@@ -1,104 +1,55 @@
-local wo = vim.wo
 local opt = vim.opt
+local wo = vim.wo
 local g = vim.g
+
+-- spaces, tabs, dif symbols
+
+
+opt.list = true
+opt.listchars = {
+	eol = '↲',          -- Salto de línea
+	trail = '·',        -- Espacios al final de línea (trailing whitespace)
+	tab = '→ ',         -- Tabulaciones
+	nbsp = '␣',         -- Non-breaking spaces
+	extends = '▶',      -- Línea continúa a la derecha
+	precedes = '◀',     -- Línea continúa a la izquierda
+}
 
 wo.relativenumber = true
 wo.number = true
 
-vim.api.nvim_set_hl(0, 'LineNrAbove', { fg='#EED49F', bold=true })
-vim.api.nvim_set_hl(0, 'LineNr', { fg='#EED49F', bold=true })
-vim.api.nvim_set_hl(0, 'LineNrBelow', { fg='#EED49F', bold=true })
-
-opt.colorcolumn = "120"
-
--- spaces, tabs, dif symbols
-opt.list = true
-opt.listchars = {
-	eol = '⤶',
-	space = '.',
-	trail = '~',
-	precedes = '◀',
-	extends = '▶',
-	tab = '>>'
-}
-
-opt.guicursor = 'i:block,i:blinkon1'
-
--- Avoid last \n on nvim
-opt.fixendofline = false
-opt.wrap = false
-opt.backup = false
-
--- TABS/SPACES
-opt.expandtab = true
-opt.autoindent = true
-opt.tabstop = 2 
-opt.shiftwidth = 2
-opt.splitbelow = true
-opt.splitright = true
-
-opt.foldmethod = "syntax"
-
-opt.termguicolors = true
-
 g.mapleader = ","
 
-g.gitgutter_map_keys = 0
-g.gitgutter_enable = 1
-g.gitgutter_highlight_linenrs = 1
-g.gitgutter_set_sign_backgrounds = 1
-g.gitgutter_highlight_lines = 1
-g.gitgutter_highlight_linenrs = 0
-
+-- Disable unused providers to avoid warnings
 g.loaded_perl_provider = 0
-g.python3_host_prog = "/usr/bin/python3"
+g.loaded_ruby_provider = 0
+g.loaded_node_provider = 0
 
-local api = vim.api
-local augroup = api.nvim_create_augroup
-local autocmd = api.nvim_create_autocmd
-local highlight = vim.highlight
-
-autocmd('TextYankPost', {
-	group = augroup('HighlightYank', {}),
-	pattern = '*',
-	callback = function()
-		highlight.on_yank({
-			higroup = 'IncSearch',
-			timeout = 700,
-		})
-	end,
-})
-
--- Pluggin manager
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
+vim.opt.wrap = false
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.termguicolors = true
+vim.opt.mouse = 'a'  -- Enable mouse in all modes
 
 require("apascualco.lazy")
 
-require("apascualco.catppuccin")
-require("apascualco.nvim-tree")
-require("apascualco.treesitter")
+require("apascualco.plugins.catppuccin")
+require("apascualco.plugins.nvim-tree")
+require("apascualco.plugins.treesitter")
+require("apascualco.plugins.lualine")
 
-require("apascualco.telescope")
-require("apascualco.lualine")
+require("apascualco.plugins.lsp.mason")
+require("apascualco.plugins.lsp.autocompletion")
 
-require("apascualco.set")
+require("apascualco.plugins.lsp.go")
+require("apascualco.plugins.lsp.tsserver")
 
-require("apascualco.lsp")
-require("apascualco.dap")
+require("apascualco.plugins.dap")
+require("apascualco.plugins.bufferline")
 
-require("apascualco.octo")
-require("apascualco.comment")
+require("apascualco.keybinding")
+require("apascualco.console")
+require("apascualco.diagnostics")
 
-require("apascualco.rust-tools")
-require("bufferline").setup{}
+require("apascualco.onsave")
+require("apascualco.test")

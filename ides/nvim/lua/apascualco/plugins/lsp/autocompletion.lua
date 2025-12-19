@@ -1,11 +1,11 @@
-local lspconfig = require('lspconfig')
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local lspkind = require('lspkind')
-require('luasnip.loaders.from_vscode').lazy_load()
 
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 local cmp = require('cmp')
+
+require('luasnip.loaders.from_vscode').lazy_load()
 local luasnip = require('luasnip')
+
 local select_opts = {behavior = cmp.SelectBehavior.Select}
 
 cmp.setup({
@@ -15,10 +15,12 @@ cmp.setup({
     end
   },
   sources = {
-    {name = 'path'},
-    {name = 'nvim_lsp'},
-    {name = 'buffer'},
-    {name = 'luasnip'},
+	  { name = "copilot",  group_index = 1, priority = 1200 },
+	  { name = "nvim_lsp", group_index = 1, priority = 1000 },
+	  { name = "nvim_lsp_signature_help", group_index = 1, priority = 950 },
+	  { name = "luasnip",  group_index = 1, priority = 900 },
+	  { name = "path" },
+	  { name = "buffer" },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -32,10 +34,12 @@ cmp.setup({
 
       before = function (entry, vim_item)
         local menu_icon = {
-          nvim_lsp = '[LSP]',
-          luasnip = '[SNIP]',
-          buffer = '[Buffer]',
-          path = '🖫',
+			copilot  = "[COPILOT]",
+			nvim_lsp = "[LSP]",
+			nvim_lsp_signature_help = "[SIG]",
+			luasnip  = "[SNIP]",
+			buffer   = "[BUF]",
+			path     = "[PATH]",
         }
 
         vim_item.menu = menu_icon[entry.source.name]
@@ -121,4 +125,3 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 		signs = true,
 	}
 )
-

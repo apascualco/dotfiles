@@ -1,0 +1,2 @@
+-- Este archivo ya no contiene keybindings.
+-- Todos los keybindings fueron movidos a keybinding.lua
