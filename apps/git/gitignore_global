@@ -37,3 +37,4 @@ bin/
 
 #Kotlin
 build/
+.gradle/
