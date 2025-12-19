@@ -18,12 +18,11 @@ require("nvim-tree").setup({
     enable = true,
     show_on_dirs = false,
   },
+  update_focused_file = {
+    enable = true,
+    update_root = false,
+  },
+  sync_root_with_cwd = true,
+  respect_buf_cwd = true,
 })
-
-local set = vim.keymap.set
-
--- g? to show help
-set("n", "n", ":NvimTreeToggle<CR>", { desc = "" })
-set("n", "tt", ":NvimTreeFindFile<CR>", { desc = "Go to current file (nvim-tree)" })
-set("n", "tc", ":NvimTreeClose<CR>", { desc = "Toggle nvim-tree if are in the file (close)" })
-set("n", "tcc", ":NvimTreeCollapse<CR>", { desc = "Collapse nvim-tree" })
+vim.g.nvim_tree_respect_buf_cwd = 1

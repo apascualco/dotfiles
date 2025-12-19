@@ -1,151 +1,479 @@
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
 require("lazy").setup({
-  -- Directory manager
-  'nvim-tree/nvim-tree.lua',
+    -- Directory manager
+    'nvim-tree/nvim-tree.lua',
 
-  -- Theme apparence
-	'nvim-tree/nvim-web-devicons',
-  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+    -- Theme appearance
+    'nvim-tree/nvim-web-devicons',
+    { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
 
-  -- Highlighting of code
-  { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
+    -- Highlighting of code
+    { "nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate" },
 
-  -- Mapper to telescope the shortcuts
-  {
-    'lazytanuki/nvim-mapper',
-    config = function() require('nvim-mapper').setup{} end,
-  },
-
-  -- Diagnostics
-  {
-    'folke/trouble.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = {},
-  },
-
-  -- Seacrh and find dirs, snips, mappers, etc...
-  {
-    'nvim-telescope/telescope.nvim',
-    dependencies = {
-      {'nvim-lua/plenary.nvim'},
-      { 'benfowler/telescope-luasnip.nvim' }
+    -- Search and find dirs, snips, mappers, etc...
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = {
+          { 'nvim-lua/plenary.nvim' },
+          { 'benfowler/telescope-luasnip.nvim' },
+          { 'lazytanuki/nvim-mapper' },
+          { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        },
+        config = function()
+          require('telescope').load_extension('mapper')
+          require('telescope').load_extension('luasnip')
+          require('telescope').load_extension('fzf')
+        end
     },
-    config = function()
-      require('telescope').load_extension('mapper')
-      require('telescope').load_extension('luasnip')
-    end
-  },
-  -- browse the tags 
-	{ 'preservim/tagbar' },
 
-  -- Language Server Protocol
-	{ 'neovim/nvim-lspconfig'},
-  { 'hrsh7th/cmp-nvim-lsp' },
-	{ 'hrsh7th/cmp-buffer' },
-	{ 'hrsh7th/cmp-path' },
-  { 'hrsh7th/cmp-cmdline' },
-	{ 'hrsh7th/nvim-cmp' },
+    -- browse the tags
+    { 'preservim/tagbar' },
 
-  -- LSP installer
-  { 'williamboman/mason.nvim' },
-
-  -- Snippers
-  { 'L3MON4D3/LuaSnip' },
-  { 'saadparwaiz1/cmp_luasnip' },
-  { 'hrsh7th/cmp-vsnip' },
-  { 'hrsh7th/vim-vsnip' },
-  { 'SirVer/ultisnips' },
-  { 'quangnguyen30192/cmp-nvim-ultisnips' },
-  { 'dcampos/nvim-snippy' },
-  { 'dcampos/cmp-snippy' },
-
-  -- Vscode-like pictograms
-  { 'onsails/lspkind.nvim' },
-
-  -- Git
-  { 'tpope/vim-fugitive' },
-	{ 'airblade/vim-gitgutter' },
-
-  -- Colored logs
-	{ 'mtdl9/vim-log-highlighting' },
-
-  -- Botton line
-  {
-    'nvim-lualine/lualine.nvim',
-    dependencies = {
-      'arkav/lualine-lsp-progress',
+    -- LSP installer
+    {
+        "neovim/nvim-lspconfig",
     },
-  },
-
-  -- Debug adapter protocol
-  { 'mfussenegger/nvim-dap' },
-  { 'theHamsta/nvim-dap-virtual-text' },
-  { 'rcarriga/nvim-dap-ui', dependencies = { 'mfussenegger/nvim-dap' } },
-
-  -- IA
-  -- { 'jpmcb/nvim-llama' },
-
-  -- Tabs extra information
-  {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
-
-  { 'dstein64/vim-startuptime' },
-
-  -- Terminal
-  {
-    'willothy/flatten.nvim',
-    config = true,
-    lazy = false,
-    priority = 1001,
-  },
-
-  -- Surround shortcuts
-  {
-    'kylechui/nvim-surround',
-    version = '*', -- Use for stability; omit to use `main` branch for the latest features
-    event = 'VeryLazy',
-    config = function()
-        require('nvim-surround').setup({
-            -- Configuration here, or leave empty to use defaults
-        })
-    end
-  },
-
-  -- Underline same words
-  {
-    'sontungexpt/stcursorword',
-    event = 'VeryLazy',
-    config = true,
-  },
-  {
-    'pwntester/octo.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-      'nvim-tree/nvim-web-devicons',
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
     },
-    config = function ()
-      require('octo').setup()
-    end
-  },
-  {
-    'numToStr/Comment.nvim',
-    opts = {},
-    lazy = false,
-  },
-  { 'simrat39/rust-tools.nvim' },
-  
-  -- Required
-  { "nvim-neotest/nvim-nio" }
+
+    -- Autocomplete
+    { "hrsh7th/nvim-cmp" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/cmp-buffer" },
+    { "hrsh7th/cmp-path" },
+
+    -- Vscode-like pictograms
+    { 'onsails/lspkind.nvim' },
+
+    -- Snippers
+    {
+        'L3MON4D3/LuaSnip',
+        build = 'make install_jsregexp'
+    },
+    { 'saadparwaiz1/cmp_luasnip' },
+
+    {
+      "mfussenegger/nvim-lint",
+      event = { "BufReadPre", "BufNewFile" },
+      config = function()
+          local lint = require("lint")
+           lint.linters_by_ft = {
+               go = { "golangcilint" },
+               }
+      end,
+    },
+    {
+        "stevearc/conform.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        opts = {
+            formatters_by_ft = { go = { "gofumpt", "goimports" },},
+            format_on_save = function(bufnr)
+                if vim.bo[bufnr].filetype == "go" then
+                    return { lsp_fallback = false, timeout_ms = 2000 }
+                end
+            end,
+        },
+    },
+
+    -- Diagnostics
+    {
+        'folke/trouble.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        opts = {},
+    },
+
+    -- Debug adapter protocol
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "rcarriga/nvim-dap-ui",
+            "jay-babu/mason-nvim-dap.nvim",
+            "williamboman/mason.nvim",
+            "theHamsta/nvim-dap-virtual-text",
+            "nvim-neotest/nvim-nio"
+        },
+    },
+    {
+        "leoluz/nvim-dap-go",
+        dependencies = { "mfussenegger/nvim-dap" },
+        config = function(_, opts)
+          require("dap-go").setup(opts)
+        end,
+    },
+	{
+		"LiadOz/nvim-dap-repl-highlights",
+		config = function()
+			require("nvim-dap-repl-highlights").setup()
+		end,
+	},
+
+    -- Botton line
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = {
+          'arkav/lualine-lsp-progress',
+          'nvim-tree/nvim-web-devicons'
+        },
+    },
+
+    -- Top line
+	{
+		"akinsho/bufferline.nvim",
+		version = "*",
+		dependencies = { "nvim-tree/nvim-web-devicons", "catppuccin/nvim" }
+	},
+
+	-- Git
+	{
+		"lewis6991/gitsigns.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		config = function()
+			require("gitsigns").setup()
+		end,
+	},
+	{ "sindrets/diffview.nvim" },
+
+	-- Comment
+	{
+		"numToStr/Comment.nvim",
+		event = "VeryLazy",
+		opts = {
+			mappings = { basic = false, extra = false },
+		},
+		config = function(_, opts)
+			require("Comment").setup(opts)
+		end,
+	},
+
+	-- Color codes
+	{
+		"NvChad/nvim-colorizer.lua",
+		event = "VeryLazy",
+		opts = {
+			filetypes = { "*" },
+			user_default_options = {
+				RGB = true,
+				RRGGBB = true,
+				names = true,
+				RRGGBBAA = true,
+				AARRGGBB = true,
+				rgb_fn = true,
+				hsl_fn = true,
+				css = true,
+				css_fn = true,
+				mode = "background",
+				tailwind = true,
+				always_update = true,
+			},
+			buftypes = {},
+		},
+		config = function(_, opts)
+			require("colorizer").setup(opts)
+		end,
+	},
+	-- Movement pluin
+	{ "nvim-pack/nvim-spectre" },
+	{ "ThePrimeagen/harpoon" },
+
+	-- Claude
+	{
+		"coder/claudecode.nvim",
+		dependencies = { "folke/snacks.nvim" },
+		cmd = {
+			"ClaudeCode",
+			"ClaudeCodeFocus",
+			"ClaudeCodeSelectModel",
+			"ClaudeCodeAdd",
+			"ClaudeCodeSend",
+			"ClaudeCodeTreeAdd",
+			"ClaudeCodeDiffAccept",
+			"ClaudeCodeDiffDeny",
+			"ClaudeCodeStatus",
+		},
+		opts = (function()
+			local local_bin = vim.fn.expand("~/.claude/local/claude")
+			local terminal_cmd = vim.fn.filereadable(local_bin) == 1 and local_bin or "claude"
+			return {
+				log_level = "info",
+				terminal_cmd = terminal_cmd,
+				git_repo_cwd = true,
+				terminal = {
+					split_side = "right",
+					provider = "auto",
+					auto_close = true,
+					snacks_win_opts = {},
+				},
+				diff_opts = {
+					auto_close_on_accept = true,
+					vertical_split = true,
+					open_in_current_tab = true,
+					keep_terminal_focus = false,
+				},
+				focus_after_send = false,
+				track_selection = true,
+				visual_demotion_delay_ms = 50,
+			}
+		end)(),
+		config = true,
+	},
+	{
+		'MeanderingProgrammer/render-markdown.nvim',
+		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+		opts = {
+			latex = { enabled = false }
+		},
+	},
+-- Autocompletado con Claude (ghost-text/cmp) + Minuet
+	{
+		"milanglacier/minuet-ai.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "hrsh7th/nvim-cmp" },
+		config = function()
+			require("minuet").setup({
+				provider = "claude",
+				request_timeout = 2.5,   -- evita bloqueos
+				throttle = 1500,         -- controla coste/rate limit
+				debounce = 600,
+				provider_options = {
+					claude = {
+						api_key = "ANTHROPIC_API_KEY",           -- lee de tu env
+						end_point = "https://api.anthropic.com/v1/messages",
+						model = "claude-haiku-4.5",              -- ajusta el modelo si quieres
+						stream = true,
+						max_tokens = 256,
+					},
+				},
+				virtualtext = { auto_trigger_ft = {} },
+			})
+			local cmp = require("cmp")
+			cmp.setup({
+				sources = cmp.config.sources({
+					{ name = "minuet", group_index = 1, priority = 100 },
+				}),
+				performance = { fetching_timeout = 2000 },
+				mapping = vim.tbl_deep_extend("force", {}, {
+					["<A-y>"] = require("minuet").make_cmp_map(), -- invocar minuet manualmente
+				}),
+			})
+		end,
+	},
+
+	-- ──────────────────────────────────────────────────────────────────────────────
+	-- Productivity plugins
+	-- ──────────────────────────────────────────────────────────────────────────────
+
+	-- Which-key: muestra atajos disponibles
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			plugins = { spelling = true },
+			spec = {
+				mode = { "n", "v" },
+				{ "g", group = "goto" },
+				{ "]", group = "next" },
+				{ "[", group = "prev" },
+				{ "<leader>a", group = "ai/claude" },
+				{ "<leader>b", group = "buffer" },
+				{ "<leader>c", group = "code" },
+				{ "<leader>d", group = "debug" },
+				{ "<leader>e", group = "explorer" },
+				{ "<leader>f", group = "find/telescope" },
+				{ "<leader>g", group = "git" },
+				{ "<leader>go", group = "golang" },
+				{ "<leader>h", group = "hunks" },
+				{ "<leader>l", group = "lsp" },
+				{ "<leader>m", group = "harpoon" },
+				{ "<leader>q", group = "session" },
+				{ "<leader>s", group = "search/snippets" },
+				{ "<leader>t", group = "terminal/toggle/test" },
+				{ "<leader>w", group = "wrap" },
+				{ "<leader>x", group = "trouble/diagnostics" },
+			},
+		},
+	},
+
+	-- Auto-cierra paréntesis, llaves, comillas
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		opts = {
+			check_ts = true,
+			ts_config = {
+				lua = { "string", "source" },
+				javascript = { "string", "template_string" },
+			},
+			disable_filetype = { "TelescopePrompt", "spectre_panel" },
+			fast_wrap = {
+				map = '<M-e>',
+				chars = { '{', '[', '(', '"', "'" },
+				pattern = [=[[%'%"%>%]%)%}%,]]=],
+				end_key = '$',
+				keys = 'qwertyuiopzxcvbnmasdfghjkl',
+				check_comma = true,
+				highlight = 'Search',
+				highlight_grey='Comment'
+			},
+		},
+		config = function(_, opts)
+			require("nvim-autopairs").setup(opts)
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			local cmp = require("cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+		end,
+	},
+
+	-- Guías de indentación
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+		main = "ibl",
+		opts = {
+			indent = {
+				char = "│",
+				tab_char = "│",
+			},
+			scope = { enabled = false },
+			exclude = {
+				filetypes = {
+					"help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy",
+					"mason", "notify", "toggleterm", "lazyterm", "NvimTree",
+				},
+			},
+		},
+	},
+
+	-- Manipula delimitadores fácilmente
+	{
+		"kylechui/nvim-surround",
+		version = "*",
+		event = "VeryLazy",
+		config = function()
+			require("nvim-surround").setup({})
+		end,
+	},
+
+	-- Navegación ultra rápida por pantalla
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		opts = {},
+	},
+
+	-- Destaca TODO, FIXME, BUG, etc
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {},
+	},
+
+	-- Destaca palabra bajo cursor
+	{
+		"RRethy/vim-illuminate",
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {
+			delay = 200,
+			large_file_cutoff = 2000,
+			large_file_overrides = {
+				providers = { "lsp" },
+			},
+		},
+		config = function(_, opts)
+			require("illuminate").configure(opts)
+		end,
+	},
+
+	-- Mejora vim.ui.select y vim.input
+	{
+		"stevearc/dressing.nvim",
+		event = "VeryLazy",
+		opts = {},
+	},
+
+	-- Sesiones automáticas
+	{
+		"folke/persistence.nvim",
+		event = "BufReadPre",
+		opts = {
+			options = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" }
+		},
+	},
+
+	-- Go extras: test coverage, tags, etc
+	{
+		"ray-x/go.nvim",
+		dependencies = {
+			"ray-x/guihua.lua",
+			"neovim/nvim-lspconfig",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		config = function()
+			-- Detectar GOPATH/GOBIN de GVM
+			local gopath = vim.fn.trim(vim.fn.system('go env GOPATH'))
+			local gobin = gopath .. '/bin'
+
+			-- Agregar GOBIN al PATH de nvim si no está
+			local current_path = vim.env.PATH
+			if not string.find(current_path, gobin, 1, true) then
+				vim.env.PATH = gobin .. ':' .. current_path
+			end
+
+			require("go").setup({
+				lsp_cfg = false,  -- Usa tu LSP config existente (go.lua)
+				lsp_on_attach = false,
+				lsp_keymaps = false,  -- Usamos keymaps de keybinding.lua
+				diagnostic = false,  -- Ya configurado en diagnostics.lua
+				go = "go",  -- comando go
+				gopath = gopath,  -- usar GOPATH detectado
+			})
+		end,
+		event = {"CmdlineEnter"},
+		ft = {"go", 'gomod'},
+		build = ':lua require("go.install").update_all_sync()'
+	},
+
+	-- Terminal con pestañas
+	{
+		"akinsho/toggleterm.nvim",
+		version = "*",
+		opts = {
+			size = 10,
+			open_mapping = [[<c-\>]],
+			direction = "horizontal",
+			shade_terminals = true,
+			start_in_insert = true,
+			persist_size = true,
+			close_on_exit = true,
+			float_opts = {
+				border = "curved",
+			},
+		},
+	},
+}, {
+	-- Configuración de lazy.nvim
+	rocks = {
+		enabled = true,
+		hererocks = true,  -- Dejar que lazy instale la versión correcta de lua/luarocks
+	},
 })
-
---require('k8s').setup({})
-
-
---     Old text                    Command         New text
---------------------------------------------------------------------------------
---    surr*ound_words             ysiw)           (surround_words)
---    *make strings               ys$"            "make strings"
---    [delete ar*ound me!]        ds]             delete around me!
---    remove <b>HTML t*ags</b>    dst             remove HTML tags
---    'change quot*es'            cs'"            "change quotes"
---    <b>or tag* types</b>        csth1<CR>       <h1>or tag types</h1>
---    delete(functi*on calls)     dsf             function calls
