@@ -1,30 +1,9 @@
 #!/bin/bash
 
-function install_apps_with_brew() {
-	brew update 
-	brew upgrade
-	brew install wget
-	brew install --cask iterm2
-	brew install zsh
-	brew install go
-	brew install neovim --HEAD
-	brew install zsh-syntax-highlighting
-	brew install fzf
-	brew install --cask google-chrome
-	brew install node
-	brew install universal-ctags
-	brew install kubectl
-	brew install textmate
-	brew install --cask docker
-	brew install --cask spotify
-	brew install jq
-	brew install yq
-	brew install ripgrep
-  brew install stats
-  brew install tmux
-  brew install htop
-  brew install gh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+function install_apps_with_brew() {
+	source "${SCRIPT_DIR}/brew.sh"
 }
 
 function install_java() {
@@ -51,7 +30,7 @@ function install_and_configura_zsh() {
 	touch ~/.local_zshrc_alternative
 }
 
-function install_meslo_lg_font(){
+function install_meslo_lg_font() {
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P tmp/
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P tmp/
 	wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P tmp/
@@ -60,21 +39,16 @@ function install_meslo_lg_font(){
 	rm tmp/*
 }
 
-
-function install_nvim_and_configure(){
+function install_nvim_and_configure() {
 	mkdir -p ${HOME}/.config/nvim/venvs
 	mkdir ${HOME}/.config/nvim/venvs/neovim3
 	${HOME}/Library/Python/*/bin/virtualenv ${HOME}/.config/nvim/venvs/neovim3 --python=python3
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-	${home}/.config/nvim/venvs/neovim3/bin/python -m ensurepip --upgrade
-	${home}/.config/nvim/venvs/neovim3/bin/pip3 install pynvim
-
+	${HOME}/.config/nvim/venvs/neovim3/bin/python -m ensurepip --upgrade
+	${HOME}/.config/nvim/venvs/neovim3/bin/pip3 install pynvim
 }
 
 function create_symlinks() {
-	ln -sf ${PWD}/mac/Library/Preferences/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/com.googlecode.iterm2.plist
-	ln -sf ${PWD}/mac/Library/Preferences/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/com.apple.dock.plist
-
 	ln -sf ${PWD}/apps/zsh/zshrc ${HOME}/.zshrc
 	ln -sf ${PWD}/apps/zsh/p10k.zsh ${HOME}/.p10k.zsh
 
@@ -89,9 +63,7 @@ function last_executions() {
 	npm install -g neovim
 	sudo gem install neovim
 
-	osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'${PWD}'/mac/wallpaper.jpg"'
-
-	#Mac configurations
+	# Mac configurations
 	defaults write com.apple.dock autohide -bool true
 	defaults delete com.apple.dock persistent-apps
 	defaults write com.apple.dock show-recents -bool false
@@ -101,7 +73,7 @@ function last_executions() {
 	killall Dock
 
 	git config --global core.excludesfile ~/.gitignore_global
- 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 }
 
 echo "⚡ Installing apps with brew!"

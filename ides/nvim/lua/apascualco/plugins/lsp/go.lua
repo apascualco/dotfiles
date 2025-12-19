@@ -1,14 +1,11 @@
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-local ok_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-if ok_cmp then
-	capabilities = cmp_lsp.default_capabilities(capabilities)
-end
+local lsp_setup = require("apascualco.plugins.lsp.setup")
 
 vim.lsp.config("gopls", {
+  on_attach = lsp_setup.on_attach,
   cmd         = { "gopls" },
   filetypes   = { "go", "gomod", "gowork", "gotmpl" },
   root_markers= { "go.work", "go.mod", ".git" },
-  capabilities= capabilities,
+  capabilities= lsp_setup.capabilities,
   settings    = {
     gopls = {
       completeUnimported           = true,

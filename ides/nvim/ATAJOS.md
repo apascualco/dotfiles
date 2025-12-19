@@ -103,7 +103,18 @@
 
 ## 💡 LSP (Servidor de Lenguaje)
 
-### Acciones Principales
+### Atajos Rápidos (sin leader)
+| Atajo | Descripción |
+|-------|-------------|
+| `K` | Ver documentación (hover) |
+| `gd` | Ir a definición |
+| `gD` | Ir a declaración |
+| `gr` | Referencias |
+| `gi` | Ir a implementación |
+| `gt` | Ir a definición de tipo |
+| `gl` | Diagnósticos de línea (float) |
+
+### Acciones Principales (con leader)
 | Atajo | Descripción |
 |-------|-------------|
 | `,la` | Acciones de código |
@@ -155,6 +166,18 @@
 | `,xs` | Toggle símbolos del documento |
 | `,xlp` | Toggle panel LSP |
 | `,xr` | Referencias LSP |
+
+### Quickfix & Location List
+| Atajo | Descripción |
+|-------|-------------|
+| `]q` | Siguiente item en quickfix |
+| `[q` | Item anterior en quickfix |
+| `]l` | Siguiente item en location list |
+| `[l` | Item anterior en location list |
+| `,co` | Abrir quickfix |
+| `,cc` | Cerrar quickfix |
+| `,Lo` | Abrir location list |
+| `,Lc` | Cerrar location list |
 
 ---
 
@@ -218,7 +241,7 @@
 |-------|-------------|
 | `,du` | 🖥️ Toggle UI de debugger |
 | `,de` | 🔍 Evaluar expresión |
-| `,dv` | 👁️ Hover eval |
+| `,dv` | 👁️ Hover eval (normal/visual) |
 
 ### Debug Go
 | Atajo | Descripción |
@@ -243,6 +266,7 @@
 | `,b<` | ⬅️ Mover buffer a la izquierda |
 | `,bsd` | 📁 Ordenar por directorio |
 | `,bse` | 📄 Ordenar por extensión |
+| `,n` | ➕ Nuevo buffer vacío |
 
 ---
 
@@ -255,6 +279,12 @@
 | `Ctrl+\` | Toggle último terminal (toggleterm) |
 | `,t1` a `,t9` | Toggle terminal 1-9 |
 | `,tq` | Cerrar todos los terminales |
+
+### Navegación entre Terminales
+| Atajo | Descripción |
+|-------|-------------|
+| `Ctrl+PageDown` | Siguiente terminal |
+| `Ctrl+PageUp` | Terminal anterior |
 
 ### Dentro del Terminal
 | Atajo | Descripción |
@@ -285,6 +315,16 @@ También: `Ctrl+w` + flechas
 | `Ctrl+→` | ➡️ Aumentar anchura |
 
 💡 **Tip:** También puedes arrastrar los bordes con el ratón
+
+### Splits (Divisiones)
+| Atajo | Descripción |
+|-------|-------------|
+| `,sv` | Split vertical |
+| `,sh` | Split horizontal |
+| `,sx` | Cerrar split actual |
+| `,so` | Cerrar todos los otros splits |
+| `,se` | Igualar tamaño de splits |
+| `,sm` | Toggle maximizar ventana actual |
 
 ### Soft Wrap (Ajuste de Línea)
 | Atajo | Descripción |
@@ -381,6 +421,8 @@ También: `Ctrl+w` + flechas
 |-------|-------------|
 | `,goj` | 🏷️ Añadir tags json |
 | `,goy` | 🏷️ Añadir tags yaml |
+| `,goA` | 🏷️ Añadir tags json + yaml |
+| `,goR` | 🏷️ Remover todos los tags |
 | `,goe` | ⚠️ Añadir if err |
 | `,goi` | 🔌 Implementar interfaz |
 | `,gof` | 📝 Llenar struct |
@@ -394,6 +436,7 @@ También: `Ctrl+w` + flechas
 | `,got` | 🧪 Test función |
 | `,goT` | 🧪 Test archivo |
 | `,goa` | 🧪 Test paquete |
+| `,gol` | 🧪 Test último |
 | `,goc` | 📊 Cobertura |
 
 ### Ejecutar y Debugear
@@ -403,7 +446,21 @@ También: `Ctrl+w` + flechas
 | `,god` | 🐛 Debugear (busca main.go automáticamente) |
 | `,gob` | 🔨 Compilar directorio actual |
 
-💡 **Tip:** Los comandos `,gor` y `,god` encuentran automáticamente todos los main.go en tu proyecto y te dejan elegir cuál ejecutar
+💡 **Tip:** Los comandos `,gor` y `,god` encuentran automáticamente todos los main.go en tu proyecto y te dejan elegir cuál ejecutar. También cargan variables de `.env.local` si existe.
+
+### Go Modules
+| Atajo | Descripción |
+|-------|-------------|
+| `,gmt` | 📦 go mod tidy |
+| `,gmv` | 📦 go mod vendor |
+| `,gmd` | 📦 go mod download |
+| `,gmi` | 📦 go mod init (pide nombre del módulo) |
+
+### Go Get/Install
+| Atajo | Descripción |
+|-------|-------------|
+| `,ggi` | 📥 go get (pide paquete) |
+| `,gg` | 🔧 go generate ./... |
 
 ---
 
@@ -456,12 +513,22 @@ También: `Ctrl+w` + flechas
 | `,ql` | 💾 Restaurar última sesión |
 | `,qd` | 🚫 No guardar sesión actual |
 
+### Toggle Options
+| Atajo | Descripción |
+|-------|-------------|
+| `,un` | 🔢 Toggle números de línea |
+| `,ur` | 🔢 Toggle números relativos |
+| `,us` | ✍️ Toggle corrector ortográfico |
+| `,uw` | 📝 Toggle ajuste de línea |
+
 ### Utilidades
 | Atajo | Descripción |
 |-------|-------------|
 | `Esc` | 🧹 Limpiar highlight de búsqueda |
 | `Ctrl+s` | 💾 Guardar archivo |
 | `,km` | 🗺️ Explorar keymaps personalizados |
+| `,q` | 🚪 Cerrar ventana |
+| `,Q` | 🚪 Cerrar todo |
 
 ---
 
@@ -482,6 +549,7 @@ También: `Ctrl+w` + flechas
 - Usa `Ctrl+h/j/k/l` para navegar a otras ventanas desde el terminal
 - Usa `Ctrl+\` para toggle rápido del último terminal
 - Accede a terminales específicos con `,t1`, `,t2`, etc.
+- Navega entre múltiples terminales con `Ctrl+PageUp/PageDown`
 
 ### 🌿 Git Workflow
 1. `,gs` - Ver archivos modificados
@@ -499,6 +567,15 @@ También: `Ctrl+w` + flechas
 - Usa `,gor` para ejecutar cualquier main.go de tu proyecto
 - Usa `,god` para debugear con soporte automático de .env.local
 - Usa `,got` para ejecutar el test bajo el cursor
+- Usa `,gmt` después de añadir nuevas dependencias
+- Usa `,ggi` para instalar paquetes con go get
+
+### 💡 LSP - Atajos Rápidos
+Los atajos LSP más comunes están disponibles sin usar la tecla líder:
+- `K` - Documentación rápida (hover)
+- `gd` - Ir a definición
+- `gr` - Ver referencias
+- `gi` - Ir a implementación
 
 ---
 

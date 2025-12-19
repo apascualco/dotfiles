@@ -1,14 +1,9 @@
 local util = require("lspconfig.util")
-
--- capacidades (nvim-cmp)
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-pcall(function()
-	capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-end)
+local lsp_setup = require("apascualco.plugins.lsp.setup")
 
 -- ts_ls
 vim.lsp.config("ts_ls", {
-	capabilities = capabilities,
+	capabilities = lsp_setup.capabilities,
 	single_file_support = true,
 	filetypes = {
 		"javascript","javascriptreact","javascript.jsx",
@@ -21,11 +16,14 @@ vim.lsp.config("ts_ls", {
 			includePackageJsonAutoImports = "on",
 		},
 	},
-	on_attach = function(client)
+	on_attach = function(client, bufnr)
+		-- Disable formatting (use prettier via conform instead)
 		if client.server_capabilities then
 			client.server_capabilities.documentFormattingProvider = false
 			client.server_capabilities.documentRangeFormattingProvider = false
 		end
+		-- Call universal on_attach for inlay hints, etc.
+		lsp_setup.on_attach(client, bufnr)
 	end,
 	settings = {
 		typescript = {

@@ -1,10 +1,9 @@
 local dap = require("dap")
 
--- Mason DAP - instala adaptadores automáticamente
 require("mason-nvim-dap").setup({
 	ensure_installed = {
-		"delve",  -- Go debugger
-		"js-debug-adapter",  -- JavaScript/TypeScript debugger
+		"delve",
+		"js-debug-adapter",
 	},
 	automatic_installation = true,
 	handlers = {
@@ -39,9 +38,10 @@ require("nvim-dap-virtual-text").setup({
 
 require("dapui").setup()
 
-vim.fn.sign_define('DapBreakpoint',          { text = '✋', texthl = 'DiagnosticError' })
+vim.fn.sign_define('DapBreakpoint', { text = '✋', texthl = 'DiagnosticError' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '🚫', texthl = 'DiagnosticWarn' })
-vim.fn.sign_define('DapBreakpointRejected',  { text = '⛔', texthl = 'DiagnosticHint' })
-vim.fn.sign_define('DapLogPoint',            { text = '🟢', texthl = 'DiagnosticInfo' })
+vim.fn.sign_define('DapBreakpointRejected', { text = '⛔', texthl = 'DiagnosticHint' })
+vim.fn.sign_define('DapLogPoint', { text = '🟢', texthl = 'DiagnosticInfo' })
 
 require("apascualco.plugins.dap.config")
+
