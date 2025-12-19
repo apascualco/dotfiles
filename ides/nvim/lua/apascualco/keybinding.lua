@@ -16,7 +16,7 @@ map('n', '<leader>ec', '<cmd>NvimTreeCollapse<CR>', 'NvimTree — Collapse all n
 map('n', '<leader>er', '<cmd>NvimTreeRefresh<CR>',  'NvimTree — Refresh tree')
 
 -- ──────────────────────────────────────────────────────────────────────────────
--- Telescope (require dentro de la función → evita rhs=nil si aún no cargó)
+-- Telescope (require inside function → avoids rhs=nil if not loaded yet)
 -- ──────────────────────────────────────────────────────────────────────────────
 map('n', '<leader>ff', function() require('telescope.builtin').find_files() end, 'Telescope — Find files')
 map('n', '<leader>fF', function() require('telescope.builtin').find_files({ no_ignore = true, hidden = true }) end,
@@ -266,7 +266,7 @@ map('n', '<leader>m5', function() require('harpoon'):list():select(5) end, 'Harp
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Claude Code (replaces Copilot section)
 -- ──────────────────────────────────────────────────────────────────────────────
-map('n', '<leader>a',  function() end,                          'AI/Claude Code — Group')
+-- <leader>a group is defined in which-key (lazy.lua)
 map('n', '<leader>ac', '<cmd>ClaudeCode<cr>',                   'Claude — Toggle panel')
 map('n', '<leader>af', '<cmd>ClaudeCodeFocus<cr>',              'Claude — Focus/toggle')
 map('n', '<leader>ar', '<cmd>ClaudeCode --resume<cr>',          'Claude — Resume session')
@@ -277,7 +277,7 @@ map('v', '<leader>as', '<cmd>ClaudeCodeSend<cr>',               'Claude — Send
 map('n', '<leader>aa', '<cmd>ClaudeCodeDiffAccept<cr>',         'Claude — Accept diff')
 map('n', '<leader>ad', '<cmd>ClaudeCodeDiffDeny<cr>',           'Claude — Deny diff')
 
--- En exploradores, <leader>as añade archivo en vez de enviar selección
+-- In file explorers, <leader>as adds file instead of sending selection
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'NvimTree', 'neo-tree', 'oil', 'minifiles', 'netrw' },
   callback = function(ev)
@@ -455,7 +455,7 @@ map('n', '<leader>goi', '<cmd>GoImpl<cr>', 'Go — Implement interface')
 map('n', '<leader>gof', '<cmd>GoFillStruct<cr>', 'Go — Fill struct')
 map('n', '<leader>gos', '<cmd>GoFillSwitch<cr>', 'Go — Fill switch')
 
--- Organize imports manualmente
+-- Organize imports manually
 map('n', '<leader>goo', function()
   local params = vim.lsp.util.make_range_params()
   params.context = { only = { "source.organizeImports" } }
@@ -476,13 +476,13 @@ map('n', '<leader>goo', function()
   end
 
   if found then
-    print("✅ Imports organizados")
+    print("✅ Imports organized")
   else
-    print("⚠️  No se encontraron imports para organizar")
+    print("⚠️  No imports found to organize")
   end
 end, 'Go — Organize imports')
 
--- Quick fix para añadir imports (cuando hay error)
+-- Quick fix to add imports (when there's an error)
 map('n', '<leader>goq', function()
   local params = vim.lsp.util.make_range_params()
   params.context = {
@@ -667,7 +667,7 @@ map('n', '<leader>gor', function()
 end, 'Go — Run (smart main.go finder)')
 
 map('n', '<leader>gob', function()
-  local dir = vim.fn.expand('%:p:h')  -- Directorio del archivo actual
+  local dir = vim.fn.expand('%:p:h')  -- Current file directory
   vim.cmd('!cd ' .. vim.fn.shellescape(dir) .. ' && go build .')
 end, 'Go — Build current directory')
 
@@ -719,9 +719,21 @@ for i = 1, 9 do
   map({'n', 't'}, '<leader>t' .. i, '<cmd>' .. i .. 'ToggleTerm<cr>', 'Terminal — Toggle terminal ' .. i)
 end
 
--- Navega al siguiente/anterior terminal
-map('t', '<C-PageDown>', '<cmd>ToggleTermToggleAll<cr><cmd>ToggleTermToggleAll<cr>', 'Terminal — Next terminal')
-map('t', '<C-PageUp>', '<cmd>ToggleTermToggleAll<cr><cmd>ToggleTermToggleAll<cr>', 'Terminal — Previous terminal')
+-- Navega al siguiente/anterior terminal (usando send para cambiar)
+map('t', '<C-PageDown>', function()
+  local terms = require('toggleterm.terminal').get_all()
+  if #terms > 1 then
+    vim.cmd('ToggleTerm')
+    vim.defer_fn(function() vim.cmd((vim.v.count > 0 and vim.v.count or 2) .. 'ToggleTerm') end, 50)
+  end
+end, 'Terminal — Next terminal')
+map('t', '<C-PageUp>', function()
+  local terms = require('toggleterm.terminal').get_all()
+  if #terms > 1 then
+    vim.cmd('ToggleTerm')
+    vim.defer_fn(function() vim.cmd('1ToggleTerm') end, 50)
+  end
+end, 'Terminal — Previous terminal')
 
 -- Cierra todos los terminales
 map('n', '<leader>tq', '<cmd>ToggleTermToggleAll<cr>', 'Terminal — Close all terminals')

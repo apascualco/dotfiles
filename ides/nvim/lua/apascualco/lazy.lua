@@ -1,126 +1,149 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+			{ out,                            "WarningMsg" },
+			{ "\nPress any key to exit..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
+	end
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    -- Directory manager
-    'nvim-tree/nvim-tree.lua',
+	-- Directory manager
+	'nvim-tree/nvim-tree.lua',
 
-    -- Theme appearance
-    'nvim-tree/nvim-web-devicons',
-    { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+	-- Theme appearance
+	'nvim-tree/nvim-web-devicons',
+	{ 'catppuccin/nvim',                 name = 'catppuccin', priority = 1000 },
 
-    -- Highlighting of code
-    { "nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate" },
+	-- Highlighting of code
+	{ "nvim-treesitter/nvim-treesitter", branch = 'master',   lazy = false,   build = ":TSUpdate" },
 
-    -- Search and find dirs, snips, mappers, etc...
-    {
-        'nvim-telescope/telescope.nvim',
-        dependencies = {
-          { 'nvim-lua/plenary.nvim' },
-          { 'benfowler/telescope-luasnip.nvim' },
-          { 'lazytanuki/nvim-mapper' },
-          { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-        },
-        config = function()
-          require('telescope').load_extension('mapper')
-          require('telescope').load_extension('luasnip')
-          require('telescope').load_extension('fzf')
-        end
-    },
+	-- Search and find dirs, snips, mappers, etc...
+	{
+		'nvim-telescope/telescope.nvim',
+		dependencies = {
+			{ 'nvim-lua/plenary.nvim' },
+			{ 'benfowler/telescope-luasnip.nvim' },
+			{ 'lazytanuki/nvim-mapper' },
+			{ 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+		},
+		config = function()
+			require('telescope').load_extension('mapper')
+			require('telescope').load_extension('luasnip')
+			require('telescope').load_extension('fzf')
+		end
+	},
 
-    -- browse the tags
-    { 'preservim/tagbar' },
+	-- browse the tags
+	{ 'preservim/tagbar' },
 
-    -- LSP installer
-    {
-        "neovim/nvim-lspconfig",
-    },
-    {
-        "mason-org/mason-lspconfig.nvim",
-        opts = {},
-        dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            "neovim/nvim-lspconfig",
-        },
-    },
+	-- LSP installer
+	{
+		"neovim/nvim-lspconfig",
+	},
+	{
+		"mason-org/mason-lspconfig.nvim",
+		opts = {},
+		dependencies = {
+			{ "mason-org/mason.nvim", opts = {} },
+			"neovim/nvim-lspconfig",
+		},
+	},
 
-    -- Autocomplete
-    { "hrsh7th/nvim-cmp" },
-    { "hrsh7th/cmp-nvim-lsp" },
-    { "hrsh7th/cmp-buffer" },
-    { "hrsh7th/cmp-path" },
+	-- Autocomplete
+	{ "hrsh7th/nvim-cmp" },
+	{ "hrsh7th/cmp-nvim-lsp" },
+	{ "hrsh7th/cmp-nvim-lsp-signature-help" },
+	{ "hrsh7th/cmp-buffer" },
+	{ "hrsh7th/cmp-path" },
 
-    -- Vscode-like pictograms
-    { 'onsails/lspkind.nvim' },
+	-- Vscode-like pictograms
+	{ 'onsails/lspkind.nvim' },
 
-    -- Snippers
-    {
-        'L3MON4D3/LuaSnip',
-        build = 'make install_jsregexp'
-    },
-    { 'saadparwaiz1/cmp_luasnip' },
+	-- Snippers
+	{
+		'L3MON4D3/LuaSnip',
+		build = 'make install_jsregexp'
+	},
+	{ 'saadparwaiz1/cmp_luasnip' },
 
-    {
-      "mfussenegger/nvim-lint",
-      event = { "BufReadPre", "BufNewFile" },
-      config = function()
-          local lint = require("lint")
-           lint.linters_by_ft = {
-               go = { "golangcilint" },
-               }
-      end,
-    },
-    {
-        "stevearc/conform.nvim",
-        event = { "BufReadPre", "BufNewFile" },
-        opts = {
-            formatters_by_ft = { go = { "gofumpt", "goimports" },},
-            format_on_save = function(bufnr)
-                if vim.bo[bufnr].filetype == "go" then
-                    return { lsp_fallback = false, timeout_ms = 2000 }
-                end
-            end,
-        },
-    },
+	{
+		"mfussenegger/nvim-lint",
+		event = { "BufReadPre", "BufNewFile" },
+		config = function()
+			local lint = require("lint")
+			lint.linters_by_ft = {
+				-- go = { "golangcilint" },  -- Disabled due to errors
+			}
 
-    -- Diagnostics
-    {
-        'folke/trouble.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
-        opts = {},
-    },
+			-- Don't run automatically, only when called manually with ,ll
+			-- This avoids annoying errors in files outside Go projects
+		end,
+	},
+	{
+		"stevearc/conform.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		opts = {
+			formatters_by_ft = {
+				go = { "gofumpt", "goimports" },
+				javascript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
+				json = { "prettier" },
+				jsonc = { "prettier" },
+				yaml = { "prettier" },
+				markdown = { "prettier" },
+				html = { "prettier" },
+				css = { "prettier" },
+				scss = { "prettier" },
+				lua = { "stylua" },
+				python = { "black", "isort" },
+				rust = { "rustfmt" },
+			},
+			format_on_save = function(bufnr)
+				-- Disable for certain filetypes
+				local ignore_filetypes = { "sql", "java" }
+				if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then
+					return
+				end
+				return { lsp_fallback = true, timeout_ms = 2000 }
+			end,
+		},
+	},
 
-    -- Debug adapter protocol
-    {
-        "mfussenegger/nvim-dap",
-        dependencies = {
-            "rcarriga/nvim-dap-ui",
-            "jay-babu/mason-nvim-dap.nvim",
-            "williamboman/mason.nvim",
-            "theHamsta/nvim-dap-virtual-text",
-            "nvim-neotest/nvim-nio"
-        },
-    },
-    {
-        "leoluz/nvim-dap-go",
-        dependencies = { "mfussenegger/nvim-dap" },
-        config = function(_, opts)
-          require("dap-go").setup(opts)
-        end,
-    },
+	-- Diagnostics
+	{
+		'folke/trouble.nvim',
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		opts = {},
+	},
+
+	-- Debug adapter protocol
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"jay-babu/mason-nvim-dap.nvim",
+			"williamboman/mason.nvim",
+			"theHamsta/nvim-dap-virtual-text",
+			"nvim-neotest/nvim-nio"
+		},
+	},
+	{
+		"leoluz/nvim-dap-go",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function(_, opts)
+			require("dap-go").setup(opts)
+		end,
+	},
 	{
 		"LiadOz/nvim-dap-repl-highlights",
 		config = function()
@@ -128,16 +151,16 @@ require("lazy").setup({
 		end,
 	},
 
-    -- Botton line
-    {
-        'nvim-lualine/lualine.nvim',
-        dependencies = {
-          'arkav/lualine-lsp-progress',
-          'nvim-tree/nvim-web-devicons'
-        },
-    },
+	-- Botton line
+	{
+		'nvim-lualine/lualine.nvim',
+		dependencies = {
+			'arkav/lualine-lsp-progress',
+			'nvim-tree/nvim-web-devicons'
+		},
+	},
 
-    -- Top line
+	-- Top line
 	{
 		"akinsho/bufferline.nvim",
 		version = "*",
@@ -152,7 +175,12 @@ require("lazy").setup({
 			require("gitsigns").setup()
 		end,
 	},
-	{ "sindrets/diffview.nvim" },
+	{
+		"sindrets/diffview.nvim",
+		opts = {
+			hg_cmd = nil, -- Desactiva Mercurial
+		},
+	},
 
 	-- Comment
 	{
@@ -239,45 +267,11 @@ require("lazy").setup({
 	},
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
-		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
 		opts = {
 			latex = { enabled = false }
 		},
 	},
--- Autocompletado con Claude (ghost-text/cmp) + Minuet
-	{
-		"milanglacier/minuet-ai.nvim",
-		dependencies = { "nvim-lua/plenary.nvim", "hrsh7th/nvim-cmp" },
-		config = function()
-			require("minuet").setup({
-				provider = "claude",
-				request_timeout = 2.5,   -- evita bloqueos
-				throttle = 1500,         -- controla coste/rate limit
-				debounce = 600,
-				provider_options = {
-					claude = {
-						api_key = "ANTHROPIC_API_KEY",           -- lee de tu env
-						end_point = "https://api.anthropic.com/v1/messages",
-						model = "claude-haiku-4.5",              -- ajusta el modelo si quieres
-						stream = true,
-						max_tokens = 256,
-					},
-				},
-				virtualtext = { auto_trigger_ft = {} },
-			})
-			local cmp = require("cmp")
-			cmp.setup({
-				sources = cmp.config.sources({
-					{ name = "minuet", group_index = 1, priority = 100 },
-				}),
-				performance = { fetching_timeout = 2000 },
-				mapping = vim.tbl_deep_extend("force", {}, {
-					["<A-y>"] = require("minuet").make_cmp_map(), -- invocar minuet manualmente
-				}),
-			})
-		end,
-	},
-
 	-- ──────────────────────────────────────────────────────────────────────────────
 	-- Productivity plugins
 	-- ──────────────────────────────────────────────────────────────────────────────
@@ -290,25 +284,25 @@ require("lazy").setup({
 			plugins = { spelling = true },
 			spec = {
 				mode = { "n", "v" },
-				{ "g", group = "goto" },
-				{ "]", group = "next" },
-				{ "[", group = "prev" },
-				{ "<leader>a", group = "ai/claude" },
-				{ "<leader>b", group = "buffer" },
-				{ "<leader>c", group = "code" },
-				{ "<leader>d", group = "debug" },
-				{ "<leader>e", group = "explorer" },
-				{ "<leader>f", group = "find/telescope" },
-				{ "<leader>g", group = "git" },
+				{ "g",          group = "goto" },
+				{ "]",          group = "next" },
+				{ "[",          group = "prev" },
+				{ "<leader>a",  group = "ai/claude" },
+				{ "<leader>b",  group = "buffer" },
+				{ "<leader>c",  group = "code" },
+				{ "<leader>d",  group = "debug" },
+				{ "<leader>e",  group = "explorer" },
+				{ "<leader>f",  group = "find/telescope" },
+				{ "<leader>g",  group = "git" },
 				{ "<leader>go", group = "golang" },
-				{ "<leader>h", group = "hunks" },
-				{ "<leader>l", group = "lsp" },
-				{ "<leader>m", group = "harpoon" },
-				{ "<leader>q", group = "session" },
-				{ "<leader>s", group = "search/snippets" },
-				{ "<leader>t", group = "terminal/toggle/test" },
-				{ "<leader>w", group = "wrap" },
-				{ "<leader>x", group = "trouble/diagnostics" },
+				{ "<leader>h",  group = "hunks" },
+				{ "<leader>l",  group = "lsp" },
+				{ "<leader>m",  group = "harpoon" },
+				{ "<leader>q",  group = "session" },
+				{ "<leader>s",  group = "search/snippets" },
+				{ "<leader>t",  group = "terminal/toggle/test" },
+				{ "<leader>w",  group = "wrap" },
+				{ "<leader>x",  group = "trouble/diagnostics" },
 			},
 		},
 	},
@@ -332,7 +326,7 @@ require("lazy").setup({
 				keys = 'qwertyuiopzxcvbnmasdfghjkl',
 				check_comma = true,
 				highlight = 'Search',
-				highlight_grey='Comment'
+				highlight_grey = 'Comment'
 			},
 		},
 		config = function(_, opts)
@@ -433,23 +427,31 @@ require("lazy").setup({
 			local gopath = vim.fn.trim(vim.fn.system('go env GOPATH'))
 			local gobin = gopath .. '/bin'
 
+			-- Configurar variables de entorno para Go
+			vim.env.GOPATH = gopath
+			vim.env.GOBIN = gobin
+
 			-- Agregar GOBIN al PATH de nvim si no está
-			local current_path = vim.env.PATH
+			local current_path = vim.env.PATH or ''
 			if not string.find(current_path, gobin, 1, true) then
 				vim.env.PATH = gobin .. ':' .. current_path
 			end
 
 			require("go").setup({
-				lsp_cfg = false,  -- Usa tu LSP config existente (go.lua)
+				lsp_cfg = false,          -- Usa tu LSP config existente (go.lua)
 				lsp_on_attach = false,
-				lsp_keymaps = false,  -- Usamos keymaps de keybinding.lua
-				diagnostic = false,  -- Ya configurado en diagnostics.lua
-				go = "go",  -- comando go
-				gopath = gopath,  -- usar GOPATH detectado
+				lsp_keymaps = false,      -- Usamos keymaps de keybinding.lua
+				lsp_inlay_hints = { enable = false }, -- Configurado en go.lua
+				diagnostic = false,       -- Ya configurado en diagnostics.lua
+				go = "go",                -- comando go
+				gopath = gopath,          -- usar GOPATH detectado
+				gobin = gobin,            -- usar GOBIN detectado
+				lsp_gofumpt = false,      -- Ya configurado en go.lua
+				luasnip = true,
 			})
 		end,
-		event = {"CmdlineEnter"},
-		ft = {"go", 'gomod'},
+		event = { "CmdlineEnter" },
+		ft = { "go", 'gomod' },
 		build = ':lua require("go.install").update_all_sync()'
 	},
 
@@ -473,7 +475,6 @@ require("lazy").setup({
 }, {
 	-- Configuración de lazy.nvim
 	rocks = {
-		enabled = true,
-		hererocks = true,  -- Dejar que lazy instale la versión correcta de lua/luarocks
+		enabled = false, -- No hay plugins que requieran luarocks
 	},
 })

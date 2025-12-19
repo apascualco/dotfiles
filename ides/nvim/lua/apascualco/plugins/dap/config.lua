@@ -9,17 +9,17 @@ vim.api.nvim_set_hl(
 
 -- # Sign
 local dapSigns =
-	{ -- TODO: change highlight for Diagnostic** to have background color
-		Stopped = {
-			"󰁕 ",
-			"DiagnosticSignWarn",
-			"DapStoppedLine",
-		},
-		Breakpoint = { " " },
-		BreakpointCondition = { " " },
-		BreakpointRejected = { " ", "DiagnosticSignError" },
-		LogPoint = { "󰯑 " },
-	}
+{  -- TODO: change highlight for Diagnostic** to have background color
+	Stopped = {
+		"󰁕 ",
+		"DiagnosticSignWarn",
+		"DapStoppedLine",
+	},
+	Breakpoint = { " " },
+	BreakpointCondition = { " " },
+	BreakpointRejected = { " ", "DiagnosticSignError" },
+	LogPoint = { "󰯑 " },
+}
 
 for name, sign in pairs(dapSigns) do
 	vim.fn.sign_define("Dap" .. name, {
@@ -30,7 +30,6 @@ for name, sign in pairs(dapSigns) do
 	})
 end
 
--- JS Debug Adapter instalado por Mason
 local js_debug_adapter_path = vim.fn.stdpath("data") .. "/mason/bin/js-debug-adapter"
 
 dap.adapters["pwa-node"] = {
@@ -210,4 +209,5 @@ for _, language in ipairs({
 	}
 end
 
-require('dap').set_log_level('TRACE')
+require('dap').set_log_level(vim.env.NEOVIM_DAP_LOG_LEVEL or 'WARN')
+

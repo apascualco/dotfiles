@@ -9,19 +9,24 @@ local luasnip = require('luasnip')
 local select_opts = {behavior = cmp.SelectBehavior.Select}
 
 cmp.setup({
+  -- Enable automatic documentation popup
+  view = {
+    docs = {
+      auto_open = true
+    }
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end
   },
-  sources = {
-	  { name = "copilot",  group_index = 1, priority = 1200 },
-	  { name = "nvim_lsp", group_index = 1, priority = 1000 },
-	  { name = "nvim_lsp_signature_help", group_index = 1, priority = 950 },
-	  { name = "luasnip",  group_index = 1, priority = 900 },
-	  { name = "path" },
-	  { name = "buffer" },
-  },
+  sources = cmp.config.sources({
+	  { name = "nvim_lsp", priority = 1000 },
+	  -- { name = "nvim_lsp_signature_help", priority = 950 },  -- Disabled to avoid automatic popup
+	  { name = "luasnip",  priority = 900 },
+	  { name = "path",     priority = 700 },
+	  { name = "buffer",   priority = 500 },
+  }),
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
@@ -34,7 +39,6 @@ cmp.setup({
 
       before = function (entry, vim_item)
         local menu_icon = {
-			copilot  = "[COPILOT]",
 			nvim_lsp = "[LSP]",
 			nvim_lsp_signature_help = "[SIG]",
 			luasnip  = "[SNIP]",
@@ -56,6 +60,15 @@ cmp.setup({
 
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
+
+    -- Toggle documentation manually
+    ['<C-h>'] = cmp.mapping(function()
+      if cmp.visible_docs() then
+        cmp.close_docs()
+      else
+        cmp.open_docs()
+      end
+    end),
 
     ['<C-e>'] = cmp.mapping.abort(),
     ['<C-y>'] = cmp.mapping.confirm({select = true}),
@@ -99,14 +112,7 @@ cmp.setup({
   },
 })
 
-vim.diagnostic.config({
-  virtual_text = false,
-  severity_sort = true,
-  float = {
-    border = 'rounded',
-    source = 'always',
-  },
-})
+-- Diagnostic config moved to diagnostics.lua (single source of truth)
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
   vim.lsp.handlers.hover,
