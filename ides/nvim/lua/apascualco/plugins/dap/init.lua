@@ -45,3 +45,15 @@ vim.fn.sign_define('DapLogPoint', { text = '🟢', texthl = 'DiagnosticInfo' })
 
 require("apascualco.plugins.dap.config")
 
+-- Load .alberto/launch.json if present in the project
+local launch_path = vim.fn.getcwd() .. "/.alberto/launch.json"
+if vim.fn.filereadable(launch_path) == 1 then
+	local ok_vscode, vscode = pcall(require, "dap.ext.vscode")
+	if ok_vscode then
+		vscode.load_launchjs(launch_path, {
+			go = { "go" },
+			["pwa-node"] = { "javascript", "typescript" },
+		})
+	end
+end
+
