@@ -142,6 +142,8 @@ map('n', '<leader>dgl', function() require('dap-go').debug_last_test() end,'nvim
 -- ──────────────────────────────────────────────────────────────────────────────
 map('n', '<Tab>',     '<cmd>BufferLineCycleNext<CR>',              'Bufferline — Next buffer')
 map('n', '<S-Tab>',   '<cmd>BufferLineCyclePrev<CR>',              'Bufferline — Previous buffer')
+map('n', '<C-A-Left>',  '<cmd>BufferLineCyclePrev<CR>',            'Bufferline — Previous buffer (Ctrl+Opt+Left)')
+map('n', '<C-A-Right>', '<cmd>BufferLineCycleNext<CR>',            'Bufferline — Next buffer (Ctrl+Opt+Right)')
 map('n', '<leader>bp','<cmd>BufferLinePick<CR>',                   'Bufferline — Pick buffer by letter')
 map('n', '<leader>bc','<cmd>bdelete<CR>',                          'Bufferline — Close current buffer')
 map('n', '<leader>bo','<cmd>BufferLineCloseOthers<CR>',            'Bufferline — Close other buffers')
@@ -808,6 +810,10 @@ map('n', 'gD', vim.lsp.buf.declaration, 'LSP — Go to declaration')
 map('n', 'gr', vim.lsp.buf.references, 'LSP — References')
 map('n', 'gi', vim.lsp.buf.implementation, 'LSP — Go to implementation')
 map('n', 'gt', vim.lsp.buf.type_definition, 'LSP — Go to type definition')
+
+-- Ctrl+Click → go to definition
+set('n', '<C-LeftMouse>', '<LeftMouse><cmd>lua vim.lsp.buf.definition()<CR>',
+  { noremap = true, silent = true, desc = 'LSP — Ctrl+Click go to definition' })
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Quickfix & Location list navigation

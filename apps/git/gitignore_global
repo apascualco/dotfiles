@@ -38,3 +38,7 @@ bin/
 #Kotlin
 build/
 .gradle/
+
+# Personal
+.alberto/
+.env

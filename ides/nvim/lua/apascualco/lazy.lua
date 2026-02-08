@@ -181,6 +181,15 @@ require("lazy").setup({
 			hg_cmd = nil, -- Desactiva Mercurial
 		},
 	},
+	{
+		"akinsho/git-conflict.nvim",
+		version = "*",
+		event = "BufReadPre",
+		opts = {
+			default_mappings = true, -- co, ct, cb, c0, ]x, [x
+			disable_diagnostics = true, -- Desactiva diagnostics en conflictos
+		},
+	},
 
 	-- Comment
 	{
@@ -224,10 +233,20 @@ require("lazy").setup({
 	{ "nvim-pack/nvim-spectre" },
 	{ "ThePrimeagen/harpoon" },
 
+	-- Snacks (required by claudecode, must not be lazy-loaded)
+	{
+		"folke/snacks.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = {
+			notifier = { enabled = true },
+			words = { enabled = true },
+		},
+	},
+
 	-- Claude
 	{
 		"coder/claudecode.nvim",
-		dependencies = { "folke/snacks.nvim" },
 		cmd = {
 			"ClaudeCode",
 			"ClaudeCodeFocus",
@@ -245,6 +264,7 @@ require("lazy").setup({
 			return {
 				log_level = "info",
 				terminal_cmd = terminal_cmd,
+				cwd = vim.fn.getcwd(),
 				git_repo_cwd = true,
 				terminal = {
 					split_side = "right",
@@ -437,16 +457,55 @@ require("lazy").setup({
 				vim.env.PATH = gobin .. ':' .. current_path
 			end
 
+			local lsp_setup = require("apascualco.plugins.lsp.setup")
+
 			require("go").setup({
-				lsp_cfg = false,          -- Usa tu LSP config existente (go.lua)
-				lsp_on_attach = false,
+				lsp_cfg = {
+					capabilities = lsp_setup.capabilities,
+					settings = {
+						gopls = {
+							completeUnimported = true,
+							gofumpt = true,
+							usePlaceholders = true,
+							completeFunctionCalls = true,
+							experimentalPostfixCompletions = true,
+							analyses = {
+								unusedparams = true,
+								shadow = true,
+								unusedwrite = true,
+								useany = true,
+							},
+							staticcheck = true,
+							codelenses = {
+								gc_details = true,
+								generate = true,
+								regenerate_cgo = true,
+								tidy = true,
+								upgrade_dependency = true,
+								vendor = true,
+							},
+							importShortcut = "Both",
+							semanticTokens = true,
+							hints = {
+								assignVariableTypes = true,
+								compositeLiteralFields = true,
+								compositeLiteralTypes = true,
+								constantValues = true,
+								functionTypeParameters = true,
+								parameterNames = true,
+								rangeVariableTypes = true,
+							},
+						},
+					},
+				},
+				lsp_on_attach = lsp_setup.on_attach,
 				lsp_keymaps = false,      -- Usamos keymaps de keybinding.lua
-				lsp_inlay_hints = { enable = false }, -- Configurado en go.lua
+				lsp_inlay_hints = { enable = false },
 				diagnostic = false,       -- Ya configurado en diagnostics.lua
-				go = "go",                -- comando go
-				gopath = gopath,          -- usar GOPATH detectado
-				gobin = gobin,            -- usar GOBIN detectado
-				lsp_gofumpt = false,      -- Ya configurado en go.lua
+				go = "go",
+				gopath = gopath,
+				gobin = gobin,
+				lsp_gofumpt = true,
 				luasnip = true,
 			})
 		end,
