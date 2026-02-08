@@ -1,2 +1,0 @@
--- This file no longer contains keybindings.
--- All keybindings were moved to keybinding.lua

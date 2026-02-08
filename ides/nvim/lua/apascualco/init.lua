@@ -7,12 +7,12 @@ local g = vim.g
 
 opt.list = true
 opt.listchars = {
-	eol = '↲',          -- End of line
-	trail = '·',        -- Trailing whitespace
-	tab = '→ ',         -- Tabs
-	nbsp = '␣',         -- Non-breaking spaces
-	extends = '▶',      -- Line continues to the right
-	precedes = '◀',     -- Line continues to the left
+	eol = '↲', -- End of line
+	trail = '·', -- Trailing whitespace
+	tab = '→ ', -- Tabs
+	nbsp = '␣', -- Non-breaking spaces
+	extends = '▶', -- Line continues to the right
+	precedes = '◀', -- Line continues to the left
 }
 
 wo.relativenumber = true
@@ -29,7 +29,7 @@ vim.opt.wrap = false
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.termguicolors = true
-vim.opt.mouse = 'a'  -- Enable mouse in all modes
+vim.opt.mouse = 'a' -- Enable mouse in all modes
 
 -- ============================================================================
 -- JetBrains/Ghostty-like visual style
@@ -45,13 +45,13 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 
 -- Better UI
-vim.opt.pumheight = 15          -- Popup menu height
-vim.opt.pumblend = 10           -- Popup menu transparency
-vim.opt.winblend = 10           -- Floating window transparency
-vim.opt.showmode = false        -- Don't show mode (lualine shows it)
+vim.opt.pumheight = 15   -- Popup menu height
+vim.opt.pumblend = 10    -- Popup menu transparency
+vim.opt.winblend = 10    -- Floating window transparency
+vim.opt.showmode = false -- Don't show mode (lualine shows it)
 vim.opt.showcmd = true
 vim.opt.cmdheight = 1
-vim.opt.laststatus = 3          -- Global statusline
+vim.opt.laststatus = 3 -- Global statusline
 
 -- Better search
 vim.opt.ignorecase = true
@@ -63,7 +63,7 @@ vim.opt.incsearch = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
-vim.opt.expandtab = false       -- Use tabs (change to true for spaces)
+vim.opt.expandtab = false -- Use tabs (change to true for spaces)
 vim.opt.smartindent = true
 vim.opt.autoindent = true
 
@@ -86,7 +86,7 @@ vim.opt.fillchars = {
 	vertleft = '┤',
 	vertright = '├',
 	verthoriz = '┼',
-	eob = ' ',              -- Hide ~ at end of buffer
+	eob = ' ', -- Hide ~ at end of buffer
 	fold = ' ',
 	foldsep = ' ',
 }
@@ -136,15 +136,14 @@ require("apascualco.plugins.lualine")
 require("apascualco.plugins.lsp.mason")
 require("apascualco.plugins.lsp.autocompletion")
 
-require("apascualco.plugins.lsp.go")
 require("apascualco.plugins.lsp.tsserver")
+
+require("apascualco.plugins.lsp.rust")
 
 require("apascualco.plugins.dap")
 require("apascualco.plugins.bufferline")
 
 require("apascualco.keybinding")
-require("apascualco.console")
 require("apascualco.diagnostics")
 
 require("apascualco.onsave")
-require("apascualco.test")
