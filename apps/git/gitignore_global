@@ -4,6 +4,7 @@
 # No versioning
 alberto/
 notas/
+.claude/
 
 # IDEA
 .idea/

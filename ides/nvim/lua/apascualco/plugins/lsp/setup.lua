@@ -20,10 +20,7 @@ M.capabilities = capabilities
 
 -- Universal on_attach function
 M.on_attach = function(client, bufnr)
-	-- Enable inlay hints if supported (Neovim 0.10+)
-	if client.server_capabilities.inlayHintProvider then
-		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-	end
+	-- Inlay hints disabled by default, toggle with <leader>lh
 
 	-- Signature help on cursor hold in insert mode (DISABLED - use ,lK manually)
 	-- if client.server_capabilities.signatureHelpProvider then
