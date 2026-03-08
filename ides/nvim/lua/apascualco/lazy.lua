@@ -20,7 +20,15 @@ require("lazy").setup({
 
 	-- Theme appearance
 	'nvim-tree/nvim-web-devicons',
-	{ 'catppuccin/nvim',                 name = 'catppuccin', priority = 1000 },
+	{
+		'catppuccin/nvim',
+		name = 'catppuccin',
+		priority = 1000,
+		lazy = false,
+		config = function()
+			require("apascualco.plugins.catppuccin")
+		end,
+	},
 
 	-- Highlighting of code
 	{ "nvim-treesitter/nvim-treesitter", branch = 'master',   lazy = false,   build = ":TSUpdate" },
@@ -35,6 +43,19 @@ require("lazy").setup({
 			{ 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
 		},
 		config = function()
+			require('telescope').setup({
+				defaults = {
+					layout_strategy = 'horizontal',
+					layout_config = {
+						horizontal = {
+							preview_width = 0.6,
+							results_width = 0.4,
+						},
+						width = 0.9,
+						height = 0.85,
+					},
+				},
+			})
 			require('telescope').load_extension('mapper')
 			require('telescope').load_extension('luasnip')
 			require('telescope').load_extension('fzf')
@@ -229,7 +250,25 @@ require("lazy").setup({
 			require("colorizer").setup(opts)
 		end,
 	},
-	-- Movement pluin
+	-- Scrollbar (minimap-style like IntelliJ)
+	{
+		"lewis6991/satellite.nvim",
+		event = "BufReadPost",
+		opts = {
+			current_only = false,
+			winblend = 50,
+			zindex = 40,
+			handlers = {
+				cursor = { enable = true },
+				search = { enable = true },
+				diagnostic = { enable = true },
+				gitsigns = { enable = true },
+				marks = { enable = true },
+			},
+		},
+	},
+
+	-- Movement plugin
 	{ "nvim-pack/nvim-spectre" },
 	{ "ThePrimeagen/harpoon" },
 

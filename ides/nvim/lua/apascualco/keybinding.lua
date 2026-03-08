@@ -47,6 +47,7 @@ map('n', '<leader>li', function() require('telescope.builtin').lsp_implementatio
 map('n', '<leader>ls', function() require('telescope.builtin').lsp_document_symbols() end,    'Telescope — LSP document symbols')
 map('n', '<leader>lS', function() require('telescope.builtin').lsp_workspace_symbols() end,   'Telescope — LSP workspace symbols')
 map('n', '<leader>dd', function() require('telescope.builtin').diagnostics() end,             'Telescope — Diagnostics')
+map('n', '<leader>lh', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end, 'LSP — Toggle inlay hints')
 
 -- Extensiones de Telescope
 map('n', '<leader>ss', function() require('telescope').extensions.luasnip.luasnip() end,
@@ -190,6 +191,10 @@ map('n', '[[', function() require('illuminate').goto_prev_reference(false) end, 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Telescope extras
 -- ──────────────────────────────────────────────────────────────────────────────
+map('n', '<leader>fw', function()
+  local word = vim.fn.expand('<cword>')
+  require('telescope.builtin').current_buffer_fuzzy_find({ default_text = word })
+end, 'Telescope — Find word in current buffer')
 map('n', '<leader>fm', function() require('telescope.builtin').marks() end,     'Telescope — Marks')
 map('n', '<leader>fj', function() require('telescope.builtin').jumplist() end,  'Telescope — Jumplist')
 
@@ -276,6 +281,7 @@ map('n', '<leader>aC', '<cmd>ClaudeCode --continue<cr>',        'Claude — Cont
 map('n', '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>',        'Claude — Select model')
 map('n', '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>',              'Claude — Add current buffer')
 map('v', '<leader>as', '<cmd>ClaudeCodeSend<cr>',               'Claude — Send visual selection')
+map('n', '<leader>al', 'V<cmd>ClaudeCodeSend<cr>',              'Claude — Send current line')
 map('n', '<leader>aa', '<cmd>ClaudeCodeDiffAccept<cr>',         'Claude — Accept diff')
 map('n', '<leader>ad', '<cmd>ClaudeCodeDiffDeny<cr>',           'Claude — Deny diff')
 
@@ -805,11 +811,11 @@ map('i', '<C-s>', '<Esc><cmd>w<CR>a', 'Save file (insert mode)')
 -- LSP shortcuts (faster, no leader)
 -- ──────────────────────────────────────────────────────────────────────────────
 map('n', 'K', vim.lsp.buf.hover, 'LSP — Hover documentation')
-map('n', 'gd', vim.lsp.buf.definition, 'LSP — Go to definition')
+map('n', 'gd', function() require('telescope.builtin').lsp_definitions() end, 'LSP — Go to definition')
 map('n', 'gD', vim.lsp.buf.declaration, 'LSP — Go to declaration')
-map('n', 'gr', vim.lsp.buf.references, 'LSP — References')
-map('n', 'gi', vim.lsp.buf.implementation, 'LSP — Go to implementation')
-map('n', 'gt', vim.lsp.buf.type_definition, 'LSP — Go to type definition')
+map('n', 'gr', function() require('telescope.builtin').lsp_references() end, 'LSP — References')
+map('n', 'gi', function() require('telescope.builtin').lsp_implementations() end, 'LSP — Go to implementation')
+map('n', 'gt', function() require('telescope.builtin').lsp_type_definitions() end, 'LSP — Go to type definition')
 
 -- Ctrl+Click → go to definition
 set('n', '<C-LeftMouse>', '<LeftMouse><cmd>lua vim.lsp.buf.definition()<CR>',
@@ -850,6 +856,7 @@ end, 'Window — Maximize toggle')
 -- Quick quit
 -- ──────────────────────────────────────────────────────────────────────────────
 map('n', '<leader>q', '<cmd>q<CR>', 'Quit window')
+map('n', '<leader>qq', '<cmd>qa!<CR>', 'Quit all (force)')
 map('n', '<leader>Q', '<cmd>qa<CR>', 'Quit all')
 
 -- ──────────────────────────────────────────────────────────────────────────────

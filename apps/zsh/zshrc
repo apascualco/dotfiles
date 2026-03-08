@@ -49,6 +49,9 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 # Bash
 export PATH="/opt/homebrew/bin/bash:$PATH"
 
+# Local binaries (Claude Code, etc.)
+export PATH="$HOME/.local/bin:$PATH"
+
 # System paths
 export PATH="/usr/local/bin:$PATH"
 

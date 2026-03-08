@@ -97,38 +97,53 @@ vim.opt.signcolumn = "yes"
 -- Color column for code width guide
 vim.opt.colorcolumn = "120"
 
--- Apply highlights after colorscheme loads
-vim.api.nvim_create_autocmd("ColorScheme", {
+-- Folding via Treesitter (supports imports, functions, methods, blocks)
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldtext = ""
+
+-- Auto-close import folds when opening a file
+vim.api.nvim_create_autocmd("BufWinEnter", {
 	callback = function()
-		-- Window separator (subtle but visible)
-		vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#45475a', bold = false })
+		-- Wait for treesitter folds to be computed
+		vim.defer_fn(function()
+			if not vim.api.nvim_buf_is_valid(vim.api.nvim_get_current_buf()) then return end
+			local ft = vim.bo.filetype
+			local patterns = {
+				go = "^import",
+				java = "^import%s",
+				typescript = "^import%s",
+				javascript = "^import%s",
+				typescriptreact = "^import%s",
+				javascriptreact = "^import%s",
+				python = "^import%s",
+				rust = "^use%s",
+			}
+			-- Also match "from" for python
+			local pattern = patterns[ft]
+			if not pattern then return end
 
-		-- Cursor line (subtle highlight)
-		vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#313244' })
-		vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#cba6f7', bold = true })
-
-		-- Floating windows with border
-		vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#1e1e2e' })
-		vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#89b4fa', bg = '#1e1e2e' })
-
-		-- Popup menu
-		vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#1e1e2e' })
-		vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#45475a', bold = true })
-
-		-- Color column (subtle)
-		vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#181825' })
-
-		-- Inlay hints (subtle, like JetBrains)
-		vim.api.nvim_set_hl(0, 'LspInlayHint', { fg = '#6c7086', italic = true })
+			local total = vim.api.nvim_buf_line_count(0)
+			for lnum = 1, math.min(total, 100) do
+				local line = vim.fn.getline(lnum)
+				local is_import = line:match(pattern)
+				if not is_import and ft == "python" then
+					is_import = line:match("^from%s")
+				end
+				if is_import then
+					-- Close the fold on this line
+					pcall(vim.cmd, lnum .. "foldclose")
+				end
+			end
+		end, 150)
 	end,
 })
 
--- Trigger for initial load
-vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#45475a', bold = false })
 
 require("apascualco.lazy")
 
-require("apascualco.plugins.catppuccin")
 require("apascualco.plugins.nvim-tree")
 require("apascualco.plugins.treesitter")
 require("apascualco.plugins.lualine")
