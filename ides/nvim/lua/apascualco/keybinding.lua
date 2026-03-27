@@ -626,6 +626,7 @@ map('n', '<leader>god', function()
       program = dir,
       cwd = dir,
       env = env_vars,
+      console = 'integratedTerminal',
     })
 
     require('dapui').open()
@@ -803,10 +804,10 @@ map('n', '<leader>tq', '<cmd>ToggleTermToggleAll<cr>', 'Terminal — Close all t
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Better window navigation
 -- ──────────────────────────────────────────────────────────────────────────────
-map('n', '<C-h>', '<C-w>h', 'Window — Move to left window')
-map('n', '<C-j>', '<C-w>j', 'Window — Move to bottom window')
-map('n', '<C-k>', '<C-w>k', 'Window — Move to top window')
-map('n', '<C-l>', '<C-w>l', 'Window — Move to right window')
+map('n', '<C-h>', '<cmd>TmuxNavigateLeft<cr>',  'Window — Move to left window / tmux pane')
+map('n', '<C-j>', '<cmd>TmuxNavigateDown<cr>', 'Window — Move to bottom window / tmux pane')
+map('n', '<C-k>', '<cmd>TmuxNavigateUp<cr>',   'Window — Move to top window / tmux pane')
+map('n', '<C-l>', '<cmd>TmuxNavigateRight<cr>', 'Window — Move to right window / tmux pane')
 
 -- Terminal mode window navigation
 map('t', '<C-h>', '<C-\\><C-n><C-w>h', 'Window — Move to left window (terminal)')

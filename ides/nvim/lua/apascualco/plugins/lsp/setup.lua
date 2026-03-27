@@ -20,6 +20,10 @@ M.capabilities = capabilities
 
 -- Universal on_attach function
 M.on_attach = function(client, bufnr)
+	-- LSP keymaps
+	local opts = { noremap = true, silent = true, buffer = bufnr }
+	vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", opts)
+
 	-- Inlay hints disabled by default, toggle with <leader>lh
 
 	-- Signature help on cursor hold in insert mode (DISABLED - use ,lK manually)
