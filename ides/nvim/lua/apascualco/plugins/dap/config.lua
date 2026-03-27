@@ -209,5 +209,5 @@ for _, language in ipairs({
 	}
 end
 
-require('dap').set_log_level(vim.env.NEOVIM_DAP_LOG_LEVEL or 'WARN')
+require('dap').set_log_level(vim.env.NEOVIM_DAP_LOG_LEVEL or 'TRACE')
 

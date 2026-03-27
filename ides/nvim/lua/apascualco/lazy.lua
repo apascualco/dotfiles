@@ -187,8 +187,14 @@ require("lazy").setup({
 	{
 		"leoluz/nvim-dap-go",
 		dependencies = { "mfussenegger/nvim-dap" },
-		config = function()
-			require("dap-go").setup()
+		config = function(_, opts)
+			require("dap-go").setup(opts)
+			local dap = require("dap")
+			for _, config in ipairs(dap.configurations.go or {}) do
+				if not config.console then
+					config.console = "integratedTerminal"
+				end
+			end
 		end,
 	},
 	{
@@ -298,6 +304,20 @@ require("lazy").setup({
 	{ "nvim-pack/nvim-spectre" },
 	{ "ThePrimeagen/harpoon", branch = "harpoon2", dependencies = { "nvim-lua/plenary.nvim" } },
 	{ "christoomey/vim-tmux-navigator", lazy = false },
+
+	-- Symbol usage: muestra references/implementations encima de funciones (como IntelliJ)
+	{
+		"Wansmer/symbol-usage.nvim",
+		event = "LspAttach",
+		config = function()
+			require("symbol-usage").setup({
+				vt_position = "above",
+				references = { enabled = true, include_declaration = false },
+				definition = { enabled = false },
+				implementation = { enabled = true },
+			})
+		end,
+	},
 
 	-- Snacks (required by claudecode, must not be lazy-loaded)
 	{
@@ -526,46 +546,8 @@ require("lazy").setup({
 			local lsp_setup = require("apascualco.plugins.lsp.setup")
 
 			require("go").setup({
-				lsp_cfg = {
-					capabilities = lsp_setup.capabilities,
-					settings = {
-						gopls = {
-							completeUnimported = true,
-							gofumpt = true,
-							usePlaceholders = true,
-							completeFunctionCalls = true,
-							experimentalPostfixCompletions = true,
-							analyses = {
-								unusedparams = true,
-								shadow = true,
-								unusedwrite = true,
-								useany = true,
-								ST1000 = false,
-							},
-							staticcheck = true,
-							codelenses = {
-								gc_details = true,
-								generate = true,
-								regenerate_cgo = true,
-								tidy = true,
-								upgrade_dependency = true,
-								vendor = true,
-							},
-							importShortcut = "Both",
-							semanticTokens = true,
-							hints = {
-								assignVariableTypes = true,
-								compositeLiteralFields = true,
-								compositeLiteralTypes = true,
-								constantValues = true,
-								functionTypeParameters = true,
-								parameterNames = true,
-								rangeVariableTypes = true,
-							},
-						},
-					},
-				},
-				lsp_on_attach = lsp_setup.on_attach,
+			lsp_cfg = false,  -- gopls gestionado en plugins/lsp/go.lua
+				lsp_on_attach = false,
 				lsp_keymaps = false,      -- Usamos keymaps de keybinding.lua
 				lsp_inlay_hints = { enable = false },
 				diagnostic = false,       -- Ya configurado en diagnostics.lua

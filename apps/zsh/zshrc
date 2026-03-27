@@ -180,6 +180,7 @@ alias venvd='deactivate'
 # ============================================================================
 alias ctags="`brew --prefix`/bin/ctags"
 alias n='nvim .'
+alias ff='claude --dangerously-skip-permissions'
 alias idea='open -na "IntelliJ IDEA.app" --args '
 
 # ============================================================================
