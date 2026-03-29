@@ -210,7 +210,7 @@ alias fckcache='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 # ALIASES - Tmux
 # ============================================================================
 alias t='tmux'
-alias tn='tmux new -s'
+tn() { if [ -n "$TMUX" ]; then tmux new-session -d -s "$1" && tmux switch-client -t "$1"; else tmux new -s "$1"; fi }
 alias ta='tmux attach -t'
 alias td='tmux detach'
 alias ts='tmux switch -t'
@@ -244,3 +244,8 @@ sEN() {
 
 # opencode
 export PATH=/Users/apascualco/.opencode/bin:$PATH
+
+# Ghostty shell integration (manual source — p10k instant prompt blocks auto-injection)
+if [[ -n "$GHOSTTY_RESOURCES_DIR" && -z "$TMUX" ]]; then
+  source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+fi

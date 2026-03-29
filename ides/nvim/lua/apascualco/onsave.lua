@@ -1,5 +1,7 @@
 local function apply_code_actions_silently(bufnr, wanted)
-	local params = vim.lsp.util.make_range_params()
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+	local encoding = clients[1] and clients[1].offset_encoding or "utf-16"
+	local params = vim.lsp.util.make_range_params(0, encoding)
 	params.context = { only = wanted }
 	local results = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 500)
 	if not results then return end

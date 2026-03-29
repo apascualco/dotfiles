@@ -18,6 +18,7 @@ vim.lsp.config("gopls", {
         shadow = true,
         unusedwrite = true,
         useany = true,
+        ST1000 = false,
       },
       staticcheck = true,
       codelenses = {

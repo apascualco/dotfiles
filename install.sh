@@ -57,6 +57,7 @@ function create_symlinks() {
 	ln -sF ${PWD}/apps/git/gitignore_global ${HOME}/.gitignore_global
 	ln -sF ${PWD}/apps/git/gitconfig ${HOME}/.gitconfig
 	ln -sF ${PWD}/ides/intellij/ideavimrc ${HOME}/.ideavimrc
+	ln -sf ${PWD}/apps/tmux/tmux.conf ${HOME}/.tmux.conf
 }
 
 function last_executions() {
