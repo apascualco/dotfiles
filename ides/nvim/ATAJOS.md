@@ -1,67 +1,136 @@
-# 🚀 Guía de Atajos de Neovim
+# Guia de Atajos de Neovim
 
-**Tecla líder:** `,`
-
----
-
-## 📑 Índice
-- [📁 Explorador de Archivos](#-explorador-de-archivos-nvimtree)
-- [🔍 Búsqueda Fuzzy](#-búsqueda-fuzzy-telescope)
-- [💡 LSP (Servidor de Lenguaje)](#-lsp-servidor-de-lenguaje)
-- [🐛 Diagnósticos y Errores](#-diagnósticos-y-errores)
-- [🌿 Git](#-git)
-- [🔧 Debugging](#-debugging-dap)
-- [📋 Buffers y Pestañas](#-buffers-y-pestañas)
-- [💻 Terminal](#-terminal)
-- [🪟 Gestión de Ventanas](#-gestión-de-ventanas)
-- [🧭 Navegación de Código](#-navegación-de-código)
-- [✏️ Edición de Código](#️-edición-de-código)
-- [🐹 Go](#-go)
-- [🤖 Claude Code](#-claude-code-ia)
-- [🛠️ Otras Herramientas](#️-otras-herramientas)
+**Tecla lider:** `,`
 
 ---
 
-## 📁 Explorador de Archivos (NvimTree)
+## Indice
+- [Movimiento basico (Vim nativo)](#movimiento-basico-vim-nativo)
+- [Explorador de Archivos (NvimTree)](#explorador-de-archivos-nvimtree)
+- [Busqueda Fuzzy (Telescope)](#busqueda-fuzzy-telescope)
+- [LSP (Servidor de Lenguaje)](#lsp-servidor-de-lenguaje)
+- [Diagnosticos y Errores](#diagnosticos-y-errores)
+- [Git](#git)
+- [Debugging (DAP)](#debugging-dap)
+- [Buffers y Pestanas (Bufferline)](#buffers-y-pestanas-bufferline)
+- [Terminal (toggleterm + nativo)](#terminal-toggleterm--nativo)
+- [Gestion de Ventanas](#gestion-de-ventanas)
+- [Navegacion de Codigo](#navegacion-de-codigo)
+- [Edicion de Codigo](#edicion-de-codigo)
+- [Autocompletado y Snippets (nvim-cmp + LuaSnip)](#autocompletado-y-snippets-nvim-cmp--luasnip)
+- [Treesitter](#treesitter)
+- [Surround (nvim-surround)](#surround-nvim-surround)
+- [Autopairs (nvim-autopairs)](#autopairs-nvim-autopairs)
+- [Go](#go)
+- [Claude Code (IA)](#claude-code-ia)
+- [Otras Herramientas](#otras-herramientas)
+- [Tips y Trucos](#tips-y-trucos)
+
+---
+
+## Movimiento basico (Vim nativo)
+
+### Movimiento por caracteres y palabras
+| Atajo | Descripcion |
+|-------|-------------|
+| `h j k l` | Izquierda, abajo, arriba, derecha |
+| `w` | Siguiente palabra (inicio) |
+| `b` | Anterior palabra (inicio) |
+| `e` | Final de la palabra actual/siguiente |
+| `W` / `B` / `E` | Igual pero por WORDS (separados por espacios) |
+| `f{char}` | Saltar a {char} hacia adelante en la linea |
+| `F{char}` | Saltar a {char} hacia atras en la linea |
+| `t{char}` | Saltar hasta antes de {char} hacia adelante |
+| `T{char}` | Saltar hasta despues de {char} hacia atras |
+| `;` | Repetir ultimo f/F/t/T |
+| `,` | Repetir ultimo f/F/t/T en direccion opuesta |
+
+### Movimiento por lineas
+| Atajo | Descripcion |
+|-------|-------------|
+| `0` | Inicio de la linea |
+| `^` | Primer caracter no-blanco de la linea |
+| `$` | Final de la linea |
+| `{numero}j` / `{numero}k` | Saltar N lineas abajo/arriba (relativenumber activo) |
+
+### Movimiento por pantalla
+| Atajo | Descripcion |
+|-------|-------------|
+| `Ctrl+d` | Media pagina abajo |
+| `Ctrl+u` | Media pagina arriba |
+| `Ctrl+f` | Pagina completa abajo |
+| `Ctrl+b` | Pagina completa arriba |
+| `H` | Parte superior de la pantalla |
+| `M` | Mitad de la pantalla |
+| `L` | Parte inferior de la pantalla |
+| `zz` | Centrar linea actual en pantalla |
+| `zt` | Linea actual arriba de la pantalla |
+| `zb` | Linea actual abajo de la pantalla |
+
+### Movimiento por archivo
+| Atajo | Descripcion |
+|-------|-------------|
+| `gg` | Inicio del archivo |
+| `G` | Final del archivo |
+| `{numero}G` | Ir a linea N |
+| `{` / `}` | Parrafo anterior / siguiente |
+| `%` | Ir al parentesis/corchete/llave complementario |
+
+### Busqueda en archivo
+| Atajo | Descripcion |
+|-------|-------------|
+| `/texto` | Buscar hacia adelante |
+| `?texto` | Buscar hacia atras |
+| `n` / `N` | Siguiente / anterior resultado |
+| `*` | Buscar la palabra bajo el cursor hacia adelante |
+| `#` | Buscar la palabra bajo el cursor hacia atras |
+
+> Config: `ignorecase + smartcase` activos -- busca case-insensitive salvo que uses mayusculas.
+> `scrolloff = 8` -- siempre hay 8 lineas de contexto visible arriba/abajo del cursor.
+
+---
+
+## Explorador de Archivos (NvimTree)
 
 ### Atajos Principales
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
 | `,e` | Abrir/cerrar explorador |
 | `,ef` | Enfocar explorador |
 | `,ee` | Mostrar archivo actual en explorador |
 | `,ec` | Colapsar todos los nodos |
-| `,er` | Refrescar árbol |
+| `,er` | Refrescar arbol |
 
-### Dentro del Explorador
-| Atajo | Descripción |
+### Dentro del Explorador (buffer-local)
+| Atajo | Descripcion |
 |-------|-------------|
 | `Enter` / `o` | Abrir archivo |
 | `i` | Abrir en split horizontal |
-| `s` / `v` | Abrir en split vertical |
-| `t` | Abrir en nueva pestaña |
+| `s` / `v` / `Ctrl+v` | Abrir en split vertical |
+| `Ctrl+x` | Abrir en split horizontal |
+| `t` / `Ctrl+t` | Abrir en nueva pestana |
 | `Tab` | Previsualizar |
-| **Crear/Eliminar** |
+| **Crear/Eliminar** | |
 | `a` | Crear archivo/carpeta |
 | `d` | Eliminar |
 | `D` | Mover a papelera |
 | `r` | Renombrar |
 | `Ctrl+r` | Renombrar (omitir nombre de archivo) |
-| **Copiar/Pegar** |
+| **Copiar/Pegar** | |
 | `x` | Cortar |
 | `c` | Copiar |
 | `p` | Pegar |
 | `y` | Copiar nombre |
 | `Y` | Copiar ruta relativa |
 | `gy` | Copiar ruta absoluta |
-| **Navegación** |
+| **Navegacion** | |
 | `<` / `>` | Hermano anterior/siguiente |
 | `P` | Ir a padre |
-| `-` | Cambiar root a directorio padre |
 | `Backspace` | Cerrar directorio |
-| `K` / `J` | Primer/último hermano |
+| `K` / `J` | Primer/ultimo hermano |
+| `-` | Cambiar root a directorio padre |
 | `[c` / `]c` | Git anterior/siguiente |
-| **Filtros** |
+| **Filtros y otros** | |
 | `I` | Toggle filtro gitignore |
 | `H` | Toggle archivos ocultos |
 | `R` | Refrescar |
@@ -70,105 +139,128 @@
 
 ---
 
-## 🔍 Búsqueda Fuzzy (Telescope)
+## Busqueda Fuzzy (Telescope)
 
 ### Buscar Archivos
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
 | `,ff` | Buscar archivos |
-| `,fF` | Buscar archivos (incluir ocultos) |
+| `,fF` | Buscar archivos (incluir ocultos e ignorados) |
 | `,fg` | Buscar texto en archivos (live grep) |
-| `,fs` | Buscar palabra bajo cursor |
-| `,f/` | Buscar en buffer actual |
+| `,fs` | Buscar palabra bajo cursor (grep_string) |
+| `,f/` | Buscar en buffer actual (fuzzy) |
+| `,fw` | Buscar palabra bajo cursor en buffer actual |
 | `,fb` | Cambiar buffer |
 | `,fo` | Archivos recientes |
-| `,fr` | Reabrir última búsqueda |
+| `,fr` | Reabrir ultima busqueda |
 
-### Otras Búsquedas
-| Atajo | Descripción |
+### Otras Busquedas
+| Atajo | Descripcion |
 |-------|-------------|
 | `,fh` | Ayuda (help tags) |
 | `,fk` | Ver todos los keymaps |
 | `,fc` | Comandos disponibles |
 | `,f:` | Historial de comandos |
-| `,f?` | Historial de búsqueda |
+| `,f?` | Historial de busqueda |
 | `,frg` | Registros |
 | `,fm` | Marcadores (marks) |
 | `,fj` | Lista de saltos (jumplist) |
-| `,ft` | Comentarios TODO |
+| `,fn` | Historial de notificaciones |
+
+### Git (Telescope)
+| Atajo | Descripcion |
+|-------|-------------|
+| `,gs` | Git status (archivos modificados) |
+| `,gb` | Ramas de git |
+| `,gc` | Commits del repositorio |
+| `,gC` | Commits del archivo actual |
+
+### LSP (Telescope)
+| Atajo | Descripcion |
+|-------|-------------|
+| `,lr` | Referencias del simbolo |
+| `,li` | Implementaciones |
+| `,ls` | Simbolos del documento |
+| `,lS` | Simbolos del workspace |
+| `,dd` | Todos los diagnosticos |
+
+### Todo-comments (Telescope)
+| Atajo | Descripcion |
+|-------|-------------|
+| `,ft` | Comentarios TODO (todos) |
 | `,fT` | Solo TODO/FIX/FIXME |
-| `,fn` | Historial notificaciones |
+
+### Extensiones de Telescope
+| Atajo | Descripcion |
+|-------|-------------|
+| `,ss` | Explorar e insertar snippets (luasnip) |
+| `,km` | Explorar keymaps personalizados (mapper) |
 
 ---
 
-## 💡 LSP (Servidor de Lenguaje)
+## LSP (Servidor de Lenguaje)
 
-### Atajos Rápidos (sin leader)
-| Atajo | Descripción |
+### Atajos rapidos (sin leader)
+| Atajo | Descripcion |
 |-------|-------------|
-| `K` | Ver documentación (hover) |
-| `gd` | Ir a definición |
-| `gD` | Ir a declaración |
-| `gr` | Referencias |
-| `gi` | Ir a implementación |
-| `gt` | Ir a definición de tipo |
-| `gl` | Diagnósticos de línea (float) |
+| `K` | Ver documentacion (hover) |
+| `gd` | Ir a definicion (via Telescope) |
+| `gD` | Ir a declaracion |
+| `gr` | Ver referencias (via Telescope) |
+| `gi` | Ir a implementacion (via Telescope) |
+| `gt` | Ir a definicion de tipo (via Telescope) |
+| `gl` | Diagnosticos de linea (float) |
+| `Ctrl+Click` | Ir a definicion (raton) |
 
 ### Acciones Principales (con leader)
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,la` | Acciones de código |
-| `,lR` | Renombrar símbolo |
-| `,ld` | Ir a definición |
-| `,lD` | Ir a declaración |
-| `,lt` | Ir a definición de tipo |
-| `,lh` | Ver documentación (hover) |
-| `,lK` | Ayuda de firma de función |
+| `,la` | Acciones de codigo |
+| `,la` (visual) | Acciones de codigo (rango visual) |
+| `,lR` | Renombrar simbolo |
+| `,ld` | Ir a definicion |
+| `,lD` | Ir a declaracion |
+| `,lt` | Ir a definicion de tipo |
+| `,lh` | Hover / Toggle inlay hints |
+| `,lK` | Ayuda de firma de funcion |
 | `,lf` | Formatear buffer |
-| `,le` | Ver diagnóstico bajo cursor |
-| `,lq` | Llenar location list con diagnósticos |
-
-### LSP vía Telescope
-| Atajo | Descripción |
-|-------|-------------|
-| `,lr` | Referencias del símbolo |
-| `,li` | Implementaciones |
-| `,ls` | Símbolos del documento |
-| `,lS` | Símbolos del workspace |
+| `,lf` (visual) | Formatear seleccion |
+| `,le` | Ver diagnostico bajo cursor |
+| `,lq` | Llenar location list con diagnosticos |
 
 ### Info LSP
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
 | `,lI` | Mostrar clientes LSP activos |
-| `,lm` | Abrir Mason (gestor de paquetes) |
+| `,lm` | Abrir Mason (gestor de paquetes LSP) |
 
 ---
 
-## 🐛 Diagnósticos y Errores
+## Diagnosticos y Errores
 
-### Navegación
-| Atajo | Descripción |
+### Navegacion
+| Atajo | Descripcion |
 |-------|-------------|
-| `[d` | Diagnóstico anterior |
-| `]d` | Diagnóstico siguiente |
-| `gl` | Diagnósticos de línea (float) |
-| `,dd` | Todos los diagnósticos (Telescope) |
-| `,td` | Toggle auto-popup de diagnósticos |
+| `[d` | Diagnostico anterior |
+| `]d` | Diagnostico siguiente |
+| `gl` | Diagnosticos de linea (float) |
+| `,dd` | Todos los diagnosticos (Telescope) |
+| `,td` | Toggle auto-popup de diagnosticos en CursorHold |
 
 ### Trouble (Panel de Errores)
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,xx` | Toggle diagnósticos (workspace) |
-| `,xd` | Toggle diagnósticos (buffer actual) |
-| `,xd0` | Abrir diagnósticos del documento |
+| `,xx` | Toggle diagnosticos (workspace) |
+| `,xd` | Toggle diagnosticos (buffer actual) |
+| `,xd0` | Abrir diagnosticos del documento |
 | `,xl` | Toggle location list |
 | `,xq` | Toggle quickfix list |
-| `,xs` | Toggle símbolos del documento |
+| `,xs` | Toggle simbolos del documento |
 | `,xlp` | Toggle panel LSP |
 | `,xr` | Referencias LSP |
 
-### Quickfix & Location List
-| Atajo | Descripción |
+### Quickfix y Location List
+| Atajo | Descripcion |
 |-------|-------------|
 | `]q` | Siguiente item en quickfix |
 | `[q` | Item anterior en quickfix |
@@ -181,405 +273,707 @@
 
 ---
 
-## 🌿 Git
-
-### Telescope Git
-| Atajo | Descripción |
-|-------|-------------|
-| `,gs` | 📊 Git status (archivos modificados) |
-| `,gb` | 🌿 Ramas de git |
-| `,gc` | 📝 Commits del repositorio |
-| `,gC` | 📝 Commits del archivo actual |
+## Git
 
 ### Gitsigns (Hunks/Cambios)
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,hs` | ✅ Stage hunk |
-| `,hr` | ↩️ Reset hunk |
-| `,hu` | ⏪ Deshacer stage hunk |
-| `,hS` | ✅ Stage todo el buffer |
-| `,hR` | ↩️ Reset todo el buffer |
-| `,hp` | 👁️ Previsualizar hunk |
-| `,hb` | 👤 Toggle blame de línea |
+| `,hs` | Stage hunk |
+| `,hs` (visual) | Stage hunk (seleccion visual) |
+| `,hr` | Reset hunk |
+| `,hr` (visual) | Reset hunk (seleccion visual) |
+| `,hu` | Deshacer stage hunk |
+| `,hS` | Stage todo el buffer |
+| `,hR` | Reset todo el buffer |
+| `,hp` | Previsualizar hunk |
+| `,hb` | Toggle blame de linea |
 | `]h` | Siguiente hunk |
 | `[h` | Hunk anterior |
 
 ### Diffview (Vista de Diferencias)
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,gd` | 📊 Abrir diff (vs HEAD) |
-| `,gD` | ❌ Cerrar diff |
-| `,gh` | 📜 Historial del archivo actual |
-| `,gH` | 📜 Historial del repositorio |
-| `,gf` | 📁 Toggle panel de archivos |
-| `,gF` | 📁 Enfocar panel de archivos |
+| `,gd` | Abrir diff (vs HEAD) |
+| `,gD` | Cerrar diff |
+| `,gh` | Historial del archivo actual |
+| `,gH` | Historial del repositorio |
+| `,gf` | Toggle panel de archivos |
+| `,gF` | Enfocar panel de archivos |
+
+### Git Conflict (resolucion de conflictos)
+
+Plugin `git-conflict.nvim` con mappings por defecto:
+
+| Atajo | Descripcion |
+|-------|-------------|
+| `co` | Elegir "ours" (cambio local) |
+| `ct` | Elegir "theirs" (cambio remoto) |
+| `cb` | Elegir ambos |
+| `c0` | No elegir ninguno |
+| `]x` | Siguiente conflicto |
+| `[x` | Conflicto anterior |
 
 ---
 
-## 🔧 Debugging (DAP)
+## Debugging (DAP)
 
 ### Breakpoints
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,db` | 🔴 Toggle breakpoint |
-| `,dB` | 🔵 Breakpoint condicional |
-| `,dL` | 📝 Logpoint |
+| `,db` | Toggle breakpoint |
+| `,dB` | Breakpoint condicional |
+| `,dL` | Logpoint (mensaje de log) |
 
 ### Controles de Debug
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,dc` | ▶️ Iniciar/continuar |
-| `,dn` | ⏭️ Step over |
-| `,di` | ⬇️ Step into |
-| `,do` | ⬆️ Step out |
-| `,dr` | 💻 Toggle REPL |
-| `,dl` | 🔄 Ejecutar último |
-| `,dt` | ⏹️ Terminar |
+| `,dc` | Iniciar/continuar |
+| `,dn` | Step over |
+| `,di` | Step into |
+| `,do` | Step out |
+| `,dr` | Toggle REPL |
+| `,dl` | Ejecutar ultimo |
+| `,dt` | Terminar |
 
 ### UI de Debug
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,du` | 🖥️ Toggle UI de debugger |
-| `,de` | 🔍 Evaluar expresión |
-| `,dv` | 👁️ Hover eval (normal/visual) |
+| `,du` | Toggle UI de debugger |
+| `,de` | Evaluar expresion |
+| `,dv` | Hover eval (normal/visual) |
 
 ### Debug Go
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,dgt` | 🧪 Debug test actual |
-| `,dgl` | 🧪 Debug último test |
+| `,dgt` | Debug test actual (Go) |
+| `,dgl` | Debug ultimo test (Go) |
 
 ---
 
-## 📋 Buffers y Pestañas
+## Buffers y Pestanas (Bufferline)
 
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `Tab` | ➡️ Buffer siguiente |
-| `Shift+Tab` | ⬅️ Buffer anterior |
-| `,bp` | 🔤 Elegir buffer por letra |
-| `,bc` | ❌ Cerrar buffer actual |
-| `,bo` | 🗑️ Cerrar otros buffers |
-| `,br` | ➡️🗑️ Cerrar buffers a la derecha |
-| `,bl` | ⬅️🗑️ Cerrar buffers a la izquierda |
-| `,b>` | ➡️ Mover buffer a la derecha |
-| `,b<` | ⬅️ Mover buffer a la izquierda |
-| `,bsd` | 📁 Ordenar por directorio |
-| `,bse` | 📄 Ordenar por extensión |
-| `,n` | ➕ Nuevo buffer vacío |
+| `Tab` | Buffer siguiente |
+| `Shift+Tab` | Buffer anterior |
+| `Ctrl+Alt+Right` | Buffer siguiente (alternativo) |
+| `Ctrl+Alt+Left` | Buffer anterior (alternativo) |
+| `,bp` | Elegir buffer por letra |
+| `,bc` | Cerrar buffer actual |
+| `,bo` | Cerrar otros buffers |
+| `,br` | Cerrar buffers a la derecha |
+| `,bl` | Cerrar buffers a la izquierda |
+| `,b>` | Mover buffer a la derecha |
+| `,b<` | Mover buffer a la izquierda |
+| `,bsd` | Ordenar por directorio |
+| `,bse` | Ordenar por extension |
+| `,n` | Nuevo buffer vacio |
 
 ---
 
-## 💻 Terminal
+## Terminal (toggleterm + nativo)
 
 ### Atajos Principales
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,T` | Toggle terminal inferior (nativo) |
-| `Ctrl+\` | Toggle último terminal (toggleterm) |
+| `,T` | Toggle terminal inferior (nativo, 12 lineas) |
+| `Ctrl+\` | Toggle ultimo terminal (toggleterm) |
 | `,t1` a `,t9` | Toggle terminal 1-9 |
 | `,tq` | Cerrar todos los terminales |
 
-### Navegación entre Terminales
-| Atajo | Descripción |
+### Navegacion entre Terminales
+| Atajo | Descripcion |
 |-------|-------------|
 | `Ctrl+PageDown` | Siguiente terminal |
 | `Ctrl+PageUp` | Terminal anterior |
 
 ### Dentro del Terminal
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `Esc` | 🚪 Salir del modo terminal |
-| `Ctrl+h/j/k/l` | ⬅️⬇️⬆️➡️ Moverse a otra ventana |
+| `Esc` | Salir del modo terminal |
+| `Ctrl+h` | Moverse a ventana izquierda |
+| `Ctrl+j` | Moverse a ventana inferior |
+| `Ctrl+k` | Moverse a ventana superior |
+| `Ctrl+l` | Moverse a ventana derecha |
 
 ---
 
-## 🪟 Gestión de Ventanas
+## Gestion de Ventanas
 
-### Navegación entre Ventanas
-| Atajo | Descripción |
+### Navegacion entre Ventanas
+| Atajo | Descripcion |
 |-------|-------------|
-| `Ctrl+h` | ⬅️ Ventana izquierda |
-| `Ctrl+j` | ⬇️ Ventana inferior |
-| `Ctrl+k` | ⬆️ Ventana superior |
-| `Ctrl+l` | ➡️ Ventana derecha |
-
-También: `Ctrl+w` + flechas
+| `Ctrl+h` | Ventana izquierda |
+| `Ctrl+j` | Ventana inferior |
+| `Ctrl+k` | Ventana superior |
+| `Ctrl+l` | Ventana derecha |
+| `Ctrl+w + Flechas` | Navegacion alternativa |
 
 ### Redimensionar Ventanas
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `Ctrl+↑` | ⬆️ Aumentar altura |
-| `Ctrl+↓` | ⬇️ Disminuir altura |
-| `Ctrl+←` | ⬅️ Disminuir anchura |
-| `Ctrl+→` | ➡️ Aumentar anchura |
-
-💡 **Tip:** También puedes arrastrar los bordes con el ratón
+| `Ctrl+Up` | Aumentar altura (+2) |
+| `Ctrl+Down` | Disminuir altura (-2) |
+| `Ctrl+Left` | Disminuir anchura (-2) |
+| `Ctrl+Right` | Aumentar anchura (+2) |
 
 ### Splits (Divisiones)
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
 | `,sv` | Split vertical |
 | `,sh` | Split horizontal |
 | `,sx` | Cerrar split actual |
 | `,so` | Cerrar todos los otros splits |
-| `,se` | Igualar tamaño de splits |
+| `,se` | Igualar tamano de splits |
 | `,sm` | Toggle maximizar ventana actual |
 
-### Soft Wrap (Ajuste de Línea)
-| Atajo | Descripción |
+### Soft Wrap (Ajuste de Linea)
+| Atajo | Descripcion |
 |-------|-------------|
-| `,tw` | Toggle soft-wrap |
+| `,tw` | Toggle soft-wrap (visual, con linebreak + breakindent) |
 | `,w8` | Ajustar a 80 columnas |
 | `,w0` | Ajustar a 100 columnas |
 | `,w2` | Ajustar a 120 columnas |
 
 ---
 
-## 🧭 Navegación de Código
+## Navegacion de Codigo
 
-### Referencias (Illuminate)
-| Atajo | Descripción |
+### Referencias (vim-illuminate)
+| Atajo | Descripcion |
 |-------|-------------|
-| `]]` | Siguiente referencia |
+| `]]` | Siguiente referencia de la palabra bajo cursor |
 | `[[` | Referencia anterior |
 
-### Flash (Salto Rápido)
-| Atajo | Descripción |
+### Flash.nvim (Salto Rapido)
+| Atajo | Descripcion |
 |-------|-------------|
-| `s` | ⚡ Saltar a ubicación |
-| `S` | 🌳 Selección treesitter |
-| `r` | 📡 Operación remota (en operator mode) |
-| `R` | 🔍 Búsqueda treesitter (operator/visual) |
-| `Ctrl+s` (en búsqueda) | 🔄 Toggle Flash en búsqueda |
+| `s` | Saltar a ubicacion (normal, visual, operator) |
+| `S` | Seleccion treesitter (normal, visual, operator) |
+| `r` | Operacion remota (solo en operator mode) |
+| `R` | Busqueda treesitter (operator/visual) |
+| `Ctrl+s` (en busqueda `/` `?`) | Toggle Flash en busqueda |
 
-### Harpoon (Marcadores de Archivos)
-| Atajo | Descripción |
+### Harpoon v2 (Marcadores de Archivos)
+| Atajo | Descripcion |
 |-------|-------------|
-| `,ma` | ➕ Añadir archivo actual |
-| `,mm` | 📋 Toggle menú rápido |
-| `,mn` | ➡️ Siguiente item |
-| `,mp` | ⬅️ Item anterior |
+| `,ma` | Anadir archivo actual a la lista |
+| `,mm` | Toggle menu rapido |
+| `,mn` | Siguiente item |
+| `,mp` | Item anterior |
 | `,m1` a `,m5` | Seleccionar item 1-5 |
 
-### Comentarios TODO
-| Atajo | Descripción |
+### Comentarios TODO (todo-comments.nvim)
+| Atajo | Descripcion |
 |-------|-------------|
 | `]t` | Siguiente TODO |
 | `[t` | TODO anterior |
 
 ---
 
-## ✏️ Edición de Código
+## Edicion de Codigo
 
-### Comentarios
-| Atajo | Descripción |
+### Comentarios (Comment.nvim)
+| Atajo | Descripcion |
 |-------|-------------|
-| `,/` | Toggle comentario (línea o selección) |
-| `gcc` | Toggle comentario línea actual |
+| `,/` | Toggle comentario (linea actual o seleccion visual) |
+| `gcc` | Toggle comentario linea actual |
 | `gbc` | Toggle comentario bloque actual |
-| `gc` (visual) | Toggle comentario (línea) |
-| `gb` (visual) | Toggle comentario (bloque) |
+| `gc` (visual) | Toggle comentario seleccion (linea) |
+| `gb` (visual) | Toggle comentario seleccion (bloque) |
+| `gc{motion}` | Comentar con movimiento (ej: `gcap` comenta parrafo) |
+| `gb{motion}` | Comentar bloque con movimiento |
 | `gco` | Insertar comentario abajo |
 | `gcO` | Insertar comentario arriba |
-| `gcA` | Comentar al final de línea |
+| `gcA` | Comentar al final de linea |
 
 ### Formato y Lint
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,cf` | 🎨 Formatear archivo (conform.nvim) |
-| `,lf` | 🎨 Formatear con LSP |
-| `,ll` | 🔍 Ejecutar linter |
+| `,cf` | Formatear archivo (conform.nvim, async) |
+| `,lf` | Formatear con LSP |
+| `,lf` (visual) | Formatear seleccion con LSP |
+| `,ll` | Ejecutar linter manualmente (nvim-lint) |
 
-### Edición General
-| Atajo | Descripción |
-|-------|-------------|
-| `<` (visual) | ⬅️ Reducir indentación (mantener selección) |
-| `>` (visual) | ➡️ Aumentar indentación (mantener selección) |
-| `Alt+j` | ⬇️ Mover línea abajo |
-| `Alt+k` | ⬆️ Mover línea arriba |
-| `Alt+j` (visual) | ⬇️ Mover selección abajo |
-| `Alt+k` (visual) | ⬆️ Mover selección arriba |
-| `p` (visual) | 📋 Pegar sin copiar texto reemplazado |
+> Nota: conform.nvim formatea automaticamente al guardar (excepto SQL y Java).
+> Los archivos Go se organizan imports + formatean automaticamente al guardar.
+> Los archivos TS/JS ejecutan fixAll + organizeImports al guardar.
 
-### Autocompletado y Snippets
-| Atajo | Descripción |
+### Movimiento e Indentacion
+| Atajo | Descripcion |
 |-------|-------------|
-| `Ctrl+Space` | 💡 Activar autocompletado |
-| `Ctrl+y` | ✅ Confirmar autocompletado |
-| `Ctrl+e` | ❌ Cancelar autocompletado |
-| `Ctrl+j` | ⬇️ Siguiente nodo del snippet |
-| `Ctrl+k` | ⬆️ Nodo anterior del snippet |
-| `,ss` | 📚 Explorar e insertar snippets |
+| `<` (visual) | Reducir indentacion (mantiene seleccion) |
+| `>` (visual) | Aumentar indentacion (mantiene seleccion) |
+| `Alt+j` | Mover linea abajo |
+| `Alt+k` | Mover linea arriba |
+| `Alt+j` (visual) | Mover seleccion abajo |
+| `Alt+k` (visual) | Mover seleccion arriba |
+| `p` (visual) | Pegar sin copiar texto reemplazado |
+
+### Guardar
+| Atajo | Descripcion |
+|-------|-------------|
+| `Ctrl+s` | Guardar archivo (modo normal) |
+| `Ctrl+s` | Guardar archivo (modo insercion, vuelve a insercion) |
 
 ---
 
-## 🐹 Go
+## Autocompletado y Snippets (nvim-cmp + LuaSnip)
 
-### Generación de Código
-| Atajo | Descripción |
+### Navegacion del menu
+| Atajo | Descripcion |
 |-------|-------------|
-| `,goj` | 🏷️ Añadir tags json |
-| `,goy` | 🏷️ Añadir tags yaml |
-| `,goA` | 🏷️ Añadir tags json + yaml |
-| `,goR` | 🏷️ Remover todos los tags |
-| `,goe` | ⚠️ Añadir if err |
-| `,goi` | 🔌 Implementar interfaz |
-| `,gof` | 📝 Llenar struct |
-| `,gos` | 🔀 Llenar switch |
-| `,goo` | 📦 Organizar imports |
-| `,goq` | 🔧 Quick fix (añadir import faltante) |
+| `Ctrl+Space` | Activar/trigger autocompletado |
+| `Tab` | Siguiente item (o trigger si no visible) |
+| `Shift+Tab` | Item anterior |
+| `Ctrl+n` | Siguiente item |
+| `Ctrl+p` | Item anterior |
+| `Up` / `Down` | Navegar items |
+
+### Confirmar / Cancelar
+| Atajo | Descripcion |
+|-------|-------------|
+| `Ctrl+y` | Confirmar autocompletado (selecciona si no hay eleccion) |
+| `Enter` | Confirmar autocompletado (no auto-selecciona) |
+| `Ctrl+e` | Cancelar/abortar autocompletado |
+
+### Documentacion
+| Atajo | Descripcion |
+|-------|-------------|
+| `Ctrl+u` | Scroll documentacion arriba (4 lineas) |
+| `Ctrl+d` | Scroll documentacion abajo (4 lineas) |
+| `Ctrl+h` | Toggle popup de documentacion |
+
+### Snippets (LuaSnip)
+| Atajo | Descripcion |
+|-------|-------------|
+| `Ctrl+j` | Saltar al siguiente nodo del snippet |
+| `Ctrl+k` | Saltar al nodo anterior del snippet |
+| `Ctrl+f` | Saltar siguiente placeholder (cmp, con fallback) |
+| `Ctrl+b` | Saltar anterior placeholder (cmp, con fallback) |
+
+---
+
+## Treesitter
+
+### Seleccion Incremental
+| Atajo | Descripcion |
+|-------|-------------|
+| `Ctrl+Space` | Iniciar seleccion / expandir al siguiente nodo |
+| `Backspace` | Reducir seleccion al nodo anterior |
+
+### Inspeccion
+| Atajo | Descripcion |
+|-------|-------------|
+| `,ti` | Inspeccionar highlight bajo cursor |
+| `,tI` | Inspeccionar arbol de sintaxis (buffer) |
+
+### Indent Blankline
+| Atajo | Descripcion |
+|-------|-------------|
+| `,tig` | Toggle guias de indentacion |
+
+---
+
+## Surround (nvim-surround)
+
+Mappings por defecto del plugin:
+
+### Normal mode
+| Atajo | Descripcion |
+|-------|-------------|
+| `ys{motion}{char}` | Rodear con {char} (ej: `ysiw"` rodea palabra con comillas) |
+| `yss{char}` | Rodear toda la linea |
+| `ds{char}` | Eliminar delimitador (ej: `ds"` elimina comillas) |
+| `cs{old}{new}` | Cambiar delimitador (ej: `cs"'` cambia " por ') |
+
+### Visual mode
+| Atajo | Descripcion |
+|-------|-------------|
+| `S{char}` | Rodear seleccion con {char} |
+
+> Caracteres especiales: `(` anade espacios internos, `)` no. Igual con `[`/`]` y `{`/`}`.
+> Tambien soporta tags HTML: `ysiwt` + `div` = `<div>palabra</div>`.
+
+---
+
+## Autopairs (nvim-autopairs)
+
+Funciona automaticamente en modo insercion (auto-cierra parentesis, llaves, corchetes, comillas).
+
+| Atajo | Descripcion |
+|-------|-------------|
+| `Alt+e` | Fast wrap: envolver el siguiente texto con un delimitador |
+
+> Fast wrap: al pulsar `Alt+e` en modo insercion, aparecen marcas en los caracteres de cierre cercanos.
+> Pulsa la letra correspondiente para envolver hasta ese punto.
+
+---
+
+## Go
+
+### Generacion de Codigo
+| Atajo | Descripcion |
+|-------|-------------|
+| `,goj` | Anadir tags json |
+| `,goy` | Anadir tags yaml |
+| `,goA` | Anadir tags json + yaml |
+| `,goR` | Remover todos los tags |
+| `,goe` | Anadir if err |
+| `,goi` | Implementar interfaz |
+| `,gof` | Llenar struct |
+| `,gos` | Llenar switch |
+| `,goo` | Organizar imports |
+| `,goq` | Quick fix (anadir import faltante) |
 
 ### Testing
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,got` | 🧪 Test función |
-| `,goT` | 🧪 Test archivo |
-| `,goa` | 🧪 Test paquete |
-| `,gol` | 🧪 Test último |
-| `,goc` | 📊 Cobertura |
+| `,got` | Test funcion bajo cursor |
+| `,goT` | Test archivo |
+| `,goa` | Test paquete |
+| `,gol` | Test ultimo |
+| `,goc` | Cobertura |
 
 ### Ejecutar y Debugear
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,gor` | ▶️ Ejecutar (busca main.go automáticamente) |
-| `,god` | 🐛 Debugear (busca main.go automáticamente) |
-| `,gob` | 🔨 Compilar directorio actual |
-
-💡 **Tip:** Los comandos `,gor` y `,god` encuentran automáticamente todos los main.go en tu proyecto y te dejan elegir cuál ejecutar. También cargan variables de `.env.local` si existe.
+| `,gor` | Ejecutar (busca main.go automaticamente, selector si hay varios) |
+| `,god` | Debugear (busca main.go automaticamente, carga .env.local) |
+| `,gob` | Compilar directorio actual |
 
 ### Go Modules
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,gmt` | 📦 go mod tidy |
-| `,gmv` | 📦 go mod vendor |
-| `,gmd` | 📦 go mod download |
-| `,gmi` | 📦 go mod init (pide nombre del módulo) |
+| `,gmt` | go mod tidy |
+| `,gmv` | go mod vendor |
+| `,gmd` | go mod download |
+| `,gmi` | go mod init (pide nombre del modulo) |
 
-### Go Get/Install
-| Atajo | Descripción |
+### Go Get/Generate
+| Atajo | Descripcion |
 |-------|-------------|
-| `,ggi` | 📥 go get (pide paquete) |
-| `,gg` | 🔧 go generate ./... |
+| `,ggi` | go get (pide paquete) |
+| `,gg` | go generate ./... |
 
 ---
 
-## 🤖 Claude Code (IA)
+## Claude Code (IA)
 
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,ac` | 💬 Toggle panel de Claude |
-| `,af` | 🎯 Enfocar/toggle Claude |
-| `,ar` | 🔄 Reanudar sesión |
-| `,aC` | ➡️ Continuar |
-| `,am` | 🤖 Seleccionar modelo |
-| `,ab` | ➕ Añadir buffer actual |
-| `,as` (visual) | 📤 Enviar selección visual |
-| `,as` (en explorador) | 📁 Añadir archivo bajo cursor |
-| `,aa` | ✅ Aceptar diff |
-| `,ad` | ❌ Rechazar diff |
-
-💡 **Nota:** En exploradores de archivos (NvimTree, neo-tree, oil), `,as` añade el archivo bajo el cursor en lugar de enviar selección.
+| `,ac` | Toggle panel de Claude |
+| `,af` | Enfocar/toggle Claude |
+| `,ar` | Reanudar sesion |
+| `,aC` | Continuar |
+| `,am` | Seleccionar modelo |
+| `,ab` | Anadir buffer actual |
+| `,as` (visual) | Enviar seleccion visual |
+| `,as` (en explorador) | Anadir archivo bajo cursor (NvimTree, neo-tree, oil) |
+| `,al` | Enviar linea actual |
+| `,aa` | Aceptar diff |
+| `,ad` | Rechazar diff |
 
 ---
 
-## 🛠️ Otras Herramientas
+## Otras Herramientas
 
-### Tagbar (Símbolos)
-| Atajo | Descripción |
+### Tagbar (Simbolos/Outline)
+| Atajo | Descripcion |
 |-------|-------------|
 | `,tt` | Toggle Tagbar |
 | `,to` | Abrir Tagbar |
 
-### Treesitter
-| Atajo | Descripción |
+### Spectre (Buscar y Reemplazar en proyecto)
+| Atajo | Descripcion |
 |-------|-------------|
-| `,ti` | 🎨 Inspeccionar highlight bajo cursor |
-| `,tI` | 🌳 Inspeccionar árbol de sintaxis |
-| `,tig` | 📏 Toggle guías de indentación |
+| `,S` | Buscar y reemplazar en proyecto |
+| `,Sf` | Buscar y reemplazar en archivo actual |
+| `,Sw` | Buscar palabra bajo cursor |
+| `,S` (visual) | Buscar y reemplazar seleccion |
 
-### Spectre (Buscar y Reemplazar)
-| Atajo | Descripción |
+### Sesiones (persistence.nvim)
+| Atajo | Descripcion |
 |-------|-------------|
-| `,S` | 🔍 Buscar y reemplazar en proyecto |
-| `,Sf` | 🔍 Buscar y reemplazar en archivo |
-| `,Sw` | 🔍 Buscar palabra bajo cursor |
-| `,S` (visual) | 🔍 Buscar y reemplazar selección |
-
-### Sesiones (Persistence)
-| Atajo | Descripción |
-|-------|-------------|
-| `,qs` | 💾 Restaurar sesión del directorio actual |
-| `,ql` | 💾 Restaurar última sesión |
-| `,qd` | 🚫 No guardar sesión actual |
+| `,qs` | Restaurar sesion del directorio actual |
+| `,ql` | Restaurar ultima sesion |
+| `,qd` | No guardar sesion actual |
 
 ### Toggle Options
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `,un` | 🔢 Toggle números de línea |
-| `,ur` | 🔢 Toggle números relativos |
-| `,us` | ✍️ Toggle corrector ortográfico |
-| `,uw` | 📝 Toggle ajuste de línea |
+| `,un` | Toggle numeros de linea |
+| `,ur` | Toggle numeros relativos |
+| `,us` | Toggle corrector ortografico |
+| `,uw` | Toggle ajuste de linea |
 
 ### Utilidades
-| Atajo | Descripción |
+| Atajo | Descripcion |
 |-------|-------------|
-| `Esc` | 🧹 Limpiar highlight de búsqueda |
-| `Ctrl+s` | 💾 Guardar archivo |
-| `,km` | 🗺️ Explorar keymaps personalizados |
-| `,q` | 🚪 Cerrar ventana |
-| `,Q` | 🚪 Cerrar todo |
+| `Esc` | Limpiar highlight de busqueda |
+| `Ctrl+s` | Guardar archivo |
+| `,km` | Explorar keymaps personalizados |
+| `,q` | Cerrar ventana |
+| `,Q` | Cerrar todo |
+| `,qq` | Cerrar todo (forzado) |
+
+### Which-key
+
+Pulsa `,` y espera -- aparecera un popup con todos los grupos disponibles.
+
+### Satellite (scrollbar)
+
+No tiene atajos -- muestra un scrollbar visual con marcadores de cursor, busqueda, diagnosticos, git y marks.
+
+### nvim-colorizer
+
+No tiene atajos -- colorea automaticamente codigos de color en el buffer (#FF0000, rgb(), hsl(), etc.).
+
+### Render-markdown
+
+No tiene atajos -- renderiza markdown automaticamente en el buffer.
+
+### Dressing.nvim
+
+No tiene atajos -- mejora los menus `vim.ui.select` y `vim.ui.input` con UI mas bonita.
+
+### Snacks.nvim
+
+Notificaciones mejoradas y resaltado de palabras automatico.
 
 ---
 
-## 💡 Tips y Trucos
+## Workflows Practicos
 
-### 🔍 Búsqueda de Atajos
+### Workflow: Debugging generico (DAP)
+
+```
+1. Abre el archivo con el codigo que quieres debugear
+2. ,db    → Pon breakpoints donde necesites (o ,dB para condicional)
+3. ,dc    → Iniciar debug
+4. ,du    → Abrir UI del debugger (variables, stack, watches)
+5. ,dn    → Step over (siguiente linea)
+   ,di    → Step into (entrar en funcion)
+   ,do    → Step out (salir de funcion)
+6. ,dv    → Hover sobre variables para ver valores
+   ,de    → Evaluar una expresion
+7. ,dl    → Re-ejecutar ultima sesion
+8. ,dt    → Terminar cuando acabes
+```
+
+### Workflow: Debug Go (`,god`)
+
+```
+1. ,db en las lineas que quieras parar
+2. ,god   → Busca todos los main.go del proyecto automaticamente
+           Si hay uno solo, lo lanza directo
+           Si hay varios, te muestra un selector
+           Carga .env.local automaticamente si existe en la raiz
+           Abre la UI del debugger automaticamente
+3. Navega con ,dn / ,di / ,do
+4. ,dt para terminar
+```
+
+### Workflow: Debug un test Go
+
+```
+1. Coloca el cursor dentro de la funcion de test
+2. ,dgt   → Debugea ese test especifico
+3. ,dgl   → Re-ejecuta el ultimo test debugeado
+```
+
+### Workflow: Ejecutar Go (sin debug)
+
+```
+,gor    → Ejecutar main.go
+          Busca todos los main.go del proyecto
+          Si hay varios, muestra selector
+          Abre un terminal con toggleterm
+          Carga .env.local automaticamente
+,gob    → Compilar directorio actual (go build .)
+```
+
+### Workflow: Testing Go
+
+```
+,got    → Test funcion bajo el cursor
+,goT    → Test archivo completo
+,goa    → Test paquete entero
+,gol    → Re-ejecutar ultimo test
+,goc    → Ver cobertura
+```
+
+### Workflow: Formateo y Lint
+
+**Automatico (al guardar con Ctrl+s o :w):**
+- **Go**: organiza imports + formatea con gofumpt via LSP
+- **TS/JS/JSX/TSX**: eslint fixAll + organiza imports + prettier
+- **Rust**: rustfmt
+- **Python**: black + isort
+- **Lua**: stylua
+- **JSON/YAML/HTML/CSS/MD**: prettier
+- **SQL y Java**: excluidos del format-on-save
+
+**Manual:**
+```
+,cf     → Formatear con conform.nvim (async, con fallback a LSP)
+,lf     → Formatear con LSP directamente
+,lf     → En modo visual, formatea solo la seleccion
+,ll     → Ejecutar linter manualmente
+```
+
+### Workflow: Go extras rapidos
+
+```
+,goe    → Insertar if err != nil { return err }
+,goj    → Anadir tags json al struct bajo cursor
+,goy    → Anadir tags yaml
+,goA    → Anadir json + yaml a la vez
+,goR    → Remover todos los tags
+,goi    → Implementar interfaz (te pide cual)
+,gof    → Llenar struct con todos los campos
+,gos    → Llenar switch con todos los cases
+,goo    → Organizar imports manualmente
+,goq    → Quick fix: anadir import faltante
+```
+
+### Workflow: Git
+
+```
+1. ,gs    → Ver archivos modificados (Telescope)
+2. ]h/[h  → Navegar entre hunks en un archivo
+3. ,hp    → Previsualizar hunk bajo cursor
+4. ,hs    → Stage hunk (o seleccion visual)
+5. ,hS    → Stage buffer entero
+6. ,hu    → Deshacer stage hunk
+7. ,gd    → Abrir diff completo (Diffview vs HEAD)
+8. ,gh    → Ver historial del archivo actual
+9. ,hb    → Toggle blame en la linea
+10. ,gD   → Cerrar diff cuando acabes
+```
+
+**Conflictos (git-conflict.nvim):**
+```
+]x / [x → Navegar entre conflictos
+co      → Elegir cambio local (ours)
+ct      → Elegir cambio remoto (theirs)
+cb      → Elegir ambos
+c0      → No elegir ninguno
+```
+
+### Workflow: Navegacion rapida por codigo
+
+```
+gd      → Ir a definicion (Telescope, con preview)
+gr      → Ver todas las referencias
+gi      → Ir a implementacion
+gt      → Ir a tipo
+K       → Hover documentacion
+,la     → Code actions (fix, refactor, etc)
+,lR     → Renombrar simbolo en todo el proyecto
+]]      → Siguiente referencia de la palabra (illuminate)
+[[      → Referencia anterior
+s       → Flash jump (saltar a cualquier punto visible)
+```
+
+### Workflow: Buscar y reemplazar
+
+```
+,fg     → Live grep en todo el proyecto (Telescope)
+,fs     → Grep palabra bajo cursor
+,S      → Abrir Spectre (buscar y reemplazar en proyecto)
+,Sw     → Buscar palabra bajo cursor en Spectre
+,Sf     → Buscar y reemplazar solo en archivo actual
+```
+
+---
+
+## Tips y Trucos
+
+### Busqueda de Atajos
 - Usa `,fk` o `:Telescope keymaps` para buscar cualquier atajo interactivamente
-- Escribe parte del comando que buscas y Telescope lo filtrará
+- Pulsa `,` y espera para ver which-key
 
-### 🖱️ Uso del Ratón
-- **Click en ventanas** para cambiar el foco
-- **Arrastra los bordes** para redimensionar ventanas
-- **Scroll** con la rueda del ratón
-- **Selecciona texto** con el ratón
+### Uso del Raton
+- Click en ventanas para cambiar el foco
+- Arrastra los bordes para redimensionar ventanas
+- Scroll con la rueda del raton
+- Ctrl+Click para ir a definicion
 
-### 💻 Terminal
-- Presiona `Esc` para salir del modo terminal
-- Usa `Ctrl+h/j/k/l` para navegar a otras ventanas desde el terminal
-- Usa `Ctrl+\` para toggle rápido del último terminal
-- Accede a terminales específicos con `,t1`, `,t2`, etc.
-- Navega entre múltiples terminales con `Ctrl+PageUp/PageDown`
-
-### 🌿 Git Workflow
-1. `,gs` - Ver archivos modificados
-2. `,hp` - Previsualizar cambios
-3. `,hs` - Stage hunks individuales
-4. `,gd` - Ver diff completo
-
-### 🐛 Debugging
-1. `,db` - Poner breakpoint
-2. `,dc` - Iniciar debug
-3. `,du` - Abrir UI de debug
-4. `,dn/di/do` - Navegar por el código
-
-### 🐹 Go Development
-- Usa `,gor` para ejecutar cualquier main.go de tu proyecto
-- Usa `,god` para debugear con soporte automático de .env.local
-- Usa `,got` para ejecutar el test bajo el cursor
-- Usa `,gmt` después de añadir nuevas dependencias
-- Usa `,ggi` para instalar paquetes con go get
-
-### 💡 LSP - Atajos Rápidos
-Los atajos LSP más comunes están disponibles sin usar la tecla líder:
-- `K` - Documentación rápida (hover)
-- `gd` - Ir a definición
+### LSP - Atajos Rapidos
+Los atajos LSP mas comunes estan disponibles sin leader:
+- `K` - Documentacion rapida (hover)
+- `gd` - Ir a definicion
 - `gr` - Ver referencias
-- `gi` - Ir a implementación
+- `gi` - Ir a implementacion
+- `gt` - Ir a tipo
 
 ---
 
-**📚 ¿Necesitas más ayuda?**
-- Ejecuta `:help` para la documentación de Neovim
+## Lista de Plugins Instalados
+
+| Plugin | Descripcion |
+|--------|-------------|
+| lazy.nvim | Gestor de plugins |
+| nvim-tree.lua | Explorador de archivos |
+| nvim-web-devicons | Iconos |
+| catppuccin | Tema de colores |
+| nvim-treesitter | Syntax highlighting y seleccion incremental |
+| telescope.nvim | Busqueda fuzzy |
+| telescope-fzf-native | Backend FZF para Telescope |
+| telescope-luasnip | Explorador de snippets |
+| nvim-mapper | Explorador de keymaps |
+| tagbar | Outline de simbolos |
+| nvim-lspconfig | Configuracion LSP |
+| mason.nvim | Instalador de servidores LSP/DAP/linters |
+| mason-lspconfig.nvim | Puente Mason + lspconfig |
+| nvim-cmp | Autocompletado |
+| cmp-nvim-lsp | Fuente LSP para cmp |
+| cmp-nvim-lsp-signature-help | Firmas de funcion |
+| cmp-buffer | Fuente buffer para cmp |
+| cmp-path | Fuente paths para cmp |
+| lspkind.nvim | Iconos VSCode en autocompletado |
+| LuaSnip | Motor de snippets |
+| cmp_luasnip | Fuente snippets para cmp |
+| nvim-lint | Linter asincrono |
+| conform.nvim | Formateador |
+| trouble.nvim | Panel de diagnosticos |
+| nvim-dap | Debug Adapter Protocol |
+| nvim-dap-ui | UI para debugger |
+| nvim-dap-virtual-text | Texto virtual en debug |
+| mason-nvim-dap | Puente Mason + DAP |
+| nvim-dap-go | Adapter Go para DAP |
+| nvim-dap-repl-highlights | Highlighting en REPL de DAP |
+| lualine.nvim | Barra de estado inferior |
+| bufferline.nvim | Barra de buffers superior |
+| gitsigns.nvim | Signos git en el gutter |
+| diffview.nvim | Vista de diffs |
+| git-conflict.nvim | Resolucion de conflictos |
+| Comment.nvim | Comentar codigo |
+| nvim-colorizer.lua | Colorea codigos de color |
+| satellite.nvim | Scrollbar visual |
+| nvim-spectre | Buscar y reemplazar en proyecto |
+| harpoon | Marcadores rapidos de archivos |
+| snacks.nvim | Notificaciones y utilidades |
+| claudecode.nvim | Integracion con Claude Code |
+| render-markdown.nvim | Renderizado de markdown |
+| which-key.nvim | Popup de atajos disponibles |
+| nvim-autopairs | Auto-cierre de delimitadores |
+| indent-blankline.nvim | Guias de indentacion |
+| nvim-surround | Manipular delimitadores |
+| flash.nvim | Navegacion rapida |
+| todo-comments.nvim | Resalta TODO/FIXME/etc |
+| vim-illuminate | Resalta palabra bajo cursor |
+| dressing.nvim | UI mejorada para select/input |
+| persistence.nvim | Sesiones automaticas |
+| go.nvim | Herramientas Go |
+| guihua.lua | UI para go.nvim |
+| toggleterm.nvim | Terminal con pestanas |
+
+---
+
+**Necesitas mas ayuda?**
+- Ejecuta `:help` para la documentacion de Neovim
 - Usa `,fh` para buscar en la ayuda con Telescope
-- Visita la configuración en `~/.config/nvim/lua/apascualco/keybinding.lua`
+- Usa `,fk` para buscar cualquier keybinding
+- Config en `~/.config/nvim/lua/apascualco/keybinding.lua`

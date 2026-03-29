@@ -35,6 +35,58 @@ map('n', '<leader>f?', function() require('telescope.builtin').search_history() 
 map('n', '<leader>fr', function() require('telescope.builtin').resume() end,     'Telescope — Resume last picker')
 map('n', '<leader>frg', function() require('telescope.builtin').registers() end, 'Telescope — Registers')
 
+-- Run main.go (Telescope picker)
+map('n', '<leader>fR', function()
+  -- Busca root por go.mod, luego git, luego cwd
+  local root = vim.fs.root(0, { 'go.mod', 'go.work' })
+    or vim.fn.systemlist('git rev-parse --show-toplevel 2>/dev/null')[1]
+    or vim.fn.getcwd()
+  if not root or root == '' then root = vim.fn.getcwd() end
+
+  local main_files = vim.fn.systemlist('find ' .. vim.fn.shellescape(root) .. ' -type f -name "main.go" -not -path "*/vendor/*" 2>/dev/null')
+  if #main_files == 0 then
+    print('No main.go found')
+    return
+  end
+
+  local pickers = require('telescope.pickers')
+  local finders = require('telescope.finders')
+  local actions = require('telescope.actions')
+  local action_state = require('telescope.actions.state')
+  local conf = require('telescope.config').values
+
+  pickers.new({}, {
+    prompt_title = 'Run main.go',
+    finder = finders.new_table({
+      results = main_files,
+      entry_maker = function(entry)
+        local display = entry:gsub(root .. '/', '')
+        return { value = entry, display = display, ordinal = display }
+      end,
+    }),
+    sorter = conf.generic_sorter({}),
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        local dir = vim.fn.fnamemodify(selection.value, ':h')
+        local env_file = root .. '/.env.local'
+        local env_cmd = vim.fn.filereadable(env_file) == 1 and ('set -a && source ' .. vim.fn.shellescape(env_file) .. ' && set +a && ') or ''
+
+        local Terminal = require('toggleterm.terminal').Terminal
+        local next_id = vim.fn.len(require('toggleterm.terminal').get_all()) + 1
+        Terminal:new({
+          cmd = env_cmd .. 'cd ' .. vim.fn.shellescape(dir) .. ' && go run .',
+          direction = 'horizontal',
+          close_on_exit = false,
+          count = next_id,
+        }):toggle()
+      end)
+      return true
+    end,
+  }):find()
+end, 'Telescope — Run main.go')
+
 -- Git (Telescope)
 map('n', '<leader>gs', function() require('telescope.builtin').git_status() end,    'Telescope — Git status')
 map('n', '<leader>gb', function() require('telescope.builtin').git_branches() end,  'Telescope — Git branches')
@@ -54,8 +106,8 @@ map('n', '<leader>ss', function() require('telescope').extensions.luasnip.luasni
   'Telescope (luasnip) — Browse & insert snippets')
 map('n', '<leader>km', function() require('telescope').extensions.mapper.mapper() end,
   'Telescope (mapper) — Browse custom keymaps')
-map('n', '<leader>fn', function() require('telescope.builtin').notify_history() end,
-  'Telescope — Notification history')
+map('n', '<leader>fn', function() Snacks.notifier.show_history() end,
+  'Snacks — Notification history')
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Tagbar
@@ -128,7 +180,10 @@ map('n', '<leader>di', function() require('dap').step_into() end,         'DAP �
 map('n', '<leader>do', function() require('dap').step_out() end,          'DAP — Step out')
 map('n', '<leader>dr', function() require('dap').repl.toggle() end,       'DAP — Toggle REPL')
 map('n', '<leader>dl', function() require('dap').run_last() end,          'DAP — Run last')
-map('n', '<leader>dt', function() require('dap').terminate() end,         'DAP — Terminate')
+map('n', '<leader>dt', function()
+  require('dap').terminate()
+  require('dapui').close()
+end, 'DAP — Terminate + close UI')
 
 -- UI helpers
 map('n', '<leader>du', function() require('dapui').toggle() end,          'DAP UI — Toggle debugger UI')
@@ -258,9 +313,8 @@ map('x', '<leader>S',  '<esc><cmd>lua require("spectre").open_visual()<CR>',
 -- ──────────────────────────────────────────────────────────────────────────────
 map('n', '<leader>ma', function() require('harpoon'):list():add() end,     'Harpoon — Add current file to list')
 map('n', '<leader>mm', function()
-  local ui = require('harpoon.ui')
   local harpoon = require('harpoon')
-  ui.toggle_quick_menu(harpoon:list())
+  harpoon.ui:toggle_quick_menu(harpoon:list())
 end, 'Harpoon — Toggle quick menu')
 map('n', '<leader>mn', function() require('harpoon'):list():next() end,    'Harpoon — Next item in list')
 map('n', '<leader>mp', function() require('harpoon'):list():prev() end,    'Harpoon — Previous item in list')

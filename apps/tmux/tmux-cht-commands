@@ -1,0 +1,17 @@
+find
+grep
+sed
+awk
+curl
+git
+docker
+kubectl
+tmux
+tar
+ssh
+make
+jq
+protoc
+go
+npm
+cargo

@@ -88,6 +88,32 @@ require("lazy").setup({
 	-- Vscode-like pictograms
 	{ 'onsails/lspkind.nvim' },
 
+	-- AI code completion (free)
+	{
+		"supermaven-inc/supermaven-nvim",
+		event = "InsertEnter",
+		config = function()
+			require("supermaven-nvim").setup({
+				keymaps = {
+					accept_suggestion = "<C-Space>",
+					clear_suggestion = "<C-]>",
+					accept_word = "<C-Right>",
+				},
+				color = {
+					suggestion_color = "#585b70",
+				},
+				log_level = "off",
+			})
+			-- Auto-activar free tier sin prompt
+			vim.defer_fn(function()
+				local ok, api = pcall(require, "supermaven-nvim.api")
+				if ok and not api.is_running() then
+					vim.cmd("SupermavenUseFree")
+				end
+			end, 1000)
+		end,
+	},
+
 	-- Snippers
 	{
 		'L3MON4D3/LuaSnip',
@@ -161,8 +187,8 @@ require("lazy").setup({
 	{
 		"leoluz/nvim-dap-go",
 		dependencies = { "mfussenegger/nvim-dap" },
-		config = function(_, opts)
-			require("dap-go").setup(opts)
+		config = function()
+			require("dap-go").setup()
 		end,
 	},
 	{
@@ -270,7 +296,8 @@ require("lazy").setup({
 
 	-- Movement plugin
 	{ "nvim-pack/nvim-spectre" },
-	{ "ThePrimeagen/harpoon" },
+	{ "ThePrimeagen/harpoon", branch = "harpoon2", dependencies = { "nvim-lua/plenary.nvim" } },
+	{ "christoomey/vim-tmux-navigator", lazy = false },
 
 	-- Snacks (required by claudecode, must not be lazy-loaded)
 	{
@@ -513,6 +540,7 @@ require("lazy").setup({
 								shadow = true,
 								unusedwrite = true,
 								useany = true,
+								ST1000 = false,
 							},
 							staticcheck = true,
 							codelenses = {

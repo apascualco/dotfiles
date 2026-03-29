@@ -154,6 +154,7 @@ require("apascualco.plugins.lsp.autocompletion")
 require("apascualco.plugins.lsp.tsserver")
 
 require("apascualco.plugins.lsp.rust")
+require("apascualco.plugins.lsp.go")
 
 require("apascualco.plugins.dap")
 require("apascualco.plugins.bufferline")
