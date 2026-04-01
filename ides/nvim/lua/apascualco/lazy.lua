@@ -63,7 +63,37 @@ require("lazy").setup({
 	},
 
 	-- browse the tags
-	{ 'preservim/tagbar' },
+	{
+		'preservim/tagbar',
+		init = function()
+			vim.g.tagbar_type_go = {
+				ctagstype = 'go',
+				kinds = {
+					'p:package',
+					'c:constants',
+					'v:variables',
+					't:types',
+					's:structs',
+					'i:interfaces',
+					'm:struct members',
+					'n:interface methods',
+					'a:type aliases',
+					'f:functions',
+				},
+				sro = '.',
+				kind2scope = {
+					s = 'struct',
+					i = 'interface',
+					t = 'type',
+				},
+				scope2kind = {
+					struct    = 's',
+					interface = 'i',
+					type      = 't',
+				},
+				}
+		end,
+	},
 
 	-- LSP installer
 	{
@@ -193,6 +223,9 @@ require("lazy").setup({
 			for _, config in ipairs(dap.configurations.go or {}) do
 				if not config.console then
 					config.console = "integratedTerminal"
+				end
+				if config.mode == "auto" then
+					config.mode = "debug"
 				end
 			end
 		end,
@@ -373,7 +406,7 @@ require("lazy").setup({
 	},
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
-		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
+		dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' },
 		opts = {
 			latex = { enabled = false }
 		},

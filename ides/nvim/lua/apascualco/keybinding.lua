@@ -70,8 +70,34 @@ map('n', '<leader>fR', function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
         local dir = vim.fn.fnamemodify(selection.value, ':h')
-        local env_file = root .. '/.env.local'
-        local env_cmd = vim.fn.filereadable(env_file) == 1 and ('set -a && source ' .. vim.fn.shellescape(env_file) .. ' && set +a && ') or ''
+
+        -- Carga env vars: primero .vscode/launch.json, luego .env.local como fallback
+        local env_cmd = ''
+        local launch_path = root .. '/.vscode/launch.json'
+        if vim.fn.filereadable(launch_path) == 1 then
+          local ok, json = pcall(function()
+            return vim.fn.json_decode(table.concat(vim.fn.readfile(launch_path), '\n'))
+          end)
+          if ok and json and json.configurations then
+            for _, cfg in ipairs(json.configurations) do
+              if cfg.program and cfg.env then
+                local prog = cfg.program:gsub('${workspaceFolder}', root)
+                if prog == dir then
+                  local exports = {}
+                  for k, v in pairs(cfg.env) do
+                    table.insert(exports, 'export ' .. k .. '=' .. vim.fn.shellescape(tostring(v)))
+                  end
+                  env_cmd = table.concat(exports, ' && ') .. ' && '
+                  break
+                end
+              end
+            end
+          end
+        end
+        if env_cmd == '' then
+          local env_file = root .. '/.env.local'
+          env_cmd = vim.fn.filereadable(env_file) == 1 and ('set -a && source ' .. vim.fn.shellescape(env_file) .. ' && set +a && ') or ''
+        end
 
         local Terminal = require('toggleterm.terminal').Terminal
         local next_id = vim.fn.len(require('toggleterm.terminal').get_all()) + 1
@@ -92,6 +118,8 @@ map('n', '<leader>gs', function() require('telescope.builtin').git_status() end,
 map('n', '<leader>gb', function() require('telescope.builtin').git_branches() end,  'Telescope — Git branches')
 map('n', '<leader>gc', function() require('telescope.builtin').git_commits() end,   'Telescope — Git commits (repo)')
 map('n', '<leader>gC', function() require('telescope.builtin').git_bcommits() end,  'Telescope — Git commits (current buffer)')
+map('n', '<leader>gd', '<cmd>DiffviewOpen<CR>',                                     'Diffview — Open diff view')
+map('n', '<leader>gD', '<cmd>DiffviewClose<CR>',                                    'Diffview — Close diff view')
 
 -- LSP (Telescope) — sin duplicar con LSP nativo
 map('n', '<leader>lr', function() require('telescope.builtin').lsp_references() end,          'Telescope — LSP references')
@@ -192,6 +220,81 @@ map('n', '<leader>de', function() require('dapui').eval() end,            'DAP U
 -- Go tests under debugger
 map('n', '<leader>dgt', function() require('dap-go').debug_test() end,     'nvim-dap-go — Debug current Go test')
 map('n', '<leader>dgl', function() require('dap-go').debug_last_test() end,'nvim-dap-go — Debug last Go test')
+
+-- DAP: Telescope picker para seleccionar main.go y debugear con env vars de .vscode/launch.json
+map('n', '<leader>dR', function()
+  local root = vim.fs.root(0, { 'go.mod', 'go.work' })
+    or vim.fn.systemlist('git rev-parse --show-toplevel 2>/dev/null')[1]
+    or vim.fn.getcwd()
+  if not root or root == '' then root = vim.fn.getcwd() end
+
+  local main_files = vim.fn.systemlist(
+    'find ' .. vim.fn.shellescape(root) .. ' -type f -name "main.go" -not -path "*/vendor/*" 2>/dev/null'
+  )
+  if #main_files == 0 then
+    vim.notify('No main.go found', vim.log.levels.WARN)
+    return
+  end
+
+  -- Carga env vars desde .vscode/launch.json
+  local launch_envs = {}
+  local launch_path = root .. '/.vscode/launch.json'
+  if vim.fn.filereadable(launch_path) == 1 then
+    local ok, json = pcall(function()
+      return vim.fn.json_decode(table.concat(vim.fn.readfile(launch_path), '\n'))
+    end)
+    if ok and json and json.configurations then
+      for _, cfg in ipairs(json.configurations) do
+        if cfg.program and cfg.env then
+          local prog = cfg.program:gsub('${workspaceFolder}', root)
+          local env = {}
+          for k, v in pairs(cfg.env) do
+            env[k] = tostring(v):gsub('${workspaceFolder}', root)
+          end
+          launch_envs[prog] = env
+        end
+      end
+    end
+  end
+
+  local pickers     = require('telescope.pickers')
+  local finders     = require('telescope.finders')
+  local actions     = require('telescope.actions')
+  local action_state= require('telescope.actions.state')
+  local conf        = require('telescope.config').values
+
+  pickers.new({}, {
+    prompt_title = 'Debug main.go',
+    finder = finders.new_table({
+      results = main_files,
+      entry_maker = function(entry)
+        local display = entry:gsub(root .. '/', '')
+        return { value = entry, display = display, ordinal = display }
+      end,
+    }),
+    sorter = conf.generic_sorter({}),
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if not selection then return end
+        local dir = vim.fn.fnamemodify(selection.value, ':h')
+        local env = launch_envs[dir] or {}
+        require('dap').run({
+          type       = 'go',
+          name       = 'Debug ' .. vim.fn.fnamemodify(dir, ':t'),
+          request    = 'launch',
+          mode       = 'debug',
+          program    = dir,
+          cwd        = dir,
+          env        = env,
+          outputMode = 'remote',
+        })
+      end)
+      return true
+    end,
+  }):find()
+end, 'DAP — Debug main.go picker (con env vars de .vscode/launch.json)')
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Bufferline

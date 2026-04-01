@@ -1,4 +1,3 @@
-local util = require("lspconfig.util")
 local lsp_setup = require("apascualco.plugins.lsp.setup")
 
 -- ts_ls
@@ -6,8 +5,8 @@ vim.lsp.config("ts_ls", {
 	capabilities = lsp_setup.capabilities,
 	single_file_support = true,
 	filetypes = {
-		"javascript","javascriptreact","javascript.jsx",
-		"typescript","typescriptreact","typescript.tsx",
+		"javascript", "javascriptreact",
+		"typescript", "typescriptreact",
 	},
 	init_options = {
 		hostInfo = "neovim",

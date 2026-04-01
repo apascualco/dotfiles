@@ -25,10 +25,9 @@ export NVM_DIR="$HOME/.nvm"
 # Homebrew (this already adds /opt/homebrew/bin)
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# GNU binaries
-GNUBINS="$(find `brew --prefix`/opt -type d -follow -name gnubin -print)"
-for bindir in ${GNUBINS[@]}; do
-  export PATH=$bindir:$PATH
+# GNU binaries (static path, avoids slow brew --prefix + find on every shell start)
+for bindir in /opt/homebrew/opt/*/libexec/gnubin; do
+  [[ -d "$bindir" ]] && export PATH="$bindir:$PATH"
 done
 
 # Android SDK
@@ -37,11 +36,13 @@ export PATH=$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID
 # Go
 export PATH="$GOPATH/bin:$PATH"
 
-# Python
-export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+# Python (picks up whichever python@3.x is installed via brew)
+for py_bin in /opt/homebrew/opt/python@3*/libexec/bin; do
+  [[ -d "$py_bin" ]] && export PATH="$py_bin:$PATH"
+done
 
-# Maven
-export PATH="$HOME/workdir/tools/apache-maven-3.9.6/bin:$PATH"
+# Maven (only if installed)
+[[ -d "$HOME/workdir/tools/apache-maven-3.9.6/bin" ]] && export PATH="$HOME/workdir/tools/apache-maven-3.9.6/bin:$PATH"
 
 # LLVM
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
@@ -229,6 +230,8 @@ alias ll='eza -lh --group-directories-first --icons -F'
 alias la='eza -lha --group-directories-first --icons -F'
 alias lt='eza -T -L 2 --icons --color=always'
 
+alias kc='killall claude'
+
 # To customize prompt, run `p10k configure` or edit ~/.dotfiles/apps/zsh/p10k.zsh.
 [[ ! -f ~/.dotfiles/apps/zsh/p10k.zsh ]] || source ~/.dotfiles/apps/zsh/p10k.zsh
 
@@ -250,3 +253,4 @@ export PATH=/Users/apascualco/.opencode/bin:$PATH
 if [[ -n "$GHOSTTY_RESOURCES_DIR" && -z "$TMUX" ]]; then
   source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
 fi
+

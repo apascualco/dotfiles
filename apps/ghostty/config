@@ -1,0 +1,7 @@
+font-family = "JetBrains Mono"
+font-style = Medium
+font-size = 14
+
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+window-theme = auto
+keybind = shift+enter=text:\x1b\r

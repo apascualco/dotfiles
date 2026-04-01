@@ -40,12 +40,8 @@ function install_meslo_lg_font() {
 }
 
 function install_nvim_and_configure() {
-	mkdir -p ${HOME}/.config/nvim/venvs
-	mkdir ${HOME}/.config/nvim/venvs/neovim3
-	${HOME}/Library/Python/*/bin/virtualenv ${HOME}/.config/nvim/venvs/neovim3 --python=python3
-	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-	${HOME}/.config/nvim/venvs/neovim3/bin/python -m ensurepip --upgrade
-	${HOME}/.config/nvim/venvs/neovim3/bin/pip3 install pynvim
+	mkdir -p ${HOME}/.config/nvim
+	# lazy.nvim is bootstrapped automatically on first nvim launch via init.lua
 }
 
 function create_symlinks() {
@@ -58,6 +54,10 @@ function create_symlinks() {
 	ln -sF ${PWD}/apps/git/gitconfig ${HOME}/.gitconfig
 	ln -sF ${PWD}/ides/intellij/ideavimrc ${HOME}/.ideavimrc
 	ln -sf ${PWD}/apps/tmux/tmux.conf ${HOME}/.tmux.conf
+
+	# Ghostty
+	mkdir -p "${HOME}/Library/Application Support/com.mitchellh.ghostty"
+	ln -sf ${PWD}/apps/ghostty/config "${HOME}/Library/Application Support/com.mitchellh.ghostty/config"
 }
 
 function last_executions() {
