@@ -1,5 +1,20 @@
 local dap = require("dap")
 
+-- Usar toggleterm para mostrar stdout del proceso con integratedTerminal
+dap.defaults.fallback.terminal_win_cmd = function()
+  local Terminal = require('toggleterm.terminal').Terminal
+  local t = Terminal:new({ direction = 'horizontal', close_on_exit = false })
+  t:open()
+  vim.api.nvim_set_current_win(vim.fn.bufwinid(t.bufnr))
+  return t.bufnr, vim.fn.bufwinid(t.bufnr)
+end
+
+-- Type mapping so .vscode/launch.json is auto-loaded correctly
+require('dap.ext.vscode').type_to_filetypes = {
+  go          = { 'go' },
+  ['pwa-node']= { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+}
+
 require("mason-nvim-dap").setup({
 	ensure_installed = {
 		"delve",
@@ -41,10 +56,9 @@ dapui.setup({
 	layouts = {
 		{
 			elements = {
-				{ id = "scopes", size = 0.25 },
-				{ id = "breakpoints", size = 0.25 },
-				{ id = "stacks", size = 0.25 },
-				{ id = "watches", size = 0.25 },
+				{ id = "scopes",  size = 0.40 },
+				{ id = "stacks",  size = 0.40 },
+				{ id = "watches", size = 0.20 },
 			},
 			position = "left",
 			size = 40,
@@ -76,15 +90,4 @@ vim.fn.sign_define('DapLogPoint', { text = '🟢', texthl = 'DiagnosticInfo' })
 
 require("apascualco.plugins.dap.config")
 
--- Load .alberto/launch.json if present in the project
-local launch_path = vim.fn.getcwd() .. "/alberto/launch.json"
-if vim.fn.filereadable(launch_path) == 1 then
-	local ok_vscode, vscode = pcall(require, "dap.ext.vscode")
-	if ok_vscode then
-		vscode.load_launchjs(launch_path, {
-			go = { "go" },
-			["pwa-node"] = { "javascript", "typescript" },
-		})
-	end
-end
 

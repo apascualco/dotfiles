@@ -7,6 +7,9 @@ require("nvim-treesitter.configs").setup({
 		enable = true,
 		custom_captures = {},
 		additional_vim_regex_highlighting = false,
+		disable = function(lang, buf)
+			return vim.bo[buf].filetype == "NvimTree"
+		end,
 	},
 	incremental_selection = {
 		enable = true,

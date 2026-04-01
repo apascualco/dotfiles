@@ -2,7 +2,7 @@ local lsp_setup = require("apascualco.plugins.lsp.setup")
 
 vim.lsp.config("gopls", {
   on_attach = lsp_setup.on_attach,
-  cmd         = { "gopls", "-remote=off" },
+  cmd         = { "gopls" },
   filetypes   = { "go", "gomod", "gowork", "gotmpl" },
   root_markers= { "go.work", "go.mod", ".git" },
   capabilities= lsp_setup.capabilities,

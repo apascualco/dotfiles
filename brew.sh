@@ -28,7 +28,7 @@ brew install yazi
 
 # Development
 brew install go
-brew install neovim --HEAD
+brew install neovim
 brew install golangci-lint
 brew install gopls
 brew install terraform-ls
@@ -39,7 +39,6 @@ brew tap homebrew/cask-fonts
 brew install --cask font-jetbrains-mono-nerd-font
 
 # Casks (GUI apps)
-brew install --cask iterm2
 brew install --cask google-chrome
 brew install --cask docker
 brew install --cask spotify
