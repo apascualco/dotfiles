@@ -109,7 +109,36 @@ require("lazy").setup({
 	},
 
 	-- Autocomplete
-	{ "hrsh7th/nvim-cmp" },
+	{
+		"hrsh7th/nvim-cmp",
+		config = function()
+			local cmp = require("cmp")
+			local supermaven = require("supermaven-nvim.completion_preview")
+			cmp.setup({
+				mapping = cmp.mapping.preset.insert({
+					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<C-n>"] = cmp.mapping.select_next_item(),
+					["<C-p>"] = cmp.mapping.select_prev_item(),
+					["<Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						elseif supermaven.suggestion_text ~= "" then
+							supermaven.on_accept_suggestion()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+				}),
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "nvim_lsp_signature_help" },
+					{ name = "luasnip" },
+					{ name = "buffer" },
+					{ name = "path" },
+				}),
+			})
+		end,
+	},
 	{ "hrsh7th/cmp-nvim-lsp" },
 	{ "hrsh7th/cmp-nvim-lsp-signature-help" },
 	{ "hrsh7th/cmp-buffer" },
@@ -125,7 +154,7 @@ require("lazy").setup({
 		config = function()
 			require("supermaven-nvim").setup({
 				keymaps = {
-					accept_suggestion = "<C-Space>",
+					accept_suggestion = "<Tab>",
 					clear_suggestion = "<C-]>",
 					accept_word = "<C-Right>",
 				},
@@ -319,18 +348,35 @@ require("lazy").setup({
 	{
 		"lewis6991/satellite.nvim",
 		event = "BufReadPost",
-		opts = {
-			current_only = false,
-			winblend = 50,
-			zindex = 40,
-			handlers = {
-				cursor = { enable = true },
-				search = { enable = true },
-				diagnostic = { enable = true },
-				gitsigns = { enable = true },
-				marks = { enable = true },
-			},
-		},
+		config = function()
+			require("satellite").setup({
+				current_only = false,
+				winblend = 50,
+				zindex = 40,
+				handlers = {
+					cursor = { enable = true },
+					search = { enable = true },
+					diagnostic = { enable = true },
+					gitsigns = { enable = true },
+					marks = { enable = true },
+				},
+			})
+			-- Fix: guard against NaN when vlinecount0=0 (e.g. 2-line buffer with wrap)
+			-- Without this, the cursor handler passes NaN as extmark id and spams errors.
+			local util = require("satellite.util")
+			local orig_row_to_barpos = util.row_to_barpos
+			util.row_to_barpos = function(winid, row)
+				local pos, f = orig_row_to_barpos(winid, row)
+				if pos ~= pos then return 0, 0 end
+				return pos, f
+			end
+			local orig_height_to_virtual = util.height_to_virtual
+			util.height_to_virtual = function(winid, row, row2)
+				local h = orig_height_to_virtual(winid, row, row2)
+				if h ~= h then return 1 end
+				return h
+			end
+		end,
 	},
 
 	-- Movement plugin
