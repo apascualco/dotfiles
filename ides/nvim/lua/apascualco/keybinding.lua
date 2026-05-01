@@ -26,6 +26,9 @@ map('n', '<leader>fs', function() require('telescope.builtin').grep_string() end
 map('n', '<leader>f/', function() require('telescope.builtin').current_buffer_fuzzy_find() end,
   'Telescope — Fuzzy search in current buffer')
 map('n', '<leader>fb', function() require('telescope.builtin').buffers() end,    'Telescope — Switch buffer')
+map('n', '<leader>fB', function() require('telescope.builtin').git_branches({ show_remote_tracking_branches = false }) end, 'Telescope — Git branches (local)')
+map('n', '<leader>fR', function() require('telescope.builtin').git_branches({ only_sort_tags = false, show_remote_tracking_branches = true }) end, 'Telescope — Git branches (remote)')
+map('n', '<leader>fS', function() require('telescope.builtin').git_stash() end, 'Telescope — Git stash')
 map('n', '<leader>fo', function() require('telescope.builtin').oldfiles() end,   'Telescope — Recent files')
 map('n', '<leader>fh', function() require('telescope.builtin').help_tags() end,  'Telescope — Help tags')
 map('n', '<leader>fk', function() require('telescope.builtin').keymaps() end,    'Telescope — Keymaps')
@@ -112,6 +115,9 @@ map('n', '<leader>fR', function()
     end,
   }):find()
 end, 'Telescope — Run main.go')
+
+-- Git (Neogit)
+map('n', '<leader>gn', '<cmd>Neogit<CR>',                                           'Neogit — Open')
 
 -- Git (Telescope)
 map('n', '<leader>gs', function() require('telescope.builtin').git_status() end,    'Telescope — Git status')

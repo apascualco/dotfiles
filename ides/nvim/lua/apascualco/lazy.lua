@@ -31,7 +31,7 @@ require("lazy").setup({
 	},
 
 	-- Highlighting of code
-	{ "nvim-treesitter/nvim-treesitter", branch = 'master',   lazy = false,   build = ":TSUpdate" },
+	{ "nvim-treesitter/nvim-treesitter", branch = 'main',   lazy = false,   build = ":TSUpdate" },
 
 	-- Search and find dirs, snips, mappers, etc...
 	{
@@ -284,6 +284,17 @@ require("lazy").setup({
 
 	-- Git
 	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"sindrets/diffview.nvim",
+		},
+		opts = {
+			integrations = { diffview = true },
+			graph_style = "unicode",
+		},
+	},
+	{
 		"lewis6991/gitsigns.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
@@ -452,6 +463,7 @@ require("lazy").setup({
 	},
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
+		enabled = false, -- TODO: incompatible con nvim 0.12 (treesitter API break)
 		dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' },
 		opts = {
 			latex = { enabled = false }

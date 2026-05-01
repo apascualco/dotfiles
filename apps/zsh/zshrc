@@ -181,7 +181,9 @@ alias venvd='deactivate'
 # ============================================================================
 alias ctags="`brew --prefix`/bin/ctags"
 alias n='nvim .'
-alias ff='claude --dangerously-skip-permissions'
+alias claudes='claude --dangerously-skip-permissions --brief --effort high --model claude-sonnet-4-6'
+alias claudesx='claude --dangerously-skip-permissions --brief --effort max --model claude-sonnet-4-6'
+alias claudex='claude --dangerously-skip-permissions --brief --effort max --model claude-opus-4-7'
 alias idea='open -na "IntelliJ IDEA.app" --args '
 
 # ============================================================================
@@ -202,6 +204,11 @@ alias gbc..='../../gradlew build --continuous --info'
 # ALIASES - Git
 # ============================================================================
 alias cab='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
+alias gss='git stash push -m'        # gss "description"
+alias gsl='git stash list'
+alias gsp='git stash pop'
+alias gsd='git stash drop'
+alias rr='source ~/.zshrc'
 
 # ============================================================================
 # ALIASES - System
