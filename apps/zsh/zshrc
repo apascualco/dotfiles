@@ -110,7 +110,7 @@ source $ZSH/oh-my-zsh.sh
 source "$HOME/.cargo/env"
 
 # GVM
-[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm" 2>/dev/null
 # Update GOBIN after GVM loads (uses current GOPATH)
 export GOBIN="$(go env GOPATH)/bin"
 export PATH="$GOBIN:$PATH"
@@ -260,4 +260,8 @@ export PATH=/Users/apascualco/.opencode/bin:$PATH
 if [[ -n "$GHOSTTY_RESOURCES_DIR" && -z "$TMUX" ]]; then
   source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
 fi
+
+
+# mlx-lm (Apple MLX LLM runtime)
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 
