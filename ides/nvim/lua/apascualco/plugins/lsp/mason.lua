@@ -19,12 +19,13 @@ require("mason-lspconfig").setup {
 		"jsonls",
 		"rust_analyzer",
 	},
+	-- We enable servers explicitly below (and in go/rust/tsserver.lua), so don't
+	-- let mason-lspconfig auto-enable them too (would double-enable). 2.x defaults to true.
+	automatic_enable = false,
 }
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-pcall(function()
-	capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-end)
+-- Single source of truth for capabilities (cmp + foldingRange), built in setup.lua
+local capabilities = require("apascualco.plugins.lsp.setup").capabilities
 
 -- ESLint
 vim.lsp.config("eslint", {
@@ -57,11 +58,32 @@ vim.lsp.config("cssls", {
 })
 vim.lsp.enable("cssls")
 
--- JSON (jsonls)
+-- JSON (jsonls) — schemas vía SchemaStore.nvim
 vim.lsp.config("jsonls", {
 	capabilities = capabilities,
 	init_options = { provideFormatter = true },
-	settings = {},
+	settings = {
+		json = {
+			schemas = require("schemastore").json.schemas(),
+			validate = { enable = true },
+		},
+	},
 })
 vim.lsp.enable("jsonls")
+
+-- Lua (lua_ls) — capabilities + LuaJIT runtime; the Neovim/vim API + plugin
+-- libraries are injected by lazydev.nvim. Must be enabled explicitly now that
+-- automatic_enable = false.
+vim.lsp.config("lua_ls", {
+	capabilities = capabilities,
+	settings = {
+		Lua = {
+			runtime = { version = "LuaJIT" },
+			diagnostics = { globals = { "vim" } },
+			workspace = { checkThirdParty = false },
+			telemetry = { enable = false },
+		},
+	},
+})
+vim.lsp.enable("lua_ls")
 

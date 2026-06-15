@@ -83,10 +83,6 @@ dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
 
-vim.fn.sign_define('DapBreakpoint', { text = '✋', texthl = 'DiagnosticError' })
-vim.fn.sign_define('DapBreakpointCondition', { text = '🚫', texthl = 'DiagnosticWarn' })
-vim.fn.sign_define('DapBreakpointRejected', { text = '⛔', texthl = 'DiagnosticHint' })
-vim.fn.sign_define('DapLogPoint', { text = '🟢', texthl = 'DiagnosticInfo' })
 
 require("apascualco.plugins.dap.config")
 
