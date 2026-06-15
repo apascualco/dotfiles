@@ -16,12 +16,13 @@ export GOBIN="$GOPATH/bin"
 # SDKMAN
 export SDKMAN_DIR="$HOME/.sdkman"
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-
 # ============================================================================
 # PATH CONFIGURATION
 # ============================================================================
+# Dedupe PATH automatically: re-sourcing ~/.zshrc (rr/lsource/esource) no longer
+# accumulates duplicate entries.
+typeset -U path PATH
+
 # Homebrew (this already adds /opt/homebrew/bin)
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -111,28 +112,31 @@ source "$HOME/.cargo/env"
 
 # GVM
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm" 2>/dev/null
-# Update GOBIN after GVM loads (uses current GOPATH)
-export GOBIN="$(go env GOPATH)/bin"
-export PATH="$GOBIN:$PATH"
+# Update GOBIN after GVM loads (uses current GOPATH). Guarded so we don't spawn
+# `go` on every shell start when Go isn't installed.
+if (( $+commands[go] )); then
+  export GOBIN="$(go env GOPATH)/bin"
+  export PATH="$GOBIN:$PATH"
+fi
 
 # SDKMAN
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# NVM
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Kubectl completion
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+# Kubectl completion (cached — regenerating it on every shell start is slow)
+if (( $+commands[kubectl] )); then
+  kubectl_cache="${XDG_CACHE_HOME:-$HOME/.cache}/kubectl-completion.zsh"
+  [[ -s "$kubectl_cache" ]] || kubectl completion zsh > "$kubectl_cache"
+  source "$kubectl_cache"
+fi
 
 # ============================================================================
 # OPTIONAL PRIVATE CONFIGURATION
 # ============================================================================
-source ~/.local_zshrc
-source ~/.local_zshrc_alternative
+[[ -f ~/.local_zshrc ]] && source ~/.local_zshrc
+[[ -f ~/.local_zshrc_alternative ]] && source ~/.local_zshrc_alternative
 
 # ============================================================================
 # FZF CONFIGURATION
@@ -179,11 +183,11 @@ alias venvd='deactivate'
 # ============================================================================
 # ALIASES - Development Tools
 # ============================================================================
-alias ctags="`brew --prefix`/bin/ctags"
+alias ctags="/opt/homebrew/bin/ctags"
 alias n='nvim .'
-alias claudes='claude --dangerously-skip-permissions --brief --effort high --model claude-sonnet-4-6'
-alias claudesx='claude --dangerously-skip-permissions --brief --effort max --model claude-sonnet-4-6'
-alias claudex='claude --dangerously-skip-permissions --brief --effort max --model claude-opus-4-7'
+alias claudes='claude --dangerously-skip-permissions --brief --effort high --model claude-sonnet-4-8'
+alias claudesx='claude --dangerously-skip-permissions --brief --effort max --model claude-sonnet-4-8'
+alias claudex='claude --dangerously-skip-permissions --brief --effort max --model claude-opus-4-8'
 alias idea='open -na "IntelliJ IDEA.app" --args '
 
 # ============================================================================
@@ -240,7 +244,7 @@ alias lt='eza -T -L 2 --icons --color=always'
 alias kc='killall claude'
 
 # To customize prompt, run `p10k configure` or edit ~/.dotfiles/apps/zsh/p10k.zsh.
-[[ ! -f ~/.dotfiles/apps/zsh/p10k.zsh ]] || source ~/.dotfiles/apps/zsh/p10k.zsh
+# (p10k is already sourced above via ~/.p10k.zsh, a symlink to that same file.)
 
 # ============================================================================
 # Text-to-Speech (edge-tts)

@@ -25,6 +25,16 @@ g.loaded_perl_provider = 0
 g.loaded_ruby_provider = 0
 g.loaded_node_provider = 0
 
+-- Register the `gotmpl` filetype (gopls is configured for it in plugins/lsp/go.lua).
+-- Without this, `:checkhealth vim.lsp` warns "Unknown filetype 'gotmpl'".
+vim.filetype.add({
+	extension = {
+		gotmpl = "gotmpl",
+		gohtml = "gotmpl",
+		gotxt = "gotmpl",
+	},
+})
+
 vim.opt.wrap = false
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -106,26 +116,31 @@ vim.opt.foldtext = ""
 
 -- Auto-close import folds when opening a file
 vim.api.nvim_create_autocmd("BufWinEnter", {
-	callback = function()
+	callback = function(args)
+		local buf = args.buf
+		-- Run at most once per buffer, and bail BEFORE scheduling the defer for
+		-- filetypes we don't fold imports for (avoids a 150ms timer + 100-line
+		-- scan on every window enter).
+		if vim.b[buf].import_folds_done then return end
+		local patterns = {
+			go = "^import",
+			java = "^import%s",
+			typescript = "^import%s",
+			javascript = "^import%s",
+			typescriptreact = "^import%s",
+			javascriptreact = "^import%s",
+			python = "^import%s",
+			rust = "^use%s",
+		}
+		local ft = vim.bo[buf].filetype
+		local pattern = patterns[ft]
+		if not pattern then return end
+		vim.b[buf].import_folds_done = true
+
 		-- Wait for treesitter folds to be computed
 		vim.defer_fn(function()
-			if not vim.api.nvim_buf_is_valid(vim.api.nvim_get_current_buf()) then return end
-			local ft = vim.bo.filetype
-			local patterns = {
-				go = "^import",
-				java = "^import%s",
-				typescript = "^import%s",
-				javascript = "^import%s",
-				typescriptreact = "^import%s",
-				javascriptreact = "^import%s",
-				python = "^import%s",
-				rust = "^use%s",
-			}
-			-- Also match "from" for python
-			local pattern = patterns[ft]
-			if not pattern then return end
-
-			local total = vim.api.nvim_buf_line_count(0)
+			if not vim.api.nvim_buf_is_valid(buf) then return end
+			local total = vim.api.nvim_buf_line_count(buf)
 			for lnum = 1, math.min(total, 100) do
 				local line = vim.fn.getline(lnum)
 				local is_import = line:match(pattern)
@@ -133,7 +148,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 					is_import = line:match("^from%s")
 				end
 				if is_import then
-					-- Close the fold on this line
 					pcall(vim.cmd, lnum .. "foldclose")
 				end
 			end

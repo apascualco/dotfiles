@@ -108,37 +108,23 @@ require("lazy").setup({
 		},
 	},
 
-	-- Autocomplete
+	-- Lua LS aware of Neovim runtime + plugin sources (for editing this config)
 	{
-		"hrsh7th/nvim-cmp",
-		config = function()
-			local cmp = require("cmp")
-			local supermaven = require("supermaven-nvim.completion_preview")
-			cmp.setup({
-				mapping = cmp.mapping.preset.insert({
-					["<C-y>"] = cmp.mapping.confirm({ select = true }),
-					["<C-n>"] = cmp.mapping.select_next_item(),
-					["<C-p>"] = cmp.mapping.select_prev_item(),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif supermaven.suggestion_text ~= "" then
-							supermaven.on_accept_suggestion()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-				}),
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "nvim_lsp_signature_help" },
-					{ name = "luasnip" },
-					{ name = "buffer" },
-					{ name = "path" },
-				}),
-			})
-		end,
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				-- Carga tipos de luv cuando se referencia vim.uv
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
 	},
+
+	-- JSON/YAML schemas for jsonls (package.json, tsconfig, eslint, GH Actions, ...)
+	{ "b0o/SchemaStore.nvim", lazy = true, ft = { "json", "jsonc", "yaml" } },
+
+	-- Autocomplete
+	{ "hrsh7th/nvim-cmp" }, -- config en plugins/lsp/autocompletion.lua
 	{ "hrsh7th/cmp-nvim-lsp" },
 	{ "hrsh7th/cmp-nvim-lsp-signature-help" },
 	{ "hrsh7th/cmp-buffer" },
@@ -317,6 +303,27 @@ require("lazy").setup({
 		},
 	},
 
+	-- GitHub PR/issue review inside nvim (activa la integración octo de catppuccin)
+	{
+		"pwntester/octo.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		cmd = "Octo",
+		keys = {
+			{ "<leader>Oo", "<cmd>Octo<cr>",              desc = "Octo — Command menu" },
+			{ "<leader>Op", "<cmd>Octo pr list<cr>",      desc = "Octo — List PRs" },
+			{ "<leader>OP", "<cmd>Octo pr search<cr>",    desc = "Octo — Search PRs" },
+			{ "<leader>Oi", "<cmd>Octo issue list<cr>",   desc = "Octo — List issues" },
+			{ "<leader>Or", "<cmd>Octo review start<cr>", desc = "Octo — Start PR review" },
+		},
+		opts = {
+			picker = "telescope",
+		},
+	},
+
 	-- Comment
 	{
 		"numToStr/Comment.nvim",
@@ -391,7 +398,6 @@ require("lazy").setup({
 	},
 
 	-- Movement plugin
-	{ "nvim-pack/nvim-spectre" },
 	{ "ThePrimeagen/harpoon", branch = "harpoon2", dependencies = { "nvim-lua/plenary.nvim" } },
 	{ "christoomey/vim-tmux-navigator", lazy = false },
 
@@ -417,6 +423,14 @@ require("lazy").setup({
 		opts = {
 			notifier = { enabled = true },
 			words = { enabled = true },
+			scroll = { enabled = true },
+			dim = { enabled = true },
+			zen = { enabled = true },
+			image = { enabled = true }, -- requiere magick, gs, mmdc + tmux allow-passthrough
+		},
+		keys = {
+			{ "<leader>gy", function() Snacks.gitbrowse({ open = function(url) vim.fn.setreg("+", url); vim.notify("Permalink copiado al portapapeles") end }) end, desc = "Git — Copiar permalink de GitHub" },
+			{ "<leader>tz", function() Snacks.zen() end, desc = "Snacks — Zen mode" },
 		},
 	},
 
@@ -461,14 +475,6 @@ require("lazy").setup({
 		end)(),
 		config = true,
 	},
-	{
-		'MeanderingProgrammer/render-markdown.nvim',
-		enabled = false, -- TODO: incompatible con nvim 0.12 (treesitter API break)
-		dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' },
-		opts = {
-			latex = { enabled = false }
-		},
-	},
 	-- ──────────────────────────────────────────────────────────────────────────────
 	-- Productivity plugins
 	-- ──────────────────────────────────────────────────────────────────────────────
@@ -495,9 +501,16 @@ require("lazy").setup({
 				{ "<leader>h",  group = "hunks" },
 				{ "<leader>l",  group = "lsp" },
 				{ "<leader>m",  group = "harpoon" },
-				{ "<leader>q",  group = "session" },
+				{ "<leader>O",  group = "octo/github" },
+				{ "<leader>z",  group = "treewalker/AST" },
+				{ "<leader>r",  group = "run/tasks" },
+				{ "<leader>n",  group = "neotest" },
+				{ "<leader>u",  group = "toggle" },
+				{ "<leader>gm", group = "go-mod" },
+				{ "<leader>L",  group = "loclist" },
+				{ "<leader>q",  group = "quit/session" },
 				{ "<leader>s",  group = "search/snippets" },
-				{ "<leader>t",  group = "terminal/toggle/test" },
+				{ "<leader>t",  group = "terminal/toggle" },
 				{ "<leader>w",  group = "wrap" },
 				{ "<leader>x",  group = "trouble/diagnostics" },
 			},
@@ -514,7 +527,7 @@ require("lazy").setup({
 				lua = { "string", "source" },
 				javascript = { "string", "template_string" },
 			},
-			disable_filetype = { "TelescopePrompt", "spectre_panel" },
+			disable_filetype = { "TelescopePrompt" },
 			fast_wrap = {
 				map = '<M-e>',
 				chars = { '{', '[', '(', '"', "'" },
@@ -562,6 +575,15 @@ require("lazy").setup({
 		config = function()
 			require("nvim-surround").setup({})
 		end,
+	},
+
+	-- Split/join de bloques (args, structs, objetos) con treesitter
+	{
+		"Wansmer/treesj",
+		keys = {
+			{ "<leader>J", function() require("treesj").toggle() end, desc = "TreeSJ — Toggle split/join" },
+		},
+		opts = { use_default_keymaps = false },
 	},
 
 	-- Navegación ultra rápida por pantalla
@@ -671,6 +693,200 @@ require("lazy").setup({
 			},
 		},
 	},
+	-- ── Plugins añadidos en la review ──────────────────────────────────────────
+
+	-- Undo history como árbol navegable
+	{
+		"mbbill/undotree",
+		cmd = { "UndotreeToggle", "UndotreeShow" },
+		keys = {
+			{ "<leader>U", "<cmd>UndotreeToggle<cr>", desc = "Undotree — Toggle undo tree" },
+		},
+		init = function()
+			vim.g.undotree_SetFocusWhenToggle = 1
+			vim.g.undotree_WindowLayout = 2
+		end,
+	},
+
+	-- Diagnóstico inline bajo el cursor (virtual_text ya está en false)
+	{
+		"rachartier/tiny-inline-diagnostic.nvim",
+		event = "LspAttach",
+		priority = 1000,
+		config = function()
+			require("tiny-inline-diagnostic").setup()
+		end,
+	},
+
+	-- Quickfix mejorado: highlight, contexto expandible y editable
+	{
+		"stevearc/quicker.nvim",
+		ft = "qf",
+		keys = {
+			{ "<leader>cq", function() require("quicker").toggle() end, desc = "Quickfix — Toggle (quicker)" },
+		},
+		opts = {
+			keys = {
+				{ ">", function() require("quicker").expand({ before = 2, after = 2, add_to_existing = true }) end, desc = "Expand qf context" },
+				{ "<", function() require("quicker").collapse() end, desc = "Collapse qf context" },
+			},
+		},
+	},
+
+	-- Render de Markdown in-buffer (reemplaza render-markdown.nvim, roto en 0.12)
+	{
+		"OXY2DEV/markview.nvim",
+		lazy = false,
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {},
+	},
+
+	-- Yank ring / historial de portapapeles (no toca el paste visual "_dP)
+	{
+		"gbprod/yanky.nvim",
+		event = "VeryLazy",
+		keys = {
+			{ "p", "<Plug>(YankyPutAfter)", mode = "n", desc = "Yanky — Put after" },
+			{ "P", "<Plug>(YankyPutBefore)", mode = "n", desc = "Yanky — Put before" },
+			{ "<C-n>", "<Plug>(YankyNextEntry)", desc = "Yanky — Cycle next (after put)" },
+			{ "<C-p>", "<Plug>(YankyPreviousEntry)", desc = "Yanky — Cycle prev (after put)" },
+			{ "<leader>fy", function() require("telescope").extensions.yank_history.yank_history() end, desc = "Yanky — Yank history" },
+		},
+		opts = { ring = { storage = "shada" } },
+		config = function(_, opts)
+			require("yanky").setup(opts)
+			require("telescope").load_extension("yank_history")
+		end,
+	},
+
+	-- Movimiento / swap de código por AST (Ctrl-hjkl evitado: es tu tmux-navigator)
+	{
+		"aaronik/treewalker.nvim",
+		cmd = "Treewalker",
+		opts = { highlight = true },
+		keys = {
+			{ "<leader>zj", "<cmd>Treewalker Down<cr>",  mode = { "n", "v" }, desc = "Treewalker — Move down (sibling)" },
+			{ "<leader>zk", "<cmd>Treewalker Up<cr>",    mode = { "n", "v" }, desc = "Treewalker — Move up (sibling)" },
+			{ "<leader>zh", "<cmd>Treewalker Left<cr>",  mode = { "n", "v" }, desc = "Treewalker — Move out (parent)" },
+			{ "<leader>zl", "<cmd>Treewalker Right<cr>", mode = { "n", "v" }, desc = "Treewalker — Move in (child)" },
+			{ "<leader>zJ", "<cmd>Treewalker SwapDown<cr>",  desc = "Treewalker — Swap down" },
+			{ "<leader>zK", "<cmd>Treewalker SwapUp<cr>",    desc = "Treewalker — Swap up" },
+			{ "<leader>zH", "<cmd>Treewalker SwapLeft<cr>",  desc = "Treewalker — Swap left" },
+			{ "<leader>zL", "<cmd>Treewalker SwapRight<cr>", desc = "Treewalker — Swap right" },
+		},
+	},
+
+	-- ── Set "según uso" (review) ────────────────────────────────────────────────
+
+	-- Test runner unificado con árbol + resultados inline (Go vía neotest-golang)
+	{
+		"nvim-neotest/neotest",
+		dependencies = {
+			"nvim-neotest/nvim-nio",
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"fredrikaverpil/neotest-golang",
+		},
+		keys = {
+			{ "<leader>nn", function() require("neotest").run.run() end, desc = "Neotest — Run nearest" },
+			{ "<leader>nf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Neotest — Run file" },
+			{ "<leader>nl", function() require("neotest").run.run_last() end, desc = "Neotest — Run last" },
+			{ "<leader>ns", function() require("neotest").summary.toggle() end, desc = "Neotest — Toggle summary" },
+			{ "<leader>no", function() require("neotest").output.open({ enter = true }) end, desc = "Neotest — Output" },
+			{ "<leader>nw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Neotest — Toggle watch" },
+			{ "<leader>nd", function() require("neotest").run.run({ strategy = "dap" }) end, desc = "Neotest — Debug nearest (dap)" },
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-golang")({ dap_mode = "dap-go" }),
+				},
+			})
+		end,
+	},
+
+	-- Task runner (lee tasks.json de VS Code; build/lint para TS/Rust)
+	{
+		"stevearc/overseer.nvim",
+		cmd = { "OverseerRun", "OverseerToggle", "OverseerQuickAction", "OverseerRunCmd" },
+		keys = {
+			{ "<leader>rr", "<cmd>OverseerRun<cr>", desc = "Overseer — Run task" },
+			{ "<leader>rt", "<cmd>OverseerToggle<cr>", desc = "Overseer — Toggle task list" },
+			{ "<leader>ra", "<cmd>OverseerQuickAction<cr>", desc = "Overseer — Quick action" },
+			{ "<leader>rc", "<cmd>OverseerRunCmd<cr>", desc = "Overseer — Run shell cmd" },
+		},
+		opts = {},
+	},
+
+	-- Generador de docstrings (TSDoc/JSDoc/Rust/Lua); Go ya lo cubre go.nvim
+	{
+		"danymat/neogen",
+		cmd = "Neogen",
+		keys = {
+			{ "<leader>cd", function() require("neogen").generate() end, desc = "Neogen — Generate docstring" },
+		},
+		opts = { snippet_engine = "luasnip" },
+	},
+
+	-- Búsqueda avanzada en historial git (pickaxe -G, por autor, diff vs commit)
+	{
+		"aaronhallaert/advanced-git-search.nvim",
+		cmd = "AdvancedGitSearch",
+		dependencies = {
+			"nvim-telescope/telescope.nvim",
+			"tpope/vim-fugitive",
+		},
+		keys = {
+			{ "<leader>gA", "<cmd>AdvancedGitSearch<cr>", desc = "Git — Advanced git search" },
+		},
+		config = function()
+			require("telescope").load_extension("advanced_git_search")
+		end,
+	},
+
+	-- Diagnósticos de TODO el proyecto (on-demand para no martillear el LSP)
+	{
+		"artemave/workspace-diagnostics.nvim",
+		keys = {
+			{ "<leader>lw", function()
+				local bufnr = vim.api.nvim_get_current_buf()
+				for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+					require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+				end
+			end, desc = "LSP — Populate workspace diagnostics" },
+		},
+	},
+
+	-- Find & replace moderno con ripgrep (sucesor de spectre)
+	{
+		"MagicDuck/grug-far.nvim",
+		cmd = "GrugFar",
+		keys = {
+			{ "<leader>sr", function() require("grug-far").open() end, desc = "Grug-far — Search & replace" },
+			{ "<leader>sR", function() require("grug-far").open({ prefills = { search = vim.fn.expand("<cword>") } }) end, desc = "Grug-far — Replace word under cursor" },
+		},
+		opts = {},
+	},
+
+	-- Detiene LSPs inactivos para liberar RAM (defaults conservadores)
+	{
+		"Zeioth/garbage-day.nvim",
+		dependencies = { "neovim/nvim-lspconfig" },
+		event = "VeryLazy",
+		opts = {},
+	},
+
+	-- Breadcrumbs en winbar (estilo IntelliJ); excluye nvim-tree y buffers especiales
+	{
+		"Bekaboo/dropbar.nvim",
+		dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
+		event = { "BufReadPost", "BufNewFile" },
+		keys = {
+			{ "<leader>lb", function() require("dropbar.api").pick() end, desc = "Dropbar — Navigate breadcrumb" },
+		},
+		opts = {},
+	},
+
 }, {
 	-- Configuración de lazy.nvim
 	rocks = {

@@ -21,6 +21,7 @@ cmp.setup({
     end
   },
   sources = cmp.config.sources({
+	  { name = "lazydev", group_index = 0 },
 	  { name = "nvim_lsp", priority = 1000 },
 	  -- { name = "nvim_lsp_signature_help", priority = 950 },  -- Disabled to avoid automatic popup
 	  { name = "luasnip",  priority = 900 },
@@ -92,9 +93,12 @@ cmp.setup({
 
     ['<Tab>'] = cmp.mapping(function(fallback)
       local col = vim.fn.col('.') - 1
+      local ok_sm, sm = pcall(require, 'supermaven-nvim.completion_preview')
 
       if cmp.visible() then
         cmp.select_next_item(select_opts)
+      elseif ok_sm and sm.suggestion_text and sm.suggestion_text ~= '' then
+        sm.on_accept_suggestion()
       elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
         fallback()
       else
@@ -112,11 +116,7 @@ cmp.setup({
   },
 })
 
-vim.lsp.handlers['textDocument/hover'] = function(err, result, ctx, config)
-  vim.lsp.handlers.hover(err, result, ctx, vim.tbl_extend('force', config or {}, {border = 'rounded'}))
-end
-
-vim.lsp.handlers['textDocument/signatureHelp'] = function(err, result, ctx, config)
-  vim.lsp.handlers.signature_help(err, result, ctx, vim.tbl_extend('force', config or {}, {border = 'rounded'}))
-end
+-- Rounded borders for all floating windows (hover, signature help, diagnostics, ...).
+-- Native nvim 0.11+ option; replaces the deprecated vim.lsp.handlers override.
+vim.o.winborder = 'rounded'
 

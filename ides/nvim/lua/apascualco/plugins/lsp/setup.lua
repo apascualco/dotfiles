@@ -20,9 +20,7 @@ M.capabilities = capabilities
 
 -- Universal on_attach function
 M.on_attach = function(client, bufnr)
-	-- LSP keymaps
-	local opts = { noremap = true, silent = true, buffer = bufnr }
-	vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", opts)
+	-- LSP keymaps live in keybinding.lua (gr is mapped globally there — no buffer-local override)
 
 	-- Inlay hints disabled by default, toggle with <leader>lh
 
