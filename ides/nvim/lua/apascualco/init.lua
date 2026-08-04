@@ -82,6 +82,46 @@ vim.opt.backup = false
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
+vim.opt.autoread = true
+
+-- Refresh buffers and git UI when files change outside Neovim (git pull/switch).
+local refresh_external_changes_group = vim.api.nvim_create_augroup("RefreshExternalChanges", { clear = true })
+local uv = vim.uv or vim.loop
+local last_external_refresh = 0
+
+local function refresh_external_changes()
+	if vim.fn.mode() ~= "n" then return end
+
+	-- BufEnter can fire frequently; keep refresh responsive but cheap.
+	if uv and uv.now then
+		local now = uv.now()
+		if (now - last_external_refresh) < 400 then return end
+		last_external_refresh = now
+	end
+
+	vim.schedule(function()
+		if vim.fn.mode() ~= "n" then return end
+
+		pcall(vim.cmd, "silent! checktime")
+
+		local ok_gitsigns, gitsigns = pcall(require, "gitsigns")
+		if ok_gitsigns then pcall(gitsigns.refresh) end
+
+		local ok_tree, api = pcall(require, "nvim-tree.api")
+		if ok_tree and api.tree.is_visible() then
+			pcall(api.tree.reload)
+		end
+	end)
+end
+
+vim.api.nvim_create_user_command("RefreshExternalChanges", refresh_external_changes, {
+	desc = "Refresh files and git UI after external changes",
+})
+
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "TermClose", "TermLeave", "ShellCmdPost" }, {
+	group = refresh_external_changes_group,
+	callback = refresh_external_changes,
+})
 
 -- Performance
 vim.opt.updatetime = 250
@@ -169,6 +209,7 @@ require("apascualco.plugins.lsp.tsserver")
 
 require("apascualco.plugins.lsp.rust")
 require("apascualco.plugins.lsp.go")
+require("apascualco.plugins.lsp.proto")
 
 require("apascualco.plugins.dap")
 require("apascualco.plugins.bufferline")
@@ -177,3 +218,5 @@ require("apascualco.keybinding")
 require("apascualco.diagnostics")
 
 require("apascualco.onsave")
+
+require("apascualco.jsonl")

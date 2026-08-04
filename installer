@@ -8,18 +8,22 @@ echo
 
 echo "🚀 Installing brew (password required)!"
 echo "-------------------------------------------------"
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 echo "-------------------------------------------------"
 echo
 
 echo "🚀 Cloning dotfiles"
 echo "-------------------------------------------------"
-git clone --depth 1 https://github.com/apascualco/dotfiles.git "$HOME/.dotfiles"
+if [[ -d "$HOME/.dotfiles/.git" ]]; then
+  git -C "$HOME/.dotfiles" pull --ff-only
+else
+  git clone --depth 1 https://github.com/apascualco/dotfiles.git "$HOME/.dotfiles"
+fi
 echo
 
 echo "🚀 Launch install.sh"
 echo "-------------------------------------------------"
-cd $HOME/.dotfiles
+cd "$HOME/.dotfiles"
 ./install.sh
 echo

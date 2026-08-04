@@ -24,6 +24,7 @@ local ensure_installed = {
 	"make",
 	"markdown",
 	"markdown_inline",
+	"proto",
 	"python",
 	"regex",
 	"ruby",

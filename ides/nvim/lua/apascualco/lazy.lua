@@ -159,6 +159,42 @@ require("lazy").setup({
 		end,
 	},
 
+	-- Codex CLI en una ventana flotante
+	{
+		"johnseth97/codex.nvim",
+		cmd = { "Codex", "CodexToggle" },
+		keys = {
+			{ "<leader>cx", function() require("codex").toggle() end, desc = "Codex — Toggle", mode = { "n", "t" } },
+		},
+		opts = {
+			keymaps = { toggle = nil }, -- <leader>cc ya se usa para cerrar quickfix
+			border = "rounded",
+			width = 0.4,
+			autoinstall = false, -- El CLI ya está instalado
+			panel = true,
+		},
+		config = function(_, opts)
+			require("codex").setup(opts)
+
+			local group = vim.api.nvim_create_augroup("CodexPanelRight", { clear = true })
+			local function move_panel_right()
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "codex" then
+						vim.api.nvim_win_call(win, function() vim.cmd("wincmd L") end)
+						return
+					end
+				end
+			end
+
+			vim.api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
+				group = group,
+				callback = function()
+					vim.schedule(move_panel_right)
+				end,
+			})
+		end,
+	},
+
 	-- Snippers
 	{
 		'L3MON4D3/LuaSnip',
@@ -199,6 +235,8 @@ require("lazy").setup({
 				lua = { "stylua" },
 				python = { "black", "isort" },
 				rust = { "rustfmt" },
+				proto = { "buf" },
+					["buf-config"] = { "prettier" }, -- buf.yaml/buf.gen.yaml (filetype fijado en lsp/proto.lua)
 			},
 			format_on_save = function(bufnr)
 				-- Disable for certain filetypes
@@ -293,6 +331,32 @@ require("lazy").setup({
 			hg_cmd = nil, -- Desactiva Mercurial
 		},
 	},
+
+	-- diffbandit.nvim — visor de diff alternativo (motor de IntelliJ, 3 paneles).
+	-- Instalado EN PARALELO a diffview para probarlo; NO pisa los <leader>g* de diffview.
+	-- Todo cuelga de <leader>gz* (zona "git", con la "z" libre). Lazy-load por cmd/keys,
+	-- así que coste de arranque ~0. Si no convence: borra este bloque y a correr.
+	{
+		"CoreyKaylor/diffbandit.nvim",
+		cmd = {
+			"DiffBanditGit", "DiffBanditGitCurrent", "DiffBanditGitMenu",
+			"DiffBanditGitLog", "DiffBanditGitCompare", "DiffBanditCommitPanel",
+		},
+		keys = {
+			{ "<leader>gzm", "<cmd>DiffBanditGitMenu<CR>",                    desc = "DiffBandit — Menú git" },
+			{ "<leader>gzg", "<cmd>DiffBanditGit<CR>",                        desc = "DiffBandit — Cambios (working tree)" },
+			{ "<leader>gzc", "<cmd>DiffBanditGitCurrent<CR>",                 desc = "DiffBandit — Diff del fichero actual" },
+			{ "<leader>gzr", "<cmd>DiffBanditGitCompare origin/main HEAD<CR>", desc = "DiffBandit — Review rama (vs main)" },
+			{ "<leader>gzl", "<cmd>DiffBanditGitLog<CR>",                     desc = "DiffBandit — Historial de commits" },
+			{ "<leader>gzp", "<cmd>DiffBanditCommitPanel<CR>",                desc = "DiffBandit — Commit panel" },
+		},
+		-- Defaults; secciones configurables: diff, navigation, git, merge, folder, ui, actions.
+		opts = {},
+		config = function(_, opts)
+			require("diffbandit").setup(opts)
+		end,
+	},
+
 	{
 		"akinsho/git-conflict.nvim",
 		version = "*",
@@ -398,6 +462,7 @@ require("lazy").setup({
 	},
 
 	-- Movement plugin
+	{ "nvim-pack/nvim-spectre" },
 	{ "ThePrimeagen/harpoon", branch = "harpoon2", dependencies = { "nvim-lua/plenary.nvim" } },
 	{ "christoomey/vim-tmux-navigator", lazy = false },
 
@@ -527,7 +592,7 @@ require("lazy").setup({
 				lua = { "string", "source" },
 				javascript = { "string", "template_string" },
 			},
-			disable_filetype = { "TelescopePrompt" },
+			disable_filetype = { "TelescopePrompt", "spectre_panel" },
 			fast_wrap = {
 				map = '<M-e>',
 				chars = { '{', '[', '(', '"', "'" },
@@ -686,6 +751,7 @@ require("lazy").setup({
 			direction = "horizontal",
 			shade_terminals = true,
 			start_in_insert = true,
+			persist_mode = false,
 			persist_size = true,
 			close_on_exit = true,
 			float_opts = {

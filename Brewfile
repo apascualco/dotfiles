@@ -39,12 +39,20 @@ brew "gopls"
 brew "terraform-ls"
 brew "tree-sitter"
 brew "virtualenv"
+brew "prettier"
+brew "stylua"
+brew "black"
+brew "isort"
+brew "buf"
 
 # ============================================================================
 # GUI apps (casks)
 # ============================================================================
+cask "brave-browser"
+cask "chatgpt"
 cask "google-chrome"
-cask "docker"
+cask "docker-desktop"
+cask "obsidian"
 cask "spotify"
 cask "ghostty"
 cask "stats"

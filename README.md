@@ -4,6 +4,14 @@ Configuración de macOS: **zsh** (oh-my-zsh + powerlevel10k), **Neovim**, **tmux
 
 ## Instalación
 
+### Opción A — Mac limpia (sin Homebrew)
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/apascualco/dotfiles/main/installer)
+```
+
+### Opción B — Ya tienes Homebrew
+
 ```bash
 git clone https://github.com/apascualco/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
@@ -27,8 +35,12 @@ cd ~/.dotfiles
   | `~/.gitconfig` | `apps/git/gitconfig` |
   | `~/.gitignore_global` | `apps/git/gitignore_global` |
   | `~/.ideavimrc` | `ides/intellij/ideavimrc` |
-  | `~/.config/nvim/{init.lua,lua}` | `ides/nvim/...` |
+  | `~/.config/nvim` | `ides/nvim` |
   | Ghostty `config` | `apps/ghostty/config` |
+
+- **Tooling de Neovim** → además del LSP (mason), `Brewfile` incluye binarios
+  de formatter/linter usados por `conform.nvim` (prettier, stylua, black,
+  isort, buf). `install.sh` instala también `gofumpt` y `goimports`.
 
 ## Secrets / configuración local
 
