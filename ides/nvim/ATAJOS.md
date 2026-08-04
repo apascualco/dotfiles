@@ -294,6 +294,7 @@
 | Atajo | Descripcion |
 |-------|-------------|
 | `,gd` | Abrir diff (vs HEAD) |
+| `,gr` | Review de la rama (vs main) |
 | `,gD` | Cerrar diff |
 | `,gh` | Historial del archivo actual |
 | `,gH` | Historial del repositorio |

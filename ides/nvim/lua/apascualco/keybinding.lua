@@ -1,4 +1,4 @@
--- keybinding.lua — curated keymaps for NvimTree, Telescope, LSP, lint/format, Trouble, DAP, Git, Diffview, Harpoon
+-- keybinding.lua — curated keymaps for NvimTree, Telescope, LSP, lint/format, Trouble, DAP, Git, Diffview, Spectre, Harpoon
 -- Estilo: vim.keymap.set “plano”, descripciones en inglés, noremap+silent.
 
 local set = vim.keymap.set
@@ -27,7 +27,7 @@ map('n', '<leader>f/', function() require('telescope.builtin').current_buffer_fu
   'Telescope — Fuzzy search in current buffer')
 map('n', '<leader>fb', function() require('telescope.builtin').buffers() end,    'Telescope — Switch buffer')
 map('n', '<leader>fB', function() require('telescope.builtin').git_branches({ show_remote_tracking_branches = false }) end, 'Telescope — Git branches (local)')
-map('n', '<leader>gB', function() require('telescope.builtin').git_branches({ only_sort_tags = false, show_remote_tracking_branches = true }) end, 'Telescope — Git branches (remote)')
+map('n', '<leader>fR', function() require('telescope.builtin').git_branches({ only_sort_tags = false, show_remote_tracking_branches = true }) end, 'Telescope — Git branches (remote)')
 map('n', '<leader>fS', function() require('telescope.builtin').git_stash() end, 'Telescope — Git stash')
 map('n', '<leader>fo', function() require('telescope.builtin').oldfiles() end,   'Telescope — Recent files')
 map('n', '<leader>fh', function() require('telescope.builtin').help_tags() end,  'Telescope — Help tags')
@@ -157,11 +157,11 @@ map('n', '<leader>lR', vim.lsp.buf.rename,                       'LSP — Rename
 map('n', '<leader>lD', vim.lsp.buf.declaration,                  'LSP — Go to declaration')
 map('n', '<leader>ld', vim.lsp.buf.definition,                   'LSP — Go to definition')
 map('n', '<leader>lt', vim.lsp.buf.type_definition,              'LSP — Go to type definition')
-map('n', '<leader>lH', vim.lsp.buf.hover,                        'LSP — Hover documentation')
+map('n', '<leader>lh', vim.lsp.buf.hover,                        'LSP — Hover documentation')
 map('n', '<leader>lK', vim.lsp.buf.signature_help,               'LSP — Function signature help')
 map('n', '<leader>lf', function() vim.lsp.buf.format({ async = true }) end, 'LSP — Format current buffer')
-map('n', '[d', function() vim.diagnostic.jump({ count = -1, float = true }) end,                         'LSP — Previous diagnostic')
-map('n', ']d', function() vim.diagnostic.jump({ count = 1, float = true }) end,                         'LSP — Next diagnostic')
+map('n', '[d', vim.diagnostic.goto_prev,                         'LSP — Previous diagnostic')
+map('n', ']d', vim.diagnostic.goto_next,                         'LSP — Next diagnostic')
 map('n', '<leader>le', vim.diagnostic.open_float,                'LSP — Show diagnostic under cursor')
 map('n', '<leader>lq', vim.diagnostic.setloclist,                'LSP — Populate location list with diagnostics')
 map('x', '<leader>la', function() vim.lsp.buf.code_action() end, 'LSP — Code actions (visual range)')
@@ -240,22 +240,24 @@ map('n', '<leader>dR', function()
     return
   end
 
-  -- Carga env vars desde .vscode/launch.json
+  -- Carga env vars desde launch.json (busca en .vscode/ y alberto/)
   local launch_envs = {}
-  local launch_path = root .. '/.vscode/launch.json'
-  if vim.fn.filereadable(launch_path) == 1 then
-    local ok, json = pcall(function()
-      return vim.fn.json_decode(table.concat(vim.fn.readfile(launch_path), '\n'))
-    end)
-    if ok and json and json.configurations then
-      for _, cfg in ipairs(json.configurations) do
-        if cfg.program and cfg.env then
-          local prog = cfg.program:gsub('${workspaceFolder}', root)
-          local env = {}
-          for k, v in pairs(cfg.env) do
-            env[k] = tostring(v):gsub('${workspaceFolder}', root)
+  for _, rel in ipairs({ '/.vscode/launch.json', '/alberto/launch.json' }) do
+    local launch_path = root .. rel
+    if vim.fn.filereadable(launch_path) == 1 then
+      local ok, json = pcall(function()
+        return vim.fn.json_decode(table.concat(vim.fn.readfile(launch_path), '\n'))
+      end)
+      if ok and json and json.configurations then
+        for _, cfg in ipairs(json.configurations) do
+          if cfg.program and cfg.env then
+            local prog = cfg.program:gsub('${workspaceFolder}', root)
+            local env = {}
+            for k, v in pairs(cfg.env) do
+              env[k] = tostring(v):gsub('${workspaceFolder}', root)
+            end
+            launch_envs[prog] = env
           end
-          launch_envs[prog] = env
         end
       end
     end
@@ -283,7 +285,10 @@ map('n', '<leader>dR', function()
         actions.close(prompt_bufnr)
         if not selection then return end
         local dir = vim.fn.fnamemodify(selection.value, ':h')
-        local env = launch_envs[dir] or {}
+        local env = launch_envs[dir]
+        if not env or not next(env) then
+          env = vim.empty_dict()
+        end
         require('dap').run({
           type       = 'go',
           name       = 'Debug ' .. vim.fn.fnamemodify(dir, ':t'),
@@ -298,7 +303,7 @@ map('n', '<leader>dR', function()
       return true
     end,
   }):find()
-end, 'DAP — Debug main.go picker (con env vars de .vscode/launch.json)')
+end, 'DAP — Debug main.go picker (con env vars de .vscode/ o alberto/launch.json)')
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Bufferline
@@ -326,7 +331,11 @@ map('x', '<leader>lf', function() vim.lsp.buf.format({ async=true }) end, 'LSP �
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Diagnostics auto-popup toggle
 -- ──────────────────────────────────────────────────────────────────────────────
-map('n', '<leader>td', function() require('tiny-inline-diagnostic').toggle() end, 'Diagnostics — Toggle inline diagnostic')
+map('n', '<leader>td', function()
+  if vim.g._diag_toggle_func then
+    vim.g._diag_toggle_func()
+  end
+end, 'Diagnostics — Toggle auto popup on CursorHold')
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- nvim-treesitter
@@ -338,7 +347,7 @@ map('n', '<leader>tI', '<cmd>InspectTree<CR>',                     'nvim-treesit
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Indent-blankline toggle
 -- ──────────────────────────────────────────────────────────────────────────────
-map('n', '<leader>ui', '<cmd>IBLToggle<CR>', 'IBL — Toggle indent guides')
+map('n', '<leader>tig', '<cmd>IBLToggle<CR>', 'IBL — Toggle indent guides')
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Vim-illuminate (navegar entre referencias)
@@ -394,11 +403,24 @@ map('v', '<leader>hr', function() require('gitsigns').reset_hunk({vim.fn.line('.
 -- Diffview
 -- ──────────────────────────────────────────────────────────────────────────────
 map('n', '<leader>gd', '<cmd>DiffviewOpen<CR>',                        'Diffview — Open diff (vs HEAD)')
+map('n', '<leader>gr', '<cmd>DiffviewOpen origin/main...HEAD<CR>',     'Diffview — Review branch (vs main)')
 map('n', '<leader>gD', '<cmd>DiffviewClose<CR>',                       'Diffview — Close diff')
+map('n', '<leader>gR', '<cmd>RefreshExternalChanges<CR>',              'Git/UI — Refresh external changes')
 map('n', '<leader>gh', '<cmd>DiffviewFileHistory %<CR>',               'Diffview — Current file history')
 map('n', '<leader>gH', '<cmd>DiffviewFileHistory<CR>',                 'Diffview — Repository file history')
 map('n', '<leader>gf', '<cmd>DiffviewToggleFiles<CR>',                 'Diffview — Toggle files panel')
 map('n', '<leader>gF', '<cmd>DiffviewFocusFiles<CR>',                  'Diffview — Focus files panel')
+
+-- ──────────────────────────────────────────────────────────────────────────────
+-- Spectre
+-- ──────────────────────────────────────────────────────────────────────────────
+map('n', '<leader>S',  '<cmd>Spectre<CR>',                             'Spectre — Project search & replace')
+map('n', '<leader>Sf', '<cmd>lua require("spectre").open_file_search()<CR>',
+  'Spectre — File search & replace (current file)')
+map('n', '<leader>Sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>',
+  'Spectre — Search word under cursor')
+map('x', '<leader>S',  '<esc><cmd>lua require("spectre").open_visual()<CR>',
+  'Spectre — Search & replace selection')
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Harpoon (v2)
@@ -601,6 +623,9 @@ map('n', '<leader>qd', function() require("persistence").stop() end, 'Session �
 map('n', '<leader>goj', '<cmd>GoTagAdd json<cr>', 'Go — Add json tags')
 map('n', '<leader>goy', '<cmd>GoTagAdd yaml<cr>', 'Go — Add yaml tags')
 map('n', '<leader>goe', '<cmd>GoIfErr<cr>', 'Go — Add if err')
+map('n', '<leader>got', '<cmd>GoTestFunc<cr>', 'Go — Test function')
+map('n', '<leader>goT', '<cmd>GoTestFile<cr>', 'Go — Test file')
+map('n', '<leader>goa', '<cmd>GoTestPkg<cr>', 'Go — Test package')
 map('n', '<leader>goc', '<cmd>GoCoverage<cr>', 'Go — Coverage')
 map('n', '<leader>goi', '<cmd>GoImpl<cr>', 'Go — Implement interface')
 map('n', '<leader>gof', '<cmd>GoFillStruct<cr>', 'Go — Fill struct')
@@ -608,23 +633,19 @@ map('n', '<leader>gos', '<cmd>GoFillSwitch<cr>', 'Go — Fill switch')
 
 -- Organize imports manually
 map('n', '<leader>goo', function()
-  local bufnr = 0
-  local clients = vim.lsp.get_clients({ bufnr = bufnr })
-  local enc = clients[1] and clients[1].offset_encoding or "utf-16"
-  local params = vim.lsp.util.make_range_params(0, enc)
+  local params = vim.lsp.util.make_range_params()
   params.context = { only = { "source.organizeImports" } }
-  local result = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 3000)
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
 
   local found = false
   for _, res in pairs(result or {}) do
-    local client = res.client_id and vim.lsp.get_client_by_id(res.client_id)
     for _, action in pairs(res.result or {}) do
       if action.edit then
-        vim.lsp.util.apply_workspace_edit(action.edit, (client and client.offset_encoding) or "utf-16")
+        vim.lsp.util.apply_workspace_edit(action.edit, "utf-16")
         found = true
       end
-      if action.command and client then
-        client:exec_cmd(action.command, { bufnr = bufnr })
+      if action.command then
+        vim.lsp.buf.execute_command(action.command)
         found = true
       end
     end
@@ -639,16 +660,12 @@ end, 'Go — Organize imports')
 
 -- Quick fix to add imports (when there's an error)
 map('n', '<leader>goq', function()
-  local bufnr = 0
-  local clients = vim.lsp.get_clients({ bufnr = bufnr })
-  local enc = clients[1] and clients[1].offset_encoding or "utf-16"
-  local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
-  local params = vim.lsp.util.make_range_params(0, enc)
+  local params = vim.lsp.util.make_range_params()
   params.context = {
-    diagnostics = vim.lsp.diagnostic.from(vim.diagnostic.get(bufnr, { lnum = lnum })),
+    diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
     only = { "quickfix" }
   }
-  local result = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 3000)
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
 
   if not result or vim.tbl_isempty(result) then
     print("⚠️  No hay quick fixes disponibles")
@@ -656,14 +673,14 @@ map('n', '<leader>goq', function()
   end
 
   for _, res in pairs(result) do
-    local client = res.client_id and vim.lsp.get_client_by_id(res.client_id)
     for _, action in pairs(res.result or {}) do
+      -- Busca acciones que añadan imports
       if action.title and (action.title:match("Add import") or action.title:match("import")) then
         if action.edit then
-          vim.lsp.util.apply_workspace_edit(action.edit, (client and client.offset_encoding) or "utf-16")
+          vim.lsp.util.apply_workspace_edit(action.edit, "utf-16")
         end
-        if action.command and client then
-          client:exec_cmd(action.command, { bufnr = bufnr })
+        if action.command then
+          vim.lsp.buf.execute_command(action.command)
         end
         print("✅ " .. action.title)
         return
@@ -837,7 +854,7 @@ map('n', '<leader>gmv', '<cmd>!go mod vendor<CR>', 'Go — Mod vendor')
 map('n', '<leader>gmd', '<cmd>!go mod download<CR>', 'Go — Mod download')
 
 -- Go get/install
-map('n', '<leader>gog', function()
+map('n', '<leader>ggi', function()
   vim.ui.input({ prompt = 'go get: ' }, function(input)
     if input then
       vim.cmd('!go get ' .. input)
@@ -854,9 +871,10 @@ end, 'Go — Add json & yaml tags')
 map('n', '<leader>goR', '<cmd>GoTagRm<CR>', 'Go — Remove all tags')
 
 -- Test shortcuts
+map('n', '<leader>gol', '<cmd>GoTestLast<CR>', 'Go — Test last')
 
 -- Generate
-map('n', '<leader>goG', '<cmd>!go generate ./...<CR>', 'Go — Generate')
+map('n', '<leader>gg', '<cmd>!go generate ./...<CR>', 'Go — Generate')
 
 -- Mod init
 map('n', '<leader>gmi', function()
@@ -910,9 +928,6 @@ map('t', '<C-h>', '<C-\\><C-n><C-w>h', 'Window — Move to left window (terminal
 map('t', '<C-j>', '<C-\\><C-n><C-w>j', 'Window — Move to bottom window (terminal)')
 map('t', '<C-k>', '<C-\\><C-n><C-w>k', 'Window — Move to top window (terminal)')
 map('t', '<C-l>', '<C-\\><C-n><C-w>l', 'Window — Move to right window (terminal)')
-
--- ESC to exit terminal mode
-map('t', '<Esc>', '<C-\\><C-n>', 'Exit terminal mode')
 
 -- Ctrl+w + flechas (navegación alternativa)
 map('n', '<C-w><Left>', '<C-w>h', 'Window — Move to left window')
@@ -1006,7 +1021,7 @@ end, 'Window — Maximize toggle')
 -- ──────────────────────────────────────────────────────────────────────────────
 -- Quick quit
 -- ──────────────────────────────────────────────────────────────────────────────
-map('n', '<leader>qw', '<cmd>q<CR>', 'Quit window')
+map('n', '<leader>q', '<cmd>q<CR>', 'Quit window')
 map('n', '<leader>qq', '<cmd>qa!<CR>', 'Quit all (force)')
 map('n', '<leader>Q', '<cmd>qa<CR>', 'Quit all')
 
@@ -1036,4 +1051,4 @@ end, 'Toggle — Wrap')
 -- ──────────────────────────────────────────────────────────────────────────────
 -- New file
 -- ──────────────────────────────────────────────────────────────────────────────
-map('n', '<leader>bn', '<cmd>enew<CR>', 'New buffer')
+map('n', '<leader>n', '<cmd>enew<CR>', 'New buffer')

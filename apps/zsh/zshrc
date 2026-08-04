@@ -57,6 +57,10 @@ export PATH="$HOME/.local/bin:$PATH"
 # System paths
 export PATH="/usr/local/bin:$PATH"
 
+# Pin Homebrew's 3.12 as the default python3/pip3 — must stay AFTER /usr/local/bin,
+# which still holds stale system-3.9 pip shims (pip / pip3 / pip3.9).
+[[ -d /opt/homebrew/opt/python@3.12/libexec/bin ]] && export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+
 # ============================================================================
 # POWERLEVEL10K INSTANT PROMPT
 # ============================================================================
@@ -112,6 +116,12 @@ source "$HOME/.cargo/env"
 
 # GVM
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm" 2>/dev/null
+# GVM overrides cd() to auto-switch Go version/pkgset from .go-version/.go-pkgset files.
+# That override is buggy under zsh — it "quietly fails" (Go still works) but spams
+# "command not found: _encode/_decode" on every cd. We don't use per-directory switching,
+# so drop the override and keep the plain builtin cd. `gvm use`/`gvm install` are
+# unaffected; only .go-version/.go-pkgset auto-switching is disabled.
+(( $+functions[cd] )) && unfunction cd
 # Update GOBIN after GVM loads (uses current GOPATH). Guarded so we don't spawn
 # `go` on every shell start when Go isn't installed.
 if (( $+commands[go] )); then
@@ -162,7 +172,7 @@ alias drc='docker rm $(docker ps -a -q)'
 # ALIASES - Shell Configuration
 # ============================================================================
 alias lsource='source ~/.zshrc'
-alias esource='vim ~/.zshrc'
+alias esource='nvim ~/.zshrc'
 
 # ============================================================================
 # ALIASES - Kubernetes
@@ -188,6 +198,9 @@ alias n='nvim .'
 alias claudes='claude --dangerously-skip-permissions --brief --effort high --model claude-sonnet-4-8'
 alias claudesx='claude --dangerously-skip-permissions --brief --effort max --model claude-sonnet-4-8'
 alias claudex='claude --dangerously-skip-permissions --brief --effort max --model claude-opus-4-8'
+# Codex uses the model/provider in ~/.codex/config.toml; override effort only.
+alias codexs='codex --dangerously-bypass-approvals-and-sandbox -c model_reasoning_effort="high"'
+alias codexsx='codex --dangerously-bypass-approvals-and-sandbox -c model_reasoning_effort="xhigh"'
 alias idea='open -na "IntelliJ IDEA.app" --args '
 
 # ============================================================================
@@ -266,6 +279,5 @@ if [[ -n "$GHOSTTY_RESOURCES_DIR" && -z "$TMUX" ]]; then
 fi
 
 
-# mlx-lm (Apple MLX LLM runtime)
-export PATH="$HOME/Library/Python/3.9/bin:$PATH"
-
+# Removed: system-Python-3.9 user bin ($HOME/Library/Python/3.9/bin). CLIs migrated to pipx on 3.12.
+# (mlx-lm is no longer installed there; to restore on 3.12: pipx install mlx-lm)

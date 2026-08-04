@@ -18,6 +18,7 @@ require("mason-lspconfig").setup {
 		"cssls",
 		"jsonls",
 		"rust_analyzer",
+		"buf_ls",
 	},
 	-- We enable servers explicitly below (and in go/rust/tsserver.lua), so don't
 	-- let mason-lspconfig auto-enable them too (would double-enable). 2.x defaults to true.

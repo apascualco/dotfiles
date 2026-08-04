@@ -8,6 +8,9 @@ vim.lsp.config("gopls", {
   capabilities= lsp_setup.capabilities,
   settings    = {
     gopls = {
+      -- Analiza también los ficheros tras estos build tags (suites eval/e2e),
+      -- si no gopls los marca inactivos (en gris) y da "No packages found".
+      buildFlags                   = { "-tags=eval,e2e" },
       completeUnimported           = true,
       gofumpt = true,
       usePlaceholders              = true,

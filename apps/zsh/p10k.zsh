@@ -115,6 +115,13 @@
     # example               # example user-defined segment (see prompt_example function below)
   )
 
+  # Neovim's embedded terminal has limited space. Keep its prompt compact and
+  # avoid the VCS rendering issue while retaining the full prompt elsewhere.
+  if [[ -n $NVIM ]]; then
+    typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir newline prompt_char)
+    typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
+  fi
+
   # Defines character set used by powerlevel10k. It's best to let `p10k configure` set it for you.
   typeset -g POWERLEVEL9K_MODE=nerdfont-complete
   # When set to `moderate`, some icons will have an extra space after them. This is meant to avoid
@@ -477,11 +484,9 @@
   # Multiple patterns can be combined with '|': '~(|/foo)|/bar/baz/*'.
   typeset -g POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN='~'
 
-  # Disable the default Git status formatting.
-  typeset -g POWERLEVEL9K_VCS_DISABLE_GITSTATUS_FORMATTING=true
-  # Install our own Git status formatter.
-  typeset -g POWERLEVEL9K_VCS_CONTENT_EXPANSION='${$((my_git_formatter(1)))+${my_git_format}}'
-  typeset -g POWERLEVEL9K_VCS_LOADING_CONTENT_EXPANSION='${$((my_git_formatter(0)))+${my_git_format}}'
+  # Use the default Git status formatting.
+  typeset -g POWERLEVEL9K_VCS_DISABLE_GITSTATUS_FORMATTING=false
+  # Use Powerlevel10k's builtin Git status formatter.
   # Enable counters for staged, unstaged, etc.
   typeset -g POWERLEVEL9K_VCS_{STAGED,UNSTAGED,UNTRACKED,CONFLICTED,COMMITS_AHEAD,COMMITS_BEHIND}_MAX_NUM=-1
 
