@@ -2,12 +2,19 @@
 
 # Directories to search for projects (depth 1)
 SEARCH_DIRS=(
-    ~/workdir/acai
     ~/workdir/projects
     ~/workdir/faraday
     ~/workdir/sandbox
     ~/workdir/tools
 )
+
+if [[ -f ~/.local_sessionizer_dirs ]]; then
+    extra=()
+    while IFS= read -r dir; do
+        [[ -n $dir && $dir != \#* ]] && extra+=("${dir/#\~/$HOME}")
+    done < ~/.local_sessionizer_dirs
+    SEARCH_DIRS=("${extra[@]}" "${SEARCH_DIRS[@]}")
+fi
 
 if [[ $# -eq 1 ]]; then
     selected=$1

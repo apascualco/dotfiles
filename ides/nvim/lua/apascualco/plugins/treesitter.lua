@@ -41,7 +41,6 @@ local ensure_installed = {
 	"terraform",
 	"javascript",
 	"typescript",
-	-- Renderizado de docs: markview (math LaTeX/typst) y Snacks.image en estos filetypes
 	"latex",
 	"typst",
 	"svelte",
@@ -78,7 +77,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		if not lang then return end
 		if not pcall(vim.treesitter.language.add, lang) then return end
 		pcall(vim.treesitter.start, args.buf, lang)
-		-- Wire treesitter-based indentation (main-branch API), not just highlight
 		pcall(function()
 			vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 		end)

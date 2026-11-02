@@ -1,19 +1,5 @@
--- JSONL (.jsonl): un objeto JSON por línea.
---
--- Nota de diseño: NO reutilizamos el trato completo de `json` (jsonls + prettier
--- en format_on_save) porque romperían el archivo — prettier/jq sobre el buffer
--- entero juntaría todos los registros en un único objeto multilínea (deja de ser
--- JSONL), y jsonls marcaría error en todo lo que no sea la primera línea. En su
--- lugar damos lo que sí tiene sentido en JSONL:
---   1) mismo resaltado que JSON (reutiliza el parser treesitter `json`)
---   2) lectura cómoda de logs largos minificados (wrap) sin tocar el archivo
---   3) <leader>jq  → pretty-print del registro bajo el cursor en un flotante
---   4) :JsonlPretty → todo el archivo formateado en un buffer scratch (solo lectura)
-
--- Para cualquier búsqueda de treesitter, el filetype `jsonl` usa el parser `json`.
 pcall(vim.treesitter.language.register, "json", "jsonl")
 
--- Abre `lines` en un buffer scratch flotante, resaltado como JSON, solo lectura.
 local function open_float(lines, title)
 	local buf = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
@@ -45,7 +31,6 @@ local function open_float(lines, title)
 	return win
 end
 
--- Corre `jq .` sobre `input` (string). Devuelve las líneas o nil + mensaje.
 local function jq_pretty(input)
 	if vim.fn.executable("jq") == 0 then
 		return nil, "jq no está instalado"
@@ -57,7 +42,6 @@ local function jq_pretty(input)
 	return out
 end
 
--- Pretty-print del registro (línea actual) en un flotante.
 local function preview_record()
 	local line = vim.api.nvim_get_current_line()
 	if line:match("^%s*$") then
@@ -72,8 +56,6 @@ local function preview_record()
 	open_float(out, "record L" .. lnum)
 end
 
--- Todo el archivo formateado (cada registro expandido) en un buffer scratch.
--- `jq .` acepta un stream de valores JSON y pretty-imprime cada uno en orden.
 local function pretty_whole_file()
 	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 	local out, err = jq_pretty(table.concat(lines, "\n"))
@@ -98,18 +80,16 @@ end
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "jsonl",
 	callback = function(args)
-		-- Resaltado idéntico a JSON.
 		if not (vim.treesitter.highlighter and vim.treesitter.highlighter.active[args.buf]) then
 			pcall(vim.treesitter.start, args.buf, "json")
 		end
-		-- Lectura cómoda de líneas largas minificadas.
 		vim.opt_local.wrap = true
 		vim.opt_local.linebreak = true
 		vim.opt_local.breakindent = true
 
 		vim.keymap.set("n", "<leader>jq", preview_record,
-			{ buffer = args.buf, desc = "JSONL — pretty registro bajo el cursor" })
+			{ buffer = args.buf, desc = "Pretty-print record" })
 		vim.api.nvim_buf_create_user_command(args.buf, "JsonlPretty", pretty_whole_file,
-			{ desc = "JSONL — todo el archivo formateado (scratch, solo lectura)" })
+			{ desc = "Pretty-print whole file (read-only scratch)" })
 	end,
 })

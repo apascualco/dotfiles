@@ -1,0 +1,22 @@
+matches:
+
+  - trigger: ":iferr"
+    replace: "if err != nil {\n\treturn err\n}"
+
+  - trigger: ":iferrw"
+    replace: "if err != nil {\n\treturn fmt.Errorf(\"$|$: %w\", err)\n}"
+
+  - trigger: ":ctxp"
+    replace: "ctx context.Context"
+
+  - trigger: ":ctxt"
+    replace: "ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)\ndefer cancel()"
+
+  - trigger: ":tt"
+    replace: "tests := []struct {\n\tname string\n\twant error\n}{\n\t{name: \"$|$\"},\n}\n\nfor _, tt := range tests {\n\tt.Run(tt.name, func(t *testing.T) {\n\t})\n}"
+
+  - trigger: ":thel"
+    replace: "t.Helper()"
+
+  - trigger: ":bench"
+    replace: "func Benchmark$|$(b *testing.B) {\n\tfor b.Loop() {\n\t}\n}"

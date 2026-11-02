@@ -1,0 +1,28 @@
+matches:
+
+  - trigger: ":ct"
+    replace: "-H 'Content-Type: application/json'"
+
+  - trigger: ":acc"
+    replace: "-H 'Accept: application/json'"
+
+  - trigger: ":auth"
+    replace: "-H \"Authorization: Bearer $TOKEN\""
+
+  - trigger: ":pref"
+    replace: "-H 'Prefer: return=representation'"
+
+  - trigger: ":hdrs"
+    replace: "-H 'Content-Type: application/json' \\\n  -H 'Accept: application/json' \\\n  "
+
+  - trigger: ":curlp"
+    replace: "curl -sS -X POST '$|$' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Accept: application/json' \\\n  -d '{}' | jq"
+
+  - trigger: ":curlg"
+    replace: "curl -sS '$|$' -H 'Accept: application/json' | jq"
+
+  - trigger: ":curlt"
+    replace: "curl -sS -o /dev/null -w 'status=%{http_code} time=%{time_total}s\\n' '$|$'"
+
+  - trigger: ":jq"
+    replace: "| jq '.'"

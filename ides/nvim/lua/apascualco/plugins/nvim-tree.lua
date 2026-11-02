@@ -1,7 +1,3 @@
--- Disabling netrw is strongly advised, see :help nvim-tree-netrw
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 require("nvim-tree").setup({
   sort_by = "case_sensitive",
   reload_on_bufenter = true,
@@ -26,4 +22,3 @@ require("nvim-tree").setup({
   sync_root_with_cwd = true,
   respect_buf_cwd = true,
 })
-vim.g.nvim_tree_respect_buf_cwd = 1

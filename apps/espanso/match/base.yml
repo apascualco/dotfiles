@@ -1,0 +1,68 @@
+matches:
+
+  - trigger: ":fecha"
+    replace: "{{f}}"
+    vars:
+      - name: f
+        type: date
+        params: { format: "%Y-%m-%d" }
+
+  - trigger: ":fechal"
+    replace: "{{f}}"
+    vars:
+      - name: f
+        type: date
+        params: { format: "%-d de %B de %Y", locale: "es_ES" }
+
+  - trigger: ":hora"
+    replace: "{{f}}"
+    vars:
+      - name: f
+        type: date
+        params: { format: "%H:%M" }
+
+  - trigger: ":ts"
+    replace: "{{f}}"
+    vars:
+      - name: f
+        type: date
+        params: { format: "%Y-%m-%dT%H:%M:%S%:z" }
+
+  - trigger: ":semana"
+    replace: "{{f}}"
+    vars:
+      - name: f
+        type: date
+        params: { format: "%Y-W%V" }
+
+  - trigger: ":gh"
+    replace: "https://github.com/apascualco"
+
+  - trigger: ":uuid"
+    replace: "{{o}}"
+    vars:
+      - name: o
+        type: shell
+        params: { cmd: "uuidgen | tr 'A-Z' 'a-z' | tr -d '\\n'" }
+
+  - trigger: ":rama"
+    replace: "{{o}}"
+    vars:
+      - name: o
+        type: shell
+        params: { cmd: "git branch --show-current 2>/dev/null | tr -d '\\n'" }
+
+  - trigger: ":->"
+    replace: "→"
+  - trigger: ":<-"
+    replace: "←"
+  - trigger: ":ok"
+    replace: "✓"
+  - trigger: ":ko"
+    replace: "✗"
+  - trigger: ":--"
+    replace: "—"
+  - trigger: ":..."
+    replace: "…"
+  - trigger: ":shrug"
+    replace: '¯\_(ツ)_/¯'

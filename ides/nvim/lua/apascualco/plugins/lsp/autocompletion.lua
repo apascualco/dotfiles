@@ -9,7 +9,6 @@ local luasnip = require('luasnip')
 local select_opts = {behavior = cmp.SelectBehavior.Select}
 
 cmp.setup({
-  -- Enable automatic documentation popup
   view = {
     docs = {
       auto_open = true
@@ -23,9 +22,9 @@ cmp.setup({
   sources = cmp.config.sources({
 	  { name = "lazydev", group_index = 0 },
 	  { name = "nvim_lsp", priority = 1000 },
-	  -- { name = "nvim_lsp_signature_help", priority = 950 },  -- Disabled to avoid automatic popup
 	  { name = "luasnip",  priority = 900 },
 	  { name = "path",     priority = 700 },
+	  { name = "crates",   priority = 650 },
 	  { name = "buffer",   priority = 500 },
   }),
   window = {
@@ -45,6 +44,7 @@ cmp.setup({
 			luasnip  = "[SNIP]",
 			buffer   = "[BUF]",
 			path     = "[PATH]",
+			crates   = "[CRATE]",
         }
 
         vim_item.menu = menu_icon[entry.source.name]
@@ -62,7 +62,6 @@ cmp.setup({
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
 
-    -- Toggle documentation manually
     ['<C-h>'] = cmp.mapping(function()
       if cmp.visible_docs() then
         cmp.close_docs()
@@ -93,12 +92,9 @@ cmp.setup({
 
     ['<Tab>'] = cmp.mapping(function(fallback)
       local col = vim.fn.col('.') - 1
-      local ok_sm, sm = pcall(require, 'supermaven-nvim.completion_preview')
 
       if cmp.visible() then
         cmp.select_next_item(select_opts)
-      elseif ok_sm and sm.suggestion_text and sm.suggestion_text ~= '' then
-        sm.on_accept_suggestion()
       elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
         fallback()
       else
@@ -116,7 +112,13 @@ cmp.setup({
   },
 })
 
--- Rounded borders for all floating windows (hover, signature help, diagnostics, ...).
--- Native nvim 0.11+ option; replaces the deprecated vim.lsp.handlers override.
+cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
+  sources = cmp.config.sources({
+    { name = 'vim-dadbod-completion', priority = 1000 },
+    { name = 'luasnip',  priority = 900 },
+    { name = 'buffer',   priority = 500 },
+  }),
+})
+
 vim.o.winborder = 'rounded'
 

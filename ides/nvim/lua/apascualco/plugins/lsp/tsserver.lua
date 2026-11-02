@@ -1,9 +1,4 @@
-local lsp_setup = require("apascualco.plugins.lsp.setup")
-
--- ts_ls
 vim.lsp.config("ts_ls", {
-	capabilities = lsp_setup.capabilities,
-	single_file_support = true,
 	filetypes = {
 		"javascript", "javascriptreact",
 		"typescript", "typescriptreact",
@@ -15,14 +10,11 @@ vim.lsp.config("ts_ls", {
 			includePackageJsonAutoImports = "on",
 		},
 	},
-	on_attach = function(client, bufnr)
-		-- Disable formatting (use prettier via conform instead)
+	on_attach = function(client)
 		if client.server_capabilities then
 			client.server_capabilities.documentFormattingProvider = false
 			client.server_capabilities.documentRangeFormattingProvider = false
 		end
-		-- Call universal on_attach for inlay hints, etc.
-		lsp_setup.on_attach(client, bufnr)
 	end,
 	settings = {
 		typescript = {

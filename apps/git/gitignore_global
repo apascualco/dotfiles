@@ -5,6 +5,7 @@
 alberto/
 notas/
 .claude/
+.agents/
 
 # IDEA
 .idea/
@@ -43,3 +44,8 @@ build/
 # Personal
 .alberto/
 .env
+
+**/.claude/settings.local.json
+
+# Personal notes
+ATAJOS.md

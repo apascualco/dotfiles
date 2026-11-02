@@ -1,11 +1,10 @@
-
 local ok_bl, bufferline = pcall(require, "bufferline")
 if not ok_bl then return end
 
 local highlights = {}
-local ok_cat, cat = pcall(require, "catppuccin.groups.integrations.bufferline")
-if ok_cat and cat and type(cat.get) == "function" then
-	highlights = cat.get()
+local ok_cat, cat = pcall(require, "catppuccin.special.bufferline")
+if ok_cat and cat and type(cat.get_theme) == "function" then
+	highlights = cat.get_theme()
 end
 
 bufferline.setup({

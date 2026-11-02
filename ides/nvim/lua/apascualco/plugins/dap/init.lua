@@ -1,6 +1,5 @@
 local dap = require("dap")
 
--- Usar toggleterm para mostrar stdout del proceso con integratedTerminal
 dap.defaults.fallback.terminal_win_cmd = function()
   local Terminal = require('toggleterm.terminal').Terminal
   local t = Terminal:new({ direction = 'horizontal', close_on_exit = false })
@@ -9,22 +8,31 @@ dap.defaults.fallback.terminal_win_cmd = function()
   return t.bufnr, vim.fn.bufwinid(t.bufnr)
 end
 
--- Type mapping so .vscode/launch.json is auto-loaded correctly
 require('dap.ext.vscode').type_to_filetypes = {
   go          = { 'go' },
+  python      = { 'python' },
   ['pwa-node']= { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+  codelldb    = { 'rust' },
+  lldb        = { 'rust' },
 }
 
 require("mason-nvim-dap").setup({
 	ensure_installed = {
 		"delve",
 		"js-debug-adapter",
+		"python",
+		"codelldb",
+		"javadbg",
+		"javatest",
 	},
 	automatic_installation = true,
 	handlers = {
 		function(config)
 			require('mason-nvim-dap').default_setup(config)
 		end,
+		codelldb = function() end,
+		javadbg = function() end,
+		javatest = function() end,
 	},
 })
 
@@ -83,7 +91,5 @@ dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
 
-
 require("apascualco.plugins.dap.config")
-
 

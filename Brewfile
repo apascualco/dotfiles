@@ -44,6 +44,7 @@ brew "stylua"
 brew "black"
 brew "isort"
 brew "buf"
+brew "mongosh"
 
 # ============================================================================
 # GUI apps (casks)
@@ -57,6 +58,11 @@ cask "spotify"
 cask "ghostty"
 cask "stats"
 cask "textmate"
+# Colocación de ventanas por atajos y expansor de texto. Los dos necesitan que
+# concedas permisos de Accesibilidad a mano la primera vez: no es
+# automatizable (la base de datos TCC está protegida por SIP).
+cask "rectangle"
+cask "espanso"
 
 # ============================================================================
 # Fonts

@@ -1,24 +1,20 @@
-local lsp_setup = require("apascualco.plugins.lsp.setup")
-
 vim.lsp.config("rust_analyzer", {
-	on_attach    = lsp_setup.on_attach,
 	cmd          = { "rust-analyzer" },
 	filetypes    = { "rust" },
 	root_markers = { "Cargo.toml", "rust-project.json", ".git" },
-	capabilities = lsp_setup.capabilities,
 
 	settings     = {
 		["rust-analyzer"] = {
 			cargo = {
-				allFeatures = true,
-				loadOutDirsFromCheck = true,
+				features = "all",
+				buildScripts = { enable = true },
 			},
 
 			procMacro = {
 				enable = true,
 			},
 
-			checkOnSave = {
+			check = {
 				command = "clippy",
 			},
 
@@ -31,7 +27,6 @@ vim.lsp.config("rust_analyzer", {
 			},
 
 			inlayHints = {
-				enable = true,
 				chainingHints = { enable = true },
 				parameterHints = { enable = true },
 				typeHints = { enable = true },

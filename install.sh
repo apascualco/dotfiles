@@ -68,6 +68,10 @@ function create_symlinks() {
 
 	mkdir -p "${HOME}/.config"
 	mkdir -p "${HOME}/Library/Application Support/com.mitchellh.ghostty"
+	# Espanso NO crea estos directorios solo: sin ellos aborta al arrancar con
+	# "missing config directory".
+	mkdir -p "${HOME}/Library/Application Support/espanso/config"
+	mkdir -p "${HOME}/Library/Application Support/espanso/match"
 
 	link "${SCRIPT_DIR}/apps/zsh/zshrc"               "${HOME}/.zshrc"
 	link "${SCRIPT_DIR}/apps/zsh/p10k.zsh"            "${HOME}/.p10k.zsh"
@@ -79,6 +83,46 @@ function create_symlinks() {
 	link "${SCRIPT_DIR}/ides/intellij/ideavimrc"      "${HOME}/.ideavimrc"
 	link "${SCRIPT_DIR}/apps/tmux/tmux.conf"          "${HOME}/.tmux.conf"
 	link "${SCRIPT_DIR}/apps/ghostty/config"          "${HOME}/Library/Application Support/com.mitchellh.ghostty/config"
+	# El match/ del repo se engancha como match/custom (no como match/ entero,
+	# porque espanso escribe dentro: match/packages, y sus paquetes no deben
+	# acabar en el repo). Espanso recorre match/ recursivamente y SÍ sigue
+	# symlinks de directorio — verificado con `espanso match list`. Ventaja:
+	# añadir un .yml nuevo al repo no obliga a tocar este script.
+	link "${SCRIPT_DIR}/apps/espanso/config/default.yml" "${HOME}/Library/Application Support/espanso/config/default.yml"
+	link "${SCRIPT_DIR}/apps/espanso/match"              "${HOME}/Library/Application Support/espanso/match/custom"
+}
+
+function configure_rectangle() {
+	# Rectangle guarda su configuración en un plist gestionado por cfprefsd, no
+	# en un fichero de texto: un symlink no sirve (macOS lo cachea y lo reescribe).
+	# Se importa con 'defaults import', y solo si la máquina no tiene ya config
+	# propia, para no pisar atajos que hayas cambiado después.
+	local plist="${SCRIPT_DIR}/apps/rectangle/com.knollsoft.Rectangle.plist"
+	[[ -f "$plist" ]] || return 0
+	if ! defaults read com.knollsoft.Rectangle allowAnyShortcut >/dev/null 2>&1; then
+		defaults import com.knollsoft.Rectangle "$plist"
+		echo "  ✓ preferencias de Rectangle importadas"
+	else
+		echo "  ↷ Rectangle ya tiene configuración propia: no se toca"
+		echo "    (para re-exportar la tuya al repo:"
+		echo "     defaults export com.knollsoft.Rectangle $plist)"
+	fi
+}
+
+function configure_espanso() {
+	# Registra el LaunchAgent para que espanso arranque al login.
+	# Sin permisos de Accesibilidad concedidos todavía, launchctl devuelve
+	# error: es esperable en una máquina nueva, así que no abortamos.
+	command -v espanso >/dev/null 2>&1 || return 0
+	espanso service register 2>/dev/null || true
+
+	# Espanso recrea match/base.yml con 3 snippets de ejemplo (:espanso, :date,
+	# :shell) cada vez que arranca y no lo encuentra. Dejamos un placeholder
+	# vacío para que no los añada: los snippets reales viven en match/custom/.
+	local base="${HOME}/Library/Application Support/espanso/match/base.yml"
+	if [[ ! -f "$base" ]]; then
+		printf '# Placeholder intencionado: evita que espanso genere sus snippets de\n# ejemplo. Los reales estan en match/custom/ (symlink al repo).\nmatches: []\n' > "$base"
+	fi
 }
 
 function verify_installation() {
@@ -129,6 +173,16 @@ echo "-------------------------------------------------"
 create_symlinks
 echo
 
+echo "🪟 Configuring Rectangle"
+echo "-------------------------------------------------"
+configure_rectangle
+echo
+
+echo "⌨️  Registering espanso service"
+echo "-------------------------------------------------"
+configure_espanso
+echo
+
 echo "🎁 Final steps (rust)"
 echo "-------------------------------------------------"
 last_executions
@@ -137,6 +191,15 @@ echo
 echo "🔎 Verifying Brewfile dependencies"
 echo "-------------------------------------------------"
 verify_installation
+echo
+
+echo "🔐 Pasos manuales pendientes (no automatizables)"
+echo "-------------------------------------------------"
+echo "   Ajustes del Sistema → Privacidad y seguridad → Accesibilidad:"
+echo "   activa Rectangle y Espanso."
+echo "   Sin ese permiso Rectangle no puede mover ventanas y espanso no"
+echo "   expande texto (arrancan, pero no hacen nada)."
+echo "   Después: open -a Rectangle && espanso start"
 echo
 
 echo "✅ Done. Abre una nueva terminal para cargar la configuración."

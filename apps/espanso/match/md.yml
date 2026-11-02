@@ -1,0 +1,32 @@
+matches:
+
+  - trigger: ":cbg"
+    replace: "```go\n$|$\n```"
+
+  - trigger: ":cbb"
+    replace: "```bash\n$|$\n```"
+
+  - trigger: ":cbj"
+    replace: "```json\n$|$\n```"
+
+  - trigger: ":cby"
+    replace: "```yaml\n$|$\n```"
+
+  - trigger: ":merm"
+    replace: "```mermaid\nflowchart LR\n  $|$\n```"
+
+  - trigger: ":tbl"
+    replace: "| $|$ | |\n|---|---|\n| | |"
+
+  - trigger: ":todo"
+    replace: "- [ ] "
+
+  - trigger: ":det"
+    replace: "<details>\n<summary>$|$</summary>\n\n</details>"
+
+  - trigger: ":fm"
+    replace: "---\nfecha: {{f}}\ntags: [$|$]\n---\n"
+    vars:
+      - name: f
+        type: date
+        params: { format: "%Y-%m-%d" }

@@ -1,5 +1,5 @@
 require("catppuccin").setup({
-    flavour = nil, -- auto: follows system light/dark mode
+    flavour = nil,
     background = {
         light = "latte",
         dark = "macchiato",
