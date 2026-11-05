@@ -71,7 +71,7 @@ for lhs, rhs in pairs({
 }) do
 	vim.keymap.set(
 		"x",
-		"<leader>pg" .. lhs,
+		"<leader>G" .. lhs,
 		"<Esc><Cmd>lua require('jdtls')." .. rhs[1] .. "(true)<CR>",
 		{ buffer = buf, silent = true, desc = rhs[2] }
 	)

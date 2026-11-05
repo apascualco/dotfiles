@@ -502,3 +502,5 @@ map("n", "<leader>un", toggle_option("number", "Line numbers"), "Line numbers")
 map("n", "<leader>ur", toggle_option("relativenumber", "Relative numbers"), "Relative numbers")
 map("n", "<leader>us", toggle_option("spell", "Spell check"), "Spell check")
 map("n", "<leader>uw", toggle_option("wrap", "Wrap"), "Wrap")
+
+require("apascualco.lang").register_fallbacks()
