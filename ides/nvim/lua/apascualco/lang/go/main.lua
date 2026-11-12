@@ -152,6 +152,16 @@ local function pick(prompt, on_choice)
 	end)
 end
 
+function M.env_file(file)
+	local project_roots = roots()
+	local dir = normalize(vim.fs.dirname(file))
+	local found = vim.fs.find(".env.local", { upward = true, path = dir, stop = vim.fs.dirname(project_roots[1]) })[1]
+	local warning = launch_env(dir, project_roots)
+			and "launch.json ya define variables para este main: tendrán prioridad sobre .env.local"
+		or nil
+	return found or (dir .. "/.env.local"), warning
+end
+
 function M.run()
 	pick("Run main.go", function(main, dir, env, cwd)
 		local exports = {}

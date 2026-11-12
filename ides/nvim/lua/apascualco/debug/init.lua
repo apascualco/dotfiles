@@ -3,9 +3,9 @@ local dap = require("dap")
 vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "DiffChange" })
 for name, sign in pairs({
 	Stopped = { "󰁕 ", "DiagnosticSignWarn", "DapStoppedLine" },
-	Breakpoint = { " " },
-	BreakpointCondition = { " " },
-	BreakpointRejected = { " ", "DiagnosticSignError" },
+	Breakpoint = { vim.fn.nr2char(0xf192) .. " " },
+	BreakpointCondition = { vim.fn.nr2char(0xf059) .. " " },
+	BreakpointRejected = { vim.fn.nr2char(0xf06a) .. " ", "DiagnosticSignError" },
 	LogPoint = { "󰯑 " },
 }) do
 	vim.fn.sign_define(
